@@ -1,4 +1,4 @@
-﻿namespace WebAPI;
+﻿namespace webAPI;
 
 public class WebApiConfiguration
 {

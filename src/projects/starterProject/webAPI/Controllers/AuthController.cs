@@ -10,8 +10,9 @@ using Core.Application.Dtos;
 using Core.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using webAPI.Controllers.Base;
 
-namespace WebAPI.Controllers;
+namespace webAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

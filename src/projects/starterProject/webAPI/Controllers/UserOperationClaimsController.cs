@@ -6,11 +6,10 @@ using Application.Features.UserOperationClaims.Queries.GetList;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
+using webAPI.Controllers.Base;
 
-namespace WebAPI.Controllers;
+namespace webAPI.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
 public class UserOperationClaimsController : BaseController
 {
     [HttpGet("{Id}")]
