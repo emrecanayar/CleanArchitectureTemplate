@@ -1,10 +1,11 @@
 ﻿using Core.CrossCuttingConcerns.Exceptions.Types;
-using Core.CrossCuttingConcerns.Logging.DbLog;
 using Core.CrossCuttingConcerns.Logging.DbLog.Dto;
+using Core.CrossCuttingConcerns.Logging.DbLog.MsSQL;
 using Core.Helpers.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
 
@@ -13,14 +14,14 @@ namespace Core.Application.Pipelines.DbLogging
     public class DbLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogService _logService;
+        private readonly IConfiguration _configuration;
         private readonly CrossCuttingConcerns.Logging.DbLog.Logging _logging;
 
-        public DbLoggingBehavior(IHttpContextAccessor httpContextAccessor, CrossCuttingConcerns.Logging.DbLog.Logging logging, ILogService logService)
+        public DbLoggingBehavior(IHttpContextAccessor httpContextAccessor, CrossCuttingConcerns.Logging.DbLog.Logging logging, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _logging = logging;
-            _logService = logService;
+            _configuration = configuration;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -107,7 +108,7 @@ namespace Core.Application.Pipelines.DbLogging
         private async Task addLogToDatabase(Domain.Entities.Log logEntry)
         {
             LogDto data = Mapper.ToMap<LogDto>(logEntry);
-            await _logService.CreateLog(data);
+            await _logging.CreateLog(new MSSQLLogService(_configuration), data);
         }
 
         private Task handleExceptionAsync(Exception exception) =>

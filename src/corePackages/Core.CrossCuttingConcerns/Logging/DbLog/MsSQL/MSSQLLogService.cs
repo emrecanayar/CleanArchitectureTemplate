@@ -38,7 +38,7 @@ namespace Core.CrossCuttingConcerns.Logging.DbLog.MsSQL
         private LogDbContext createDbContext()
         {
             var builder = new DbContextOptionsBuilder<LogDbContext>();
-            builder.UseSqlServer(_configuration.GetConnectionString("LogDbConnectionString"));
+            builder.UseSqlServer(_configuration.GetConnectionString("ConnectionString"));
             return new LogDbContext(builder.Options);
         }
     }
