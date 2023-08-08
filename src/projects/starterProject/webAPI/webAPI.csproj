@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="logs\" />
+    <Folder Include="logs\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
