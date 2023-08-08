@@ -1,16 +1,18 @@
 using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.UserOperationClaims.Queries.GetById;
 
-public class GetByIdUserOperationClaimQuery : IRequest<GetByIdUserOperationClaimResponse>
+public class GetByIdUserOperationClaimQuery : IRequest<CustomResponseDto<GetByIdUserOperationClaimResponse>>
 {
     public Guid Id { get; set; }
 
-    public class GetByIdUserOperationClaimQueryHandler : IRequestHandler<GetByIdUserOperationClaimQuery, GetByIdUserOperationClaimResponse>
+    public class GetByIdUserOperationClaimQueryHandler : IRequestHandler<GetByIdUserOperationClaimQuery, CustomResponseDto<GetByIdUserOperationClaimResponse>>
     {
         private readonly IUserOperationClaimRepository _userOperationClaimRepository;
         private readonly IMapper _mapper;
@@ -27,7 +29,7 @@ public class GetByIdUserOperationClaimQuery : IRequest<GetByIdUserOperationClaim
             _userOperationClaimBusinessRules = userOperationClaimBusinessRules;
         }
 
-        public async Task<GetByIdUserOperationClaimResponse> Handle(
+        public async Task<CustomResponseDto<GetByIdUserOperationClaimResponse>> Handle(
             GetByIdUserOperationClaimQuery request,
             CancellationToken cancellationToken
         )
@@ -39,7 +41,7 @@ public class GetByIdUserOperationClaimQuery : IRequest<GetByIdUserOperationClaim
             await _userOperationClaimBusinessRules.UserOperationClaimShouldExistWhenSelected(userOperationClaim);
 
             GetByIdUserOperationClaimResponse userOperationClaimDto = _mapper.Map<GetByIdUserOperationClaimResponse>(userOperationClaim);
-            return userOperationClaimDto;
+            return CustomResponseDto<GetByIdUserOperationClaimResponse>.Success((int)HttpStatusCode.OK, userOperationClaimDto, true);
         }
     }
 }

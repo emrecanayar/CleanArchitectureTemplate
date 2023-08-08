@@ -2,13 +2,15 @@ using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.UserOperationClaims.Queries.GetList;
 
-public class GetListUserOperationClaimQuery : IRequest<GetListResponse<GetListUserOperationClaimListItemDto>>
+public class GetListUserOperationClaimQuery : IRequest<CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>>
 {
     public PageRequest PageRequest { get; set; }
 
@@ -23,7 +25,7 @@ public class GetListUserOperationClaimQuery : IRequest<GetListResponse<GetListUs
     }
 
     public class GetListUserOperationClaimQueryHandler
-        : IRequestHandler<GetListUserOperationClaimQuery, GetListResponse<GetListUserOperationClaimListItemDto>>
+        : IRequestHandler<GetListUserOperationClaimQuery, CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>>
     {
         private readonly IUserOperationClaimRepository _userOperationClaimRepository;
         private readonly IMapper _mapper;
@@ -34,7 +36,7 @@ public class GetListUserOperationClaimQuery : IRequest<GetListResponse<GetListUs
             _mapper = mapper;
         }
 
-        public async Task<GetListResponse<GetListUserOperationClaimListItemDto>> Handle(
+        public async Task<CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>> Handle(
             GetListUserOperationClaimQuery request,
             CancellationToken cancellationToken
         )
@@ -47,7 +49,8 @@ public class GetListUserOperationClaimQuery : IRequest<GetListResponse<GetListUs
             GetListResponse<GetListUserOperationClaimListItemDto> mappedUserOperationClaimListModel = _mapper.Map<
                 GetListResponse<GetListUserOperationClaimListItemDto>
             >(userOperationClaims);
-            return mappedUserOperationClaimListModel;
+
+            return CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>.Success((int)HttpStatusCode.OK, mappedUserOperationClaimListModel, true);
         }
     }
 }

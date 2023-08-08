@@ -3,20 +3,22 @@ using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 using static Application.Features.UserOperationClaims.Constants.UserOperationClaimsOperationClaims;
 
 namespace Application.Features.UserOperationClaims.Commands.Delete;
 
-public class DeleteUserOperationClaimCommand : IRequest<DeletedUserOperationClaimResponse>, ISecuredRequest
+public class DeleteUserOperationClaimCommand : IRequest<CustomResponseDto<DeletedUserOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
 
     public string[] Roles => new[] { Admin, Write, UserOperationClaimsOperationClaims.Delete };
 
     public class DeleteUserOperationClaimCommandHandler
-        : IRequestHandler<DeleteUserOperationClaimCommand, DeletedUserOperationClaimResponse>
+        : IRequestHandler<DeleteUserOperationClaimCommand, CustomResponseDto<DeletedUserOperationClaimResponse>>
     {
         private readonly IUserOperationClaimRepository _userOperationClaimRepository;
         private readonly IMapper _mapper;
@@ -33,7 +35,7 @@ public class DeleteUserOperationClaimCommand : IRequest<DeletedUserOperationClai
             _userOperationClaimBusinessRules = userOperationClaimBusinessRules;
         }
 
-        public async Task<DeletedUserOperationClaimResponse> Handle(
+        public async Task<CustomResponseDto<DeletedUserOperationClaimResponse>> Handle(
             DeleteUserOperationClaimCommand request,
             CancellationToken cancellationToken
         )
@@ -47,7 +49,7 @@ public class DeleteUserOperationClaimCommand : IRequest<DeletedUserOperationClai
             await _userOperationClaimRepository.DeleteAsync(userOperationClaim!);
 
             DeletedUserOperationClaimResponse response = _mapper.Map<DeletedUserOperationClaimResponse>(userOperationClaim);
-            return response;
+            return CustomResponseDto<DeletedUserOperationClaimResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

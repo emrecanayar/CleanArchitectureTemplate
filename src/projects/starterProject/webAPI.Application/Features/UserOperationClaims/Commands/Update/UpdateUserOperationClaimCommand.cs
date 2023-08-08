@@ -3,13 +3,15 @@ using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 using static Application.Features.UserOperationClaims.Constants.UserOperationClaimsOperationClaims;
 
 namespace Application.Features.UserOperationClaims.Commands.Update;
 
-public class UpdateUserOperationClaimCommand : IRequest<UpdatedUserOperationClaimResponse>, ISecuredRequest
+public class UpdateUserOperationClaimCommand : IRequest<CustomResponseDto<UpdatedUserOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
@@ -18,7 +20,7 @@ public class UpdateUserOperationClaimCommand : IRequest<UpdatedUserOperationClai
     public string[] Roles => new[] { Admin, Write, UserOperationClaimsOperationClaims.Update };
 
     public class UpdateUserOperationClaimCommandHandler
-        : IRequestHandler<UpdateUserOperationClaimCommand, UpdatedUserOperationClaimResponse>
+        : IRequestHandler<UpdateUserOperationClaimCommand, CustomResponseDto<UpdatedUserOperationClaimResponse>>
     {
         private readonly IUserOperationClaimRepository _userOperationClaimRepository;
         private readonly IMapper _mapper;
@@ -35,7 +37,7 @@ public class UpdateUserOperationClaimCommand : IRequest<UpdatedUserOperationClai
             _userOperationClaimBusinessRules = userOperationClaimBusinessRules;
         }
 
-        public async Task<UpdatedUserOperationClaimResponse> Handle(
+        public async Task<CustomResponseDto<UpdatedUserOperationClaimResponse>> Handle(
             UpdateUserOperationClaimCommand request,
             CancellationToken cancellationToken
         )
@@ -58,7 +60,7 @@ public class UpdateUserOperationClaimCommand : IRequest<UpdatedUserOperationClai
             UpdatedUserOperationClaimResponse updatedUserOperationClaimDto = _mapper.Map<UpdatedUserOperationClaimResponse>(
                 updatedUserOperationClaim
             );
-            return updatedUserOperationClaimDto;
+            return CustomResponseDto<UpdatedUserOperationClaimResponse>.Success((int)HttpStatusCode.OK, updatedUserOperationClaimDto, true);
         }
     }
 }
