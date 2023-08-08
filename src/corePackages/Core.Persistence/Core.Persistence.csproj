@@ -27,6 +27,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Core.Domain\Core.Domain.csproj" />
 	  <ProjectReference Include="..\Core.Helpers\Core.Helpers.csproj" />
+	  <ProjectReference Include="..\Core.Security\Core.Security.csproj" />
 	</ItemGroup>
 
 </Project>
