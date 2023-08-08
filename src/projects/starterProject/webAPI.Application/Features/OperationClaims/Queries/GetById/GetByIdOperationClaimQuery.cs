@@ -1,17 +1,19 @@
 using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Application.Features.OperationClaims.Queries.GetById;
 
-public class GetByIdOperationClaimQuery : IRequest<GetByIdOperationClaimResponse>
+public class GetByIdOperationClaimQuery : IRequest<CustomResponseDto<GetByIdOperationClaimResponse>>
 {
     public Guid Id { get; set; }
 
-    public class GetByIdOperationClaimQueryHandler : IRequestHandler<GetByIdOperationClaimQuery, GetByIdOperationClaimResponse>
+    public class GetByIdOperationClaimQueryHandler : IRequestHandler<GetByIdOperationClaimQuery, CustomResponseDto<GetByIdOperationClaimResponse>>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly IMapper _mapper;
@@ -28,7 +30,7 @@ public class GetByIdOperationClaimQuery : IRequest<GetByIdOperationClaimResponse
             _operationClaimBusinessRules = operationClaimBusinessRules;
         }
 
-        public async Task<GetByIdOperationClaimResponse> Handle(GetByIdOperationClaimQuery request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<GetByIdOperationClaimResponse>> Handle(GetByIdOperationClaimQuery request, CancellationToken cancellationToken)
         {
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: b => b.Id == request.Id,
@@ -38,7 +40,7 @@ public class GetByIdOperationClaimQuery : IRequest<GetByIdOperationClaimResponse
             await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
 
             GetByIdOperationClaimResponse response = _mapper.Map<GetByIdOperationClaimResponse>(operationClaim);
-            return response;
+            return CustomResponseDto<GetByIdOperationClaimResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

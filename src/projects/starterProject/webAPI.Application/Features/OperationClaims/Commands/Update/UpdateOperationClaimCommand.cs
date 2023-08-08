@@ -3,13 +3,15 @@ using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 using static Application.Features.OperationClaims.Constants.OperationClaimsOperationClaims;
 
 namespace Application.Features.OperationClaims.Commands.Update;
 
-public class UpdateOperationClaimCommand : IRequest<UpdatedOperationClaimResponse>, ISecuredRequest
+public class UpdateOperationClaimCommand : IRequest<CustomResponseDto<UpdatedOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
@@ -27,7 +29,7 @@ public class UpdateOperationClaimCommand : IRequest<UpdatedOperationClaimRespons
 
     public string[] Roles => new[] { Admin, Write, OperationClaimsOperationClaims.Update };
 
-    public class UpdateOperationClaimCommandHandler : IRequestHandler<UpdateOperationClaimCommand, UpdatedOperationClaimResponse>
+    public class UpdateOperationClaimCommandHandler : IRequestHandler<UpdateOperationClaimCommand, CustomResponseDto<UpdatedOperationClaimResponse>>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly IMapper _mapper;
@@ -44,7 +46,7 @@ public class UpdateOperationClaimCommand : IRequest<UpdatedOperationClaimRespons
             _operationClaimBusinessRules = operationClaimBusinessRules;
         }
 
-        public async Task<UpdatedOperationClaimResponse> Handle(UpdateOperationClaimCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<UpdatedOperationClaimResponse>> Handle(UpdateOperationClaimCommand request, CancellationToken cancellationToken)
         {
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: oc => oc.Id == request.Id,
@@ -57,7 +59,7 @@ public class UpdateOperationClaimCommand : IRequest<UpdatedOperationClaimRespons
             OperationClaim updatedOperationClaim = await _operationClaimRepository.UpdateAsync(mappedOperationClaim);
 
             UpdatedOperationClaimResponse response = _mapper.Map<UpdatedOperationClaimResponse>(updatedOperationClaim);
-            return response;
+            return CustomResponseDto<UpdatedOperationClaimResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

@@ -3,20 +3,22 @@ using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using static Application.Features.OperationClaims.Constants.OperationClaimsOperationClaims;
 
 namespace Application.Features.OperationClaims.Commands.Delete;
 
-public class DeleteOperationClaimCommand : IRequest<DeletedOperationClaimResponse>, ISecuredRequest
+public class DeleteOperationClaimCommand : IRequest<CustomResponseDto<DeletedOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
 
     public string[] Roles => new[] { Admin, Write, OperationClaimsOperationClaims.Delete };
 
-    public class DeleteOperationClaimCommandHandler : IRequestHandler<DeleteOperationClaimCommand, DeletedOperationClaimResponse>
+    public class DeleteOperationClaimCommandHandler : IRequestHandler<DeleteOperationClaimCommand, CustomResponseDto<DeletedOperationClaimResponse>>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly IMapper _mapper;
@@ -33,7 +35,7 @@ public class DeleteOperationClaimCommand : IRequest<DeletedOperationClaimRespons
             _operationClaimBusinessRules = operationClaimBusinessRules;
         }
 
-        public async Task<DeletedOperationClaimResponse> Handle(DeleteOperationClaimCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<DeletedOperationClaimResponse>> Handle(DeleteOperationClaimCommand request, CancellationToken cancellationToken)
         {
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: oc => oc.Id == request.Id,
@@ -45,7 +47,7 @@ public class DeleteOperationClaimCommand : IRequest<DeletedOperationClaimRespons
             await _operationClaimRepository.DeleteAsync(entity: operationClaim!);
 
             DeletedOperationClaimResponse response = _mapper.Map<DeletedOperationClaimResponse>(operationClaim);
-            return response;
+            return CustomResponseDto<DeletedOperationClaimResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

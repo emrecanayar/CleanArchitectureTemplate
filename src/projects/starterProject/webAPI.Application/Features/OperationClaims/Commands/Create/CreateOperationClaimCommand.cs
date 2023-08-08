@@ -2,13 +2,15 @@
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 using static Application.Features.OperationClaims.Constants.OperationClaimsOperationClaims;
 
 namespace Application.Features.OperationClaims.Commands.Create;
 
-public class CreateOperationClaimCommand : IRequest<CreatedOperationClaimResponse>, ISecuredRequest
+public class CreateOperationClaimCommand : IRequest<CustomResponseDto<CreatedOperationClaimResponse>>, ISecuredRequest
 {
     public string Name { get; set; }
 
@@ -24,7 +26,7 @@ public class CreateOperationClaimCommand : IRequest<CreatedOperationClaimRespons
 
     public string[] Roles => new[] { Admin, Write, Add };
 
-    public class CreateOperationClaimCommandHandler : IRequestHandler<CreateOperationClaimCommand, CreatedOperationClaimResponse>
+    public class CreateOperationClaimCommandHandler : IRequestHandler<CreateOperationClaimCommand, CustomResponseDto<CreatedOperationClaimResponse>>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly IMapper _mapper;
@@ -41,7 +43,7 @@ public class CreateOperationClaimCommand : IRequest<CreatedOperationClaimRespons
             _operationClaimBusinessRules = operationClaimBusinessRules;
         }
 
-        public async Task<CreatedOperationClaimResponse> Handle(CreateOperationClaimCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<CreatedOperationClaimResponse>> Handle(CreateOperationClaimCommand request, CancellationToken cancellationToken)
         {
             await _operationClaimBusinessRules.OperationClaimNameShouldNotExistWhenCreating(request.Name);
             OperationClaim mappedOperationClaim = _mapper.Map<OperationClaim>(request);
@@ -49,7 +51,7 @@ public class CreateOperationClaimCommand : IRequest<CreatedOperationClaimRespons
             OperationClaim createdOperationClaim = await _operationClaimRepository.AddAsync(mappedOperationClaim);
 
             CreatedOperationClaimResponse response = _mapper.Map<CreatedOperationClaimResponse>(createdOperationClaim);
-            return response;
+            return CustomResponseDto<CreatedOperationClaimResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

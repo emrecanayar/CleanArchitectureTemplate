@@ -5,6 +5,7 @@ using Application.Features.OperationClaims.Queries.GetById;
 using Application.Features.OperationClaims.Queries.GetList;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Application.ResponseTypes.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using webAPI.Controllers.Base;
 
@@ -15,7 +16,7 @@ public class OperationClaimsController : BaseController
     [HttpGet("{Id}")]
     public async Task<IActionResult> GetById([FromRoute] GetByIdOperationClaimQuery getByIdOperationClaimQuery)
     {
-        GetByIdOperationClaimResponse result = await Mediator.Send(getByIdOperationClaimQuery);
+        CustomResponseDto<GetByIdOperationClaimResponse> result = await Mediator.Send(getByIdOperationClaimQuery);
         return Ok(result);
     }
 
@@ -23,28 +24,28 @@ public class OperationClaimsController : BaseController
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListOperationClaimQuery getListOperationClaimQuery = new() { PageRequest = pageRequest };
-        GetListResponse<GetListOperationClaimListItemDto> result = await Mediator.Send(getListOperationClaimQuery);
+        CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>> result = await Mediator.Send(getListOperationClaimQuery);
         return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateOperationClaimCommand createOperationClaimCommand)
     {
-        CreatedOperationClaimResponse result = await Mediator.Send(createOperationClaimCommand);
+        CustomResponseDto<CreatedOperationClaimResponse> result = await Mediator.Send(createOperationClaimCommand);
         return Created(uri: "", result);
     }
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateOperationClaimCommand updateOperationClaimCommand)
     {
-        UpdatedOperationClaimResponse result = await Mediator.Send(updateOperationClaimCommand);
+        CustomResponseDto<UpdatedOperationClaimResponse> result = await Mediator.Send(updateOperationClaimCommand);
         return Ok(result);
     }
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteOperationClaimCommand deleteOperationClaimCommand)
     {
-        DeletedOperationClaimResponse result = await Mediator.Send(deleteOperationClaimCommand);
+        CustomResponseDto<DeletedOperationClaimResponse> result = await Mediator.Send(deleteOperationClaimCommand);
         return Ok(result);
     }
 }

@@ -2,13 +2,15 @@ using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.OperationClaims.Queries.GetList;
 
-public class GetListOperationClaimQuery : IRequest<GetListResponse<GetListOperationClaimListItemDto>>
+public class GetListOperationClaimQuery : IRequest<CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>>>
 {
     public PageRequest PageRequest { get; set; }
 
@@ -23,7 +25,7 @@ public class GetListOperationClaimQuery : IRequest<GetListResponse<GetListOperat
     }
 
     public class GetListOperationClaimQueryHandler
-        : IRequestHandler<GetListOperationClaimQuery, GetListResponse<GetListOperationClaimListItemDto>>
+        : IRequestHandler<GetListOperationClaimQuery, CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>>>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly IMapper _mapper;
@@ -34,7 +36,7 @@ public class GetListOperationClaimQuery : IRequest<GetListResponse<GetListOperat
             _mapper = mapper;
         }
 
-        public async Task<GetListResponse<GetListOperationClaimListItemDto>> Handle(
+        public async Task<CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>>> Handle(
             GetListOperationClaimQuery request,
             CancellationToken cancellationToken
         )
@@ -48,7 +50,7 @@ public class GetListOperationClaimQuery : IRequest<GetListResponse<GetListOperat
             GetListResponse<GetListOperationClaimListItemDto> response = _mapper.Map<GetListResponse<GetListOperationClaimListItemDto>>(
                 operationClaims
             );
-            return response;
+            return CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }
