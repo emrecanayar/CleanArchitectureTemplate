@@ -3,14 +3,16 @@ using Application.Features.Users.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using MediatR;
+using System.Net;
 using static Application.Features.Users.Constants.UsersOperationClaims;
 
 namespace Application.Features.Users.Commands.Update;
 
-public class UpdateUserCommand : IRequest<UpdatedUserResponse>, ISecuredRequest
+public class UpdateUserCommand : IRequest<CustomResponseDto<UpdatedUserResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
@@ -37,7 +39,7 @@ public class UpdateUserCommand : IRequest<UpdatedUserResponse>, ISecuredRequest
 
     public string[] Roles => new[] { Admin, Write, UsersOperationClaims.Update };
 
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UpdatedUserResponse>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, CustomResponseDto<UpdatedUserResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -50,7 +52,7 @@ public class UpdateUserCommand : IRequest<UpdatedUserResponse>, ISecuredRequest
             _userBusinessRules = userBusinessRules;
         }
 
-        public async Task<UpdatedUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<UpdatedUserResponse>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             User? user = await _userRepository.GetAsync(predicate: u => u.Id == request.Id, cancellationToken: cancellationToken);
             await _userBusinessRules.UserShouldBeExistsWhenSelected(user);
@@ -67,7 +69,7 @@ public class UpdateUserCommand : IRequest<UpdatedUserResponse>, ISecuredRequest
             await _userRepository.UpdateAsync(user);
 
             UpdatedUserResponse response = _mapper.Map<UpdatedUserResponse>(user);
-            return response;
+            return CustomResponseDto<UpdatedUserResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

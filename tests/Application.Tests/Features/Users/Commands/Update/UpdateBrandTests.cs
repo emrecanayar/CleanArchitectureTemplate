@@ -1,6 +1,7 @@
 ﻿using Application.Features.Users.Commands.Update;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
+using Core.Application.ResponseTypes.Concrete;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.Test.Application.Constants;
 using FluentValidation.Results;
@@ -60,9 +61,9 @@ public class UpdateUserTests : UserMockRepository
         _command.Email = "test@email.com";
         _command.Password = "password";
 
-        UpdatedUserResponse result = await _handler.Handle(_command, CancellationToken.None);
+        CustomResponseDto<UpdatedUserResponse> result = await _handler.Handle(_command, CancellationToken.None);
 
-        Assert.Equal(expected: "test@email.com", result.Email);
+        Assert.Equal(expected: "test@email.com", result.Data.Email);
     }
 
     [Fact]

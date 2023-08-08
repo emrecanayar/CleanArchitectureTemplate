@@ -1,4 +1,5 @@
 using Core.Application.Responses;
+using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Users.Commands.Create;
 
@@ -8,7 +9,7 @@ public class CreatedUserResponse : IResponse
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public bool Status { get; set; }
+    public RecordStatu Status { get; set; }
 
     public CreatedUserResponse()
     {
@@ -17,7 +18,7 @@ public class CreatedUserResponse : IResponse
         Email = string.Empty;
     }
 
-    public CreatedUserResponse(int id, string firstName, string lastName, string email, bool status)
+    public CreatedUserResponse(int id, string firstName, string lastName, string email, RecordStatu status)
     {
         Id = id;
         FirstName = firstName;

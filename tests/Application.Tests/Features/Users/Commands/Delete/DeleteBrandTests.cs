@@ -1,6 +1,7 @@
 ﻿using Application.Features.Users.Commands.Delete;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
+using Core.Application.ResponseTypes.Concrete;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using System;
 using System.Threading;
@@ -26,7 +27,7 @@ public class DeleteUserTests : UserMockRepository
     public async Task DeleteShouldSuccessfully()
     {
         _command.Id = Guid.NewGuid();
-        DeletedUserResponse result = await _handler.Handle(_command, CancellationToken.None);
+        CustomResponseDto<DeletedUserResponse> result = await _handler.Handle(_command, CancellationToken.None);
         Assert.NotNull(result);
     }
 

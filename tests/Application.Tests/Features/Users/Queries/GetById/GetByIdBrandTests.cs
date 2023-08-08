@@ -1,6 +1,7 @@
 ﻿using Application.Features.Users.Queries.GetById;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
+using Core.Application.ResponseTypes.Concrete;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using System;
 using System.Threading;
@@ -27,9 +28,9 @@ public class GetByIdUserTests : UserMockRepository
     {
         _query.Id = Guid.NewGuid();
 
-        GetByIdUserResponse result = await _handler.Handle(_query, CancellationToken.None);
+        CustomResponseDto<GetByIdUserResponse> result = await _handler.Handle(_query, CancellationToken.None);
 
-        Assert.Equal(expected: "example@email.com", result.Email);
+        Assert.Equal(expected: "example@email.com", result.Data.Email);
     }
 
     [Fact]

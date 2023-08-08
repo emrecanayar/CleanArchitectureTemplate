@@ -2,13 +2,15 @@
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.Users.Commands.UpdateFromAuth;
 
-public class UpdateUserFromAuthCommand : IRequest<UpdatedUserFromAuthResponse>
+public class UpdateUserFromAuthCommand : IRequest<CustomResponseDto<UpdatedUserFromAuthResponse>>
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
@@ -31,7 +33,7 @@ public class UpdateUserFromAuthCommand : IRequest<UpdatedUserFromAuthResponse>
         Password = password;
     }
 
-    public class UpdateUserFromAuthCommandHandler : IRequestHandler<UpdateUserFromAuthCommand, UpdatedUserFromAuthResponse>
+    public class UpdateUserFromAuthCommandHandler : IRequestHandler<UpdateUserFromAuthCommand, CustomResponseDto<UpdatedUserFromAuthResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -51,7 +53,7 @@ public class UpdateUserFromAuthCommand : IRequest<UpdatedUserFromAuthResponse>
             _authService = authService;
         }
 
-        public async Task<UpdatedUserFromAuthResponse> Handle(UpdateUserFromAuthCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<UpdatedUserFromAuthResponse>> Handle(UpdateUserFromAuthCommand request, CancellationToken cancellationToken)
         {
             User? user = await _userRepository.GetAsync(predicate: u => u.Id == request.Id, cancellationToken: cancellationToken);
             await _userBusinessRules.UserShouldBeExistsWhenSelected(user);
@@ -73,7 +75,7 @@ public class UpdateUserFromAuthCommand : IRequest<UpdatedUserFromAuthResponse>
 
             UpdatedUserFromAuthResponse response = _mapper.Map<UpdatedUserFromAuthResponse>(updatedUser);
             response.AccessToken = await _authService.CreateAccessToken(user!);
-            return response;
+            return CustomResponseDto<UpdatedUserFromAuthResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

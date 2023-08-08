@@ -2,14 +2,16 @@ using Application.Features.Users.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using MediatR;
+using System.Net;
 using static Application.Features.Users.Constants.UsersOperationClaims;
 
 namespace Application.Features.Users.Commands.Create;
 
-public class CreateUserCommand : IRequest<CreatedUserResponse>, ISecuredRequest
+public class CreateUserCommand : IRequest<CustomResponseDto<CreatedUserResponse>>, ISecuredRequest
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -34,7 +36,7 @@ public class CreateUserCommand : IRequest<CreatedUserResponse>, ISecuredRequest
 
     public string[] Roles => new[] { Admin, Write, Add };
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreatedUserResponse>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CustomResponseDto<CreatedUserResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -47,7 +49,7 @@ public class CreateUserCommand : IRequest<CreatedUserResponse>, ISecuredRequest
             _userBusinessRules = userBusinessRules;
         }
 
-        public async Task<CreatedUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<CreatedUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             await _userBusinessRules.UserEmailShouldNotExistsWhenInsert(request.Email);
             User user = _mapper.Map<User>(request);
@@ -62,7 +64,7 @@ public class CreateUserCommand : IRequest<CreatedUserResponse>, ISecuredRequest
             User createdUser = await _userRepository.AddAsync(user);
 
             CreatedUserResponse response = _mapper.Map<CreatedUserResponse>(createdUser);
-            return response;
+            return CustomResponseDto<CreatedUserResponse>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

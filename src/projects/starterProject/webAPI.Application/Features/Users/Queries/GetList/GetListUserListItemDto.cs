@@ -1,4 +1,5 @@
 using Core.Application.Dtos;
+using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Users.Queries.GetList;
 
@@ -8,7 +9,7 @@ public class GetListUserListItemDto : IDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public bool Status { get; set; }
+    public RecordStatu Status { get; set; }
 
     public GetListUserListItemDto()
     {
@@ -17,7 +18,7 @@ public class GetListUserListItemDto : IDto
         Email = string.Empty;
     }
 
-    public GetListUserListItemDto(int id, string firstName, string lastName, string email, bool status)
+    public GetListUserListItemDto(int id, string firstName, string lastName, string email, RecordStatu status)
     {
         Id = id;
         FirstName = firstName;

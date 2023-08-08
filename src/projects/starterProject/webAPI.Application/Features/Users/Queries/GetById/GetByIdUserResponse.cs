@@ -1,4 +1,5 @@
 using Core.Application.Responses;
+using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Users.Queries.GetById;
 
@@ -8,7 +9,7 @@ public class GetByIdUserResponse : IResponse
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public bool Status { get; set; }
+    public RecordStatu Status { get; set; }
 
     public GetByIdUserResponse()
     {
@@ -17,7 +18,7 @@ public class GetByIdUserResponse : IResponse
         Email = string.Empty;
     }
 
-    public GetByIdUserResponse(int id, string firstName, string lastName, string email, bool status)
+    public GetByIdUserResponse(int id, string firstName, string lastName, string email, RecordStatu status)
     {
         Id = id;
         FirstName = firstName;

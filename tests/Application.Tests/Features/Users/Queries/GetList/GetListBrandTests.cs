@@ -3,6 +3,7 @@ using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Application.ResponseTypes.Concrete;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -27,8 +28,8 @@ public class GetListUserTests : UserMockRepository
     {
         _query.PageRequest = new PageRequest { PageIndex = 0, PageSize = 3 };
 
-        GetListResponse<GetListUserListItemDto> result = await _handler.Handle(_query, CancellationToken.None);
+        CustomResponseDto<GetListResponse<GetListUserListItemDto>> result = await _handler.Handle(_query, CancellationToken.None);
 
-        Assert.Equal(expected: 2, result.Items.Count);
+        Assert.Equal(expected: 2, result.Data.Items.Count);
     }
 }
