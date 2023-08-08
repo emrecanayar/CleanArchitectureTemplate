@@ -4,7 +4,7 @@ namespace Application.Features.OperationClaims.Queries.GetById;
 
 public class GetByIdOperationClaimResponse : IResponse
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
 
     public GetByIdOperationClaimResponse()
@@ -12,7 +12,7 @@ public class GetByIdOperationClaimResponse : IResponse
         Name = string.Empty;
     }
 
-    public GetByIdOperationClaimResponse(int id, string name)
+    public GetByIdOperationClaimResponse(Guid id, string name)
     {
         Id = id;
         Name = name;

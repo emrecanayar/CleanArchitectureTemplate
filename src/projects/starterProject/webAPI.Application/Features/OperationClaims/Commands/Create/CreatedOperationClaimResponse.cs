@@ -4,7 +4,7 @@ namespace Application.Features.OperationClaims.Commands.Create;
 
 public class CreatedOperationClaimResponse : IResponse
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
 
     public CreatedOperationClaimResponse()
@@ -12,7 +12,7 @@ public class CreatedOperationClaimResponse : IResponse
         Name = string.Empty;
     }
 
-    public CreatedOperationClaimResponse(int id, string name)
+    public CreatedOperationClaimResponse(Guid id, string name)
     {
         Id = id;
         Name = name;
