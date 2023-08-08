@@ -2,15 +2,17 @@
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using Core.Application.Dtos;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
+using System.Net;
 using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Register;
 
-public class RegisterCommand : IRequest<RegisteredResponse>
+public class RegisterCommand : IRequest<CustomResponseDto<RegisteredResponse>>
 {
     public UserForRegisterDto UserForRegisterDto { get; set; }
     public string IpAddress { get; set; }
@@ -27,7 +29,7 @@ public class RegisterCommand : IRequest<RegisteredResponse>
         IpAddress = ipAddress;
     }
 
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisteredResponse>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, CustomResponseDto<RegisteredResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthService _authService;
@@ -40,7 +42,7 @@ public class RegisterCommand : IRequest<RegisteredResponse>
             _authBusinessRules = authBusinessRules;
         }
 
-        public async Task<RegisteredResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<RegisteredResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             await _authBusinessRules.UserEmailShouldBeNotExists(request.UserForRegisterDto.Email);
 
@@ -67,7 +69,7 @@ public class RegisterCommand : IRequest<RegisteredResponse>
             Core.Domain.Entities.RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
 
             RegisteredResponse registeredResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken };
-            return registeredResponse;
+            return CustomResponseDto<RegisteredResponse>.Success((int)HttpStatusCode.OK, registeredResponse, true);
         }
     }
 }

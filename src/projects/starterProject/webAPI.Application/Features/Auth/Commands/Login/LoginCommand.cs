@@ -3,14 +3,16 @@ using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
 using Core.Application.Dtos;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
+using System.Net;
 using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Login;
 
-public class LoginCommand : IRequest<LoggedResponse>
+public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
 {
     public UserForLoginDto UserForLoginDto { get; set; }
     public string IpAddress { get; set; }
@@ -27,7 +29,7 @@ public class LoginCommand : IRequest<LoggedResponse>
         IpAddress = ipAddress;
     }
 
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, LoggedResponse>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, CustomResponseDto<LoggedResponse>>
     {
         private readonly AuthBusinessRules _authBusinessRules;
         private readonly IAuthenticatorService _authenticatorService;
@@ -47,7 +49,7 @@ public class LoginCommand : IRequest<LoggedResponse>
             _authenticatorService = authenticatorService;
         }
 
-        public async Task<LoggedResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<LoggedResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             User? user = await _userService.GetAsync(
                 predicate: u => u.Email == request.UserForLoginDto.Email,
@@ -64,7 +66,7 @@ public class LoginCommand : IRequest<LoggedResponse>
                 {
                     await _authenticatorService.SendAuthenticatorCode(user);
                     loggedResponse.RequiredAuthenticatorType = user.AuthenticatorType;
-                    return loggedResponse;
+                    return CustomResponseDto<LoggedResponse>.Success((int)HttpStatusCode.OK, loggedResponse, true);
                 }
 
                 await _authenticatorService.VerifyAuthenticatorCode(user, request.UserForLoginDto.AuthenticatorCode);
@@ -78,7 +80,7 @@ public class LoginCommand : IRequest<LoggedResponse>
 
             loggedResponse.AccessToken = createdAccessToken;
             loggedResponse.RefreshToken = addedRefreshToken;
-            return loggedResponse;
+            return CustomResponseDto<LoggedResponse>.Success((int)HttpStatusCode.OK, loggedResponse, true);
         }
     }
 }

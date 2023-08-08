@@ -2,16 +2,18 @@
 using Application.Services.AuthenticatorService;
 using Application.Services.Repositories;
 using Application.Services.UsersService;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.Auth.Commands.EnableOtpAuthenticator;
 
-public class EnableOtpAuthenticatorCommand : IRequest<EnabledOtpAuthenticatorResponse>
+public class EnableOtpAuthenticatorCommand : IRequest<CustomResponseDto<EnabledOtpAuthenticatorResponse>>
 {
     public Guid UserId { get; set; }
 
-    public class EnableOtpAuthenticatorCommandHandler : IRequestHandler<EnableOtpAuthenticatorCommand, EnabledOtpAuthenticatorResponse>
+    public class EnableOtpAuthenticatorCommandHandler : IRequestHandler<EnableOtpAuthenticatorCommand, CustomResponseDto<EnabledOtpAuthenticatorResponse>>
     {
         private readonly AuthBusinessRules _authBusinessRules;
         private readonly IAuthenticatorService _authenticatorService;
@@ -31,7 +33,7 @@ public class EnableOtpAuthenticatorCommand : IRequest<EnabledOtpAuthenticatorRes
             _authenticatorService = authenticatorService;
         }
 
-        public async Task<EnabledOtpAuthenticatorResponse> Handle(
+        public async Task<CustomResponseDto<EnabledOtpAuthenticatorResponse>> Handle(
             EnableOtpAuthenticatorCommand request,
             CancellationToken cancellationToken
         )
@@ -53,7 +55,7 @@ public class EnableOtpAuthenticatorCommand : IRequest<EnabledOtpAuthenticatorRes
 
             EnabledOtpAuthenticatorResponse enabledOtpAuthenticatorDto =
                 new() { SecretKey = await _authenticatorService.ConvertSecretKeyToString(addedOtpAuthenticator.SecretKey) };
-            return enabledOtpAuthenticatorDto;
+            return CustomResponseDto<EnabledOtpAuthenticatorResponse>.Success((int)HttpStatusCode.OK, enabledOtpAuthenticatorDto, true);
         }
     }
 }

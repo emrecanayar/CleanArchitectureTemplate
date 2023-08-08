@@ -1,11 +1,13 @@
 ﻿using Application.Features.Auth.Rules;
 using Application.Services.AuthService;
 using AutoMapper;
+using Core.Application.ResponseTypes.Concrete;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.Auth.Commands.RevokeToken;
 
-public class RevokeTokenCommand : IRequest<RevokedTokenResponse>
+public class RevokeTokenCommand : IRequest<CustomResponseDto<RevokedTokenResponse>>
 {
     public string Token { get; set; }
     public string IpAddress { get; set; }
@@ -22,7 +24,7 @@ public class RevokeTokenCommand : IRequest<RevokedTokenResponse>
         IpAddress = ipAddress;
     }
 
-    public class RevokeTokenCommandHandler : IRequestHandler<RevokeTokenCommand, RevokedTokenResponse>
+    public class RevokeTokenCommandHandler : IRequestHandler<RevokeTokenCommand, CustomResponseDto<RevokedTokenResponse>>
     {
         private readonly IAuthService _authService;
         private readonly AuthBusinessRules _authBusinessRules;
@@ -35,7 +37,7 @@ public class RevokeTokenCommand : IRequest<RevokedTokenResponse>
             _mapper = mapper;
         }
 
-        public async Task<RevokedTokenResponse> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<RevokedTokenResponse>> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
         {
             Core.Domain.Entities.RefreshToken? refreshToken = await _authService.GetRefreshTokenByToken(request.Token);
             await _authBusinessRules.RefreshTokenShouldBeExists(refreshToken);
@@ -44,7 +46,7 @@ public class RevokeTokenCommand : IRequest<RevokedTokenResponse>
             await _authService.RevokeRefreshToken(token: refreshToken!, request.IpAddress, reason: "Revoked without replacement");
 
             RevokedTokenResponse revokedTokenResponse = _mapper.Map<RevokedTokenResponse>(refreshToken);
-            return revokedTokenResponse;
+            return CustomResponseDto<RevokedTokenResponse>.Success((int)HttpStatusCode.OK, revokedTokenResponse, true);
         }
     }
 }

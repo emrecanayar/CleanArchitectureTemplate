@@ -1,13 +1,15 @@
 ﻿using Application.Features.Auth.Rules;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
+using System.Net;
 
 namespace Application.Features.Auth.Commands.RefreshToken;
 
-public class RefreshTokenCommand : IRequest<RefreshedTokensResponse>
+public class RefreshTokenCommand : IRequest<CustomResponseDto<RefreshedTokensResponse>>
 {
     public string RefreshToken { get; set; }
     public string IpAddress { get; set; }
@@ -24,7 +26,7 @@ public class RefreshTokenCommand : IRequest<RefreshedTokensResponse>
         IpAddress = ipAddress;
     }
 
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, RefreshedTokensResponse>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, CustomResponseDto<RefreshedTokensResponse>>
     {
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
@@ -37,7 +39,7 @@ public class RefreshTokenCommand : IRequest<RefreshedTokensResponse>
             _authBusinessRules = authBusinessRules;
         }
 
-        public async Task<RefreshedTokensResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<RefreshedTokensResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             Core.Domain.Entities.RefreshToken? refreshToken = await _authService.GetRefreshTokenByToken(request.RefreshToken);
             await _authBusinessRules.RefreshTokenShouldBeExists(refreshToken);
@@ -64,7 +66,7 @@ public class RefreshTokenCommand : IRequest<RefreshedTokensResponse>
             AccessToken createdAccessToken = await _authService.CreateAccessToken(user!);
 
             RefreshedTokensResponse refreshedTokensResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken };
-            return refreshedTokensResponse;
+            return CustomResponseDto<RefreshedTokensResponse>.Success((int)HttpStatusCode.OK, refreshedTokensResponse, true);
         }
     }
 }
