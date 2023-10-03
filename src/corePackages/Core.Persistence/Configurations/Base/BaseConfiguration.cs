@@ -21,7 +21,7 @@ namespace Core.Persistence.Configurations.Base
             builder.Property(x => x.ModifiedDate).HasColumnName("ModifiedDate").IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName("IsDeleted").IsRequired(true).HasDefaultValue(false);
             builder.Property(x => x.DeletedDate).HasColumnName("DeletedDate").IsRequired(false);
-            builder.HasQueryFilter(x => x.IsDeleted == false);
+            builder.HasQueryFilter(x => x.IsDeleted == false && x.DeletedDate == null);
         }
     }
 }
