@@ -1,37 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.9" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.9" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="logs\NewFolder\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="logs\NewFolder\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\corePackages\Core.BackgroundJob\Core.BackgroundJob.csproj" />
-    <ProjectReference Include="..\..\..\corePackages\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj" />
-    <ProjectReference Include="..\..\..\corePackages\Core.Persistence\Core.Persistence.csproj" />
-    <ProjectReference Include="..\..\..\corePackages\Core.Utilities\Core.Utilities.csproj" />
-    <ProjectReference Include="..\webAPI.Application\webAPI.Application.csproj" />
-    <ProjectReference Include="..\webAPI.Infrastructure\webAPI.Infrastructure.csproj" />
-    <ProjectReference Include="..\webAPI.Persistence\webAPI.Persistence.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\corePackages\Core.BackgroundJob\Core.BackgroundJob.csproj" />
+		<ProjectReference Include="..\..\..\corePackages\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj" />
+		<ProjectReference Include="..\..\..\corePackages\Core.Persistence\Core.Persistence.csproj" />
+		<ProjectReference Include="..\..\..\corePackages\Core.Utilities\Core.Utilities.csproj" />
+		<ProjectReference Include="..\webAPI.Application\webAPI.Application.csproj" />
+		<ProjectReference Include="..\webAPI.Infrastructure\webAPI.Infrastructure.csproj" />
+		<ProjectReference Include="..\webAPI.Persistence\webAPI.Persistence.csproj" />
+	</ItemGroup>
 
 </Project>
