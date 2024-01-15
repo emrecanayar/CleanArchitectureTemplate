@@ -14,8 +14,9 @@ namespace Core.BackgroundJob.Services
         /// <param name="methodCall">Çağrılacak metot ifadesi</param>
         public void ContinueWith<T>(string parentJobId, Expression<Action<T>> methodCall)
         {
-            Hangfire.BackgroundJob.ContinueWith(parentJobId, methodCall);
+            Hangfire.BackgroundJob.ContinueJobWith(parentJobId, methodCall);
         }
+
 
         /// <summary>
         /// Belirtilen metot çağrısını sıraya ekler.
@@ -35,9 +36,11 @@ namespace Core.BackgroundJob.Services
         /// <typeparam name="T">Metodun türü</typeparam>
         /// <param name="methodCall">Çağrılacak metot ifadesi</param>
         /// <param name="cronExpression">Cron ifadesi, tekrarlama zamanlamasını tanımlar</param>
-        public void Recurring<T>(Expression<Action<T>> methodCall, string cronExpression)
+        public void Recurring<T>(Expression<Action<T>> methodCall, string cronExpression, string recurringJobId, RecurringJobOptions? options = null)
         {
-            RecurringJob.AddOrUpdate(methodCall, cronExpression);
+            options ??= new RecurringJobOptions();
+
+            RecurringJob.AddOrUpdate(recurringJobId, methodCall, cronExpression, options);
         }
 
         /// <summary>

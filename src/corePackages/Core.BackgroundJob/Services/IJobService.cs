@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Hangfire;
+using System.Linq.Expressions;
 
 namespace Core.BackgroundJob.Services
 {
@@ -7,6 +8,6 @@ namespace Core.BackgroundJob.Services
         void Enqueue<T>(Expression<Action<T>> methodCall);
         void Schedule<T>(Expression<Action<T>> methodCall, TimeSpan delay);
         void ContinueWith<T>(string parentJobId, Expression<Action<T>> methodCall);
-        void Recurring<T>(Expression<Action<T>> methodCall, string cronExpression);
+        void Recurring<T>(Expression<Action<T>> methodCall, string cronExpression, string recurringJobId, RecurringJobOptions? options = null);
     }
 }
