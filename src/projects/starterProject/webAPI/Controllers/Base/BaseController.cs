@@ -1,4 +1,6 @@
-﻿using Core.Security.Extensions;
+﻿using Application.Services.Repositories;
+using Core.Domain.Entities;
+using Core.Security.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +16,12 @@ namespace webAPI.Controllers.Base
            ?? throw new InvalidOperationException("IMediator cannot be retrieved from request services.");
 
         private IMediator? _mediator;
+        protected IUserRepository _userRepository =>
+           userRepository ??=
+           HttpContext.RequestServices.GetService<IUserRepository>()
+           ?? throw new InvalidOperationException("IUserRepository cannot be retrieved from request services.");
 
+        private IUserRepository? userRepository;
         protected string getIpAddress()
         {
             string ipAddress = Request.Headers.ContainsKey("X-Forwarded-For")
@@ -28,6 +35,14 @@ namespace webAPI.Controllers.Base
         {
             Guid userId = HttpContext.User.GetUserId();
             return userId;
+
+        }
+
+        protected User getUserFromRequest()
+        {
+            Guid userId = HttpContext.User.GetUserId();
+            User? user = _userRepository.Get(x => x.Id == userId, enableTracking: false);
+            return user;
 
         }
     }
