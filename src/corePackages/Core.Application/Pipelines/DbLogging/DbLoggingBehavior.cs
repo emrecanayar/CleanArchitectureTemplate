@@ -1,7 +1,6 @@
 ﻿using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.CrossCuttingConcerns.Logging.DbLog.Dto;
 using Core.CrossCuttingConcerns.Logging.DbLog.MsSQL;
-using Core.Helpers.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -108,7 +107,7 @@ namespace Core.Application.Pipelines.DbLogging
         private async Task addLogToDatabase(Domain.Entities.Log logEntry)
         {
             LogDto data = Mapper.ToMap<LogDto>(logEntry);
-            await _logging.CreateLog(new MSSQLLogService(_configuration), data);
+            await _logging.CreateLog(new MsSqlLogService(_configuration), data);
         }
 
         private Task handleExceptionAsync(Exception exception) =>
