@@ -13,12 +13,18 @@ namespace Core.ElasticSearch
         public ElasticSearchManager(IConfiguration configuration)
         {
             ElasticSearchConfig? settings = configuration.GetSection("ElasticSearchConfig").Get<ElasticSearchConfig>();
+            if (settings?.ConnectionString == null)
+            {
+                throw new InvalidOperationException("The connection string cannot be null.");
+            }
+
             SingleNodeConnectionPool pool = new(new Uri(settings.ConnectionString));
             _connectionSettings = new ConnectionSettings(pool, (builtInSerializer, connectionSettings) => new JsonNetSerializer(builtInSerializer, connectionSettings, () => new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
         }
+
 
 
         public IReadOnlyDictionary<IndexName, IndexState> GetIndexList()
@@ -70,17 +76,13 @@ namespace Core.ElasticSearch
         }
 
 
-        public async Task<List<ElasticSearchGetModel<T>>> GetAllSearch<T>(SearchParameters parameters)
-            where T : class
+        public async Task<List<ElasticSearchGetModel<T>>> GetAllSearch<T>(SearchParameters parameters) where T : class
         {
-            Type type = typeof(T);
-
             ElasticClient elasticClient = GetElasticClient(parameters.IndexName);
             ISearchResponse<T>? searchResponse = await elasticClient.SearchAsync<T>(s => s
-                                                     .Index(Indices.Index(parameters.IndexName))
-                                                     .From(parameters.From)
-                                                     .Size(parameters.Size));
-
+                                                         .Index(Indices.Index(parameters.IndexName))
+                                                         .From(parameters.From)
+                                                         .Size(parameters.Size));
 
             List<ElasticSearchGetModel<T>> list = searchResponse.Hits.Select(x => new ElasticSearchGetModel<T>
             {
@@ -90,6 +92,7 @@ namespace Core.ElasticSearch
 
             return list;
         }
+
 
         public async Task<List<ElasticSearchGetModel<T>>> GetSearchByField<T>(SearchByFieldParameters fieldParameters)
             where T : class

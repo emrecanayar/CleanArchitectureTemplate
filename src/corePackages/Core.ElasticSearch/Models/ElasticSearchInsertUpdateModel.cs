@@ -3,5 +3,10 @@
     public class ElasticSearchInsertUpdateModel : ElasticSearchModel
     {
         public object Item { get; set; }
+
+        public ElasticSearchInsertUpdateModel()
+        {
+            Item = new object();
+        }
     }
 }

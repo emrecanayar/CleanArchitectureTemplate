@@ -10,6 +10,7 @@
         public ElasticSearchResult(bool success)
         {
             Success = success;
+            Message = string.Empty;
         }
 
         public bool Success { get; set; }
