@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Core.Helpers.Helpers
 {
-    public class HashingHelper
+    public static class HashingHelper
     {
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -46,41 +46,46 @@ namespace Core.Helpers.Helpers
             }
         }
 
-        public static string SHA1(string content, Encoding encode)
+        public static string SHA1Encrypt(string content, Encoding encode)
         {
             try
             {
-                SHA1 sha1 = new SHA1CryptoServiceProvider();
-                byte[] bytes_in = encode.GetBytes(content);
-                byte[] bytes_out = sha1.ComputeHash(bytes_in);
-                sha1.Dispose();
-                string result = BitConverter.ToString(bytes_out);
-                result = result.Replace("-", "");
-                return result;
+                using (SHA1 sha1 = SHA1.Create())
+                {
+                    byte[] bytes_in = encode.GetBytes(content);
+                    byte[] bytes_out = sha1.ComputeHash(bytes_in);
+                    string result = BitConverter.ToString(bytes_out);
+                    result = result.Replace("-", "");
+                    return result;
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("SHA1：" + ex.Message);
+                throw new InvalidOperationException("SHA1：" + ex.Message);
             }
         }
+
 
         public static string AESEncrypt(string toEncrypt, string key)
         {
             if (string.IsNullOrWhiteSpace(toEncrypt)) return "";
 
-            byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
+            byte[] keyArray = Encoding.UTF8.GetBytes(key);
+            byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
 
-            RijndaelManaged rDel = new RijndaelManaged();
-            rDel.Key = keyArray;
-            rDel.Mode = CipherMode.ECB;
-            rDel.Padding = PaddingMode.PKCS7;
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = keyArray;
+                aes.Mode = CipherMode.ECB;
+                aes.Padding = PaddingMode.PKCS7;
 
-            ICryptoTransform cTransform = rDel.CreateEncryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+                ICryptoTransform cTransform = aes.CreateEncryptor();
+                byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
-            return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+                return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+            }
         }
+
 
         public static string AESDecrypt(string toDecrypt, string key)
         {
@@ -89,20 +94,23 @@ namespace Core.Helpers.Helpers
             byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
             byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
 
-            RijndaelManaged rDel = new RijndaelManaged();
-            rDel.Key = keyArray;
-            rDel.Mode = CipherMode.ECB;
-            rDel.Padding = PaddingMode.PKCS7;
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = keyArray;
+                aes.Mode = CipherMode.ECB;
+                aes.Padding = PaddingMode.PKCS7;
 
-            ICryptoTransform cTransform = rDel.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+                ICryptoTransform cTransform = aes.CreateDecryptor();
+                byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
-            return UTF8Encoding.UTF8.GetString(resultArray);
+                return UTF8Encoding.UTF8.GetString(resultArray);
+            }
         }
+
 
         public static string GeyRandomAESKey()
         {
-            string str = string.Empty;
+            StringBuilder str = new StringBuilder();
             Random rnd1 = new Random();
             int r = rnd1.Next(10, 100);
             long num2 = DateTime.Now.Ticks + r;
@@ -119,27 +127,31 @@ namespace Core.Helpers.Helpers
                 {
                     ch = (char)(0x41 + ((ushort)(num % 0x1a)));
                 }
-                str = str + ch.ToString();
+
+                str.Append(ch);
             }
-            return str;
+            return str.ToString();
         }
+
 
         public static string GetMD5HashFromFile(Stream stream)
         {
             try
             {
-                MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] retVal = md5.ComputeHash(stream);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < retVal.Length; i++)
+                using (MD5 md5 = MD5.Create())
                 {
-                    sb.Append(retVal[i].ToString("x2"));
+                    byte[] hash = md5.ComputeHash(stream);
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < hash.Length; i++)
+                    {
+                        sb.Append(hash[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
             }
             catch (Exception ex)
             {
-                throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
+                throw new InvalidOperationException("GetMD5HashFromFile() fail,error:" + ex.Message);
             }
         }
     }

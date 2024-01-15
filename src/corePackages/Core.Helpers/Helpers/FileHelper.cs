@@ -92,28 +92,28 @@ namespace Core.Helpers.Helpers
 
         public static string GetExtension(string filePath)
         {
-            FileInfo fi = new FileInfo(filePath);
+            FileInfo fi = new(filePath);
 
             return fi.Extension;
         }
 
         public static string GetFileName(string filePath)
         {
-            FileInfo fi = new FileInfo(filePath);
+            FileInfo fi = new(filePath);
 
             return fi.Name;
         }
 
         public static string GetFileNameNoExtension(string filePath)
         {
-            FileInfo fi = new FileInfo(filePath);
+            FileInfo fi = new(filePath);
 
             return fi.Name.Split('.')[0];
         }
 
         public static int GetFileSize(string filePath)
         {
-            FileInfo fi = new FileInfo(filePath);
+            FileInfo fi = new(filePath);
 
             return (int)fi.Length;
         }
@@ -131,14 +131,16 @@ namespace Core.Helpers.Helpers
 
             if (IsExistDirectory(descDirectoryPath))
             {
-                if (IsExistFile(descDirectoryPath + "\\" + sourceFileName))
+                string destFilePath = Path.Combine(descDirectoryPath, sourceFileName);
+                if (IsExistFile(destFilePath))
                 {
-                    DeleteFile(descDirectoryPath + "\\" + sourceFileName);
+                    DeleteFile(destFilePath);
                 }
 
-                File.Move(sourceFilePath, descDirectoryPath + "\\" + sourceFileName);
+                File.Move(sourceFilePath, destFilePath);
             }
         }
+
 
         public static void WriteText(string filePath, string text, Encoding encoding)
         {
@@ -150,13 +152,13 @@ namespace Core.Helpers.Helpers
             return Directory.Exists(directoryPath);
         }
 
-        public static GenerateURL GenerateURLForFile(IFormFile file, string webRootPath, string folderPath)
+        public static GenerateUrl GenerateURLForFile(IFormFile file, string webRootPath, string folderPath)
         {
             var name = file.FileName.Split('.')[0].Replace(" ", string.Empty);
             var type = file.ContentType.ToLower().Contains("image") ? ".webp" : Path.GetExtension(file.FileName);
             CheckDirectoryExists(Path.Combine(webRootPath, folderPath.Replace("/", "\\")));
 
-            return new GenerateURL
+            return new GenerateUrl
             {
                 FileType = type,
                 FileName = name,
@@ -168,7 +170,7 @@ namespace Core.Helpers.Helpers
         {
             var isNotValid = CheckFileTypeValid(Path.GetExtension(file.FileName));
             if (isNotValid)
-                throw new Exception("Type is not valid!");
+                throw new InvalidOperationException("Type is not valid!");
             CreateFile(Path.Combine(webRootPath, filePath), file);
             return $"{filePath}";
         }
@@ -253,13 +255,13 @@ namespace Core.Helpers.Helpers
         }
 
 
-        public class GenerateURL
+        public class GenerateUrl
         {
-            public string FileType { get; set; }
-            public string FileName { get; set; }
-            public string Path { get; set; }
-            public string Extension { get; set; }
-            public string Directory { get; set; }
+            public string? FileType { get; set; }
+            public string? FileName { get; set; }
+            public string? Path { get; set; }
+            public string? Extension { get; set; }
+            public string? Directory { get; set; }
         }
     }
 }

@@ -11,27 +11,27 @@ namespace Core.Helpers.Helpers
             _configuration = configuration;
         }
 
-        public string WebRootPath => _configuration["WebRootPath"];
+        public string? WebRootPath => _configuration["WebRootPath"];
 
-        public string WebApiDomain => _configuration["WebApiDomain"];
+        public string? WebApiDomain => _configuration["WebApiDomain"];
 
-        public string WebSiteDomain => _configuration["WebSiteDomain"];
+        public string? WebSiteDomain => _configuration["WebSiteDomain"];
 
-        public string WebApiAdminDomain => _configuration["WebApiAdminDomain"];
+        public string? WebApiAdminDomain => _configuration["WebApiAdminDomain"];
 
-        public string WebSiteAdminDomain => _configuration["WebSiteAdminDomain"];
+        public string? WebSiteAdminDomain => _configuration["WebSiteAdminDomain"];
 
-        public string GetWebSiteUrl(string path, string pathParam = null)
+        public string GetWebSiteUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebSiteDomain}/{path}" : $"{WebSiteDomain}/{path}/{pathParam}";
 
-        public string GetWebApiUrl(string path, string pathParam = null)
+        public string GetWebApiUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebApiDomain}/{path}" : $"{WebApiDomain}/{path}/{pathParam}";
 
-        public string GetWebSiteAdminUrl(string path, string pathParam = null)
+        public string GetWebSiteAdminUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebSiteAdminDomain}/{path}" : $"{WebSiteAdminDomain}/{path}/{pathParam}";
 
 
-        public string GetWebApiAdminUrl(string path, string pathParam = null)
+        public string GetWebApiAdminUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebApiAdminDomain}/{path}" : $"{WebApiAdminDomain}/{path}/{pathParam}";
     }
 }

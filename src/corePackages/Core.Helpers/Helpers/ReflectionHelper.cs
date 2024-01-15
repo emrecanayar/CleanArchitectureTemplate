@@ -56,19 +56,6 @@ namespace Core.Helpers.Helpers
             return attributeList;
         }
 
-        /// <summary>
-        /// Gets a list of attributes defined for a class member and type including inherited attributes.
-        /// </summary>
-        /// <param name="memberInfo">MemberInfo</param>
-        /// <param name="type">Type</param>
-        /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<object> GetAttributesOfMemberAndType(MemberInfo memberInfo, Type type, bool inherit = true)
-        {
-            var attributeList = new List<object>();
-            attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
-            attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(inherit));
-            return attributeList;
-        }
 
         /// <summary>
         /// Gets a list of attributes defined for a class member and it's declaring type including inherited attributes.
@@ -77,7 +64,7 @@ namespace Core.Helpers.Helpers
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
         public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo, bool inherit = true)
-            where TAttribute : Attribute
+       where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
 
@@ -93,6 +80,21 @@ namespace Core.Helpers.Helpers
 
             return attributeList;
         }
+
+        /// <summary>
+        /// Gets a list of attributes defined for a class member and type including inherited attributes.
+        /// </summary>
+        /// <param name="memberInfo">MemberInfo</param>
+        /// <param name="type">Type</param>
+        /// <param name="inherit">Inherit attribute from base classes</param>
+        public static List<object> GetAttributesOfMemberAndType(MemberInfo memberInfo, Type type, bool inherit = true)
+        {
+            var attributeList = new List<object>();
+            attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
+            attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(inherit));
+            return attributeList;
+        }
+
 
         /// <summary>
         /// Gets a list of attributes defined for a class member and type including inherited attributes.
@@ -127,8 +129,8 @@ namespace Core.Helpers.Helpers
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
-            where TAttribute : class
+        public static TAttribute? GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute? defaultValue = default)
+         where TAttribute : class
         {
             return memberInfo.GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
                    ?? memberInfo.ReflectedType?.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
@@ -143,8 +145,8 @@ namespace Core.Helpers.Helpers
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
-            where TAttribute : Attribute
+        public static TAttribute? GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute? defaultValue = default, bool inherit = true)
+          where TAttribute : class
         {
             //Get attribute on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
@@ -155,6 +157,7 @@ namespace Core.Helpers.Helpers
             return defaultValue;
         }
 
+
         /// <summary>
         /// Gets a property by it's full path from given object
         /// </summary>
@@ -162,13 +165,13 @@ namespace Core.Helpers.Helpers
         /// <param name="objectType">Type of given object</param>
         /// <param name="propertyPath">Full path of property</param>
         /// <returns></returns>
-        internal static object GetPropertyByPath(object obj, Type objectType, string propertyPath)
+        internal static PropertyInfo? GetPropertyByPath(Type objectType, string propertyPath)
         {
-            var property = obj;
-            var currentType = objectType;
-            var objectPath = currentType.FullName;
-            var absolutePropertyPath = propertyPath;
-            if (absolutePropertyPath.StartsWith(objectPath))
+            PropertyInfo? property = null;
+            Type currentType = objectType;
+            string objectPath = currentType.FullName ?? string.Empty;
+            string absolutePropertyPath = propertyPath;
+            if (absolutePropertyPath.StartsWith(objectPath, StringComparison.OrdinalIgnoreCase))
             {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
             }
@@ -176,11 +179,17 @@ namespace Core.Helpers.Helpers
             foreach (var propertyName in absolutePropertyPath.Split('.'))
             {
                 property = currentType.GetProperty(propertyName);
-                currentType = ((PropertyInfo)property).PropertyType;
+                if (property == null)
+                {
+                    // Handle the case where the property doesn't exist
+                    return null;
+                }
+                currentType = property.PropertyType;
             }
 
             return property;
         }
+
 
         /// <summary>
         /// Gets value of a property by it's full path from given object
@@ -189,22 +198,22 @@ namespace Core.Helpers.Helpers
         /// <param name="objectType">Type of given object</param>
         /// <param name="propertyPath">Full path of property</param>
         /// <returns></returns>
-        internal static object GetValueByPath(object obj, Type objectType, string propertyPath)
+        internal static object? GetValueByPath(object obj, Type objectType, string propertyPath)
         {
-            var value = obj;
-            var currentType = objectType;
-            var objectPath = currentType.FullName;
+            object? value = obj;
+            Type? currentType = objectType;
+            string? objectPath = currentType.FullName ?? string.Empty;
             var absolutePropertyPath = propertyPath;
-            if (absolutePropertyPath.StartsWith(objectPath))
+            if (absolutePropertyPath.StartsWith(objectPath, StringComparison.Ordinal))
             {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
             }
 
             foreach (var propertyName in absolutePropertyPath.Split('.'))
             {
-                var property = currentType.GetProperty(propertyName);
-                value = property.GetValue(value, null);
-                currentType = property.PropertyType;
+                PropertyInfo? property = currentType?.GetProperty(propertyName);
+                value = property?.GetValue(value, null);
+                currentType = property?.PropertyType;
             }
 
             return value;
@@ -217,13 +226,13 @@ namespace Core.Helpers.Helpers
         /// <param name="objectType"></param>
         /// <param name="propertyPath"></param>
         /// <param name="value"></param>
-        internal static void SetValueByPath(object obj, Type objectType, string propertyPath, object value)
+        internal static void SetValueByPath(object? obj, Type objectType, string propertyPath, object value)
         {
             var currentType = objectType;
-            PropertyInfo property;
-            var objectPath = currentType.FullName;
+            PropertyInfo? property;
+            string? objectPath = currentType.FullName ?? string.Empty;
             var absolutePropertyPath = propertyPath;
-            if (absolutePropertyPath.StartsWith(objectPath))
+            if (absolutePropertyPath.StartsWith(objectPath, StringComparison.Ordinal))
             {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
             }
@@ -232,20 +241,20 @@ namespace Core.Helpers.Helpers
 
             if (properties.Length == 1)
             {
-                property = objectType.GetProperty(properties.First());
-                property.SetValue(obj, value);
+                property = objectType.GetProperty(properties[0]);
+                property?.SetValue(obj, value);
                 return;
             }
 
             for (int i = 0; i < properties.Length - 1; i++)
             {
-                property = currentType.GetProperty(properties[i]);
-                obj = property.GetValue(obj, null);
-                currentType = property.PropertyType;
+                property = currentType?.GetProperty(properties[i]);
+                obj = property?.GetValue(obj, null);
+                currentType = property?.PropertyType;
             }
 
-            property = currentType.GetProperty(properties.Last());
-            property.SetValue(obj, value);
+            property = currentType?.GetProperty(properties[^1]);
+            property?.SetValue(obj, value);
         }
 
         internal static bool IsPropertyGetterSetterMethod(MethodInfo method, Type type)
@@ -260,37 +269,43 @@ namespace Core.Helpers.Helpers
                 return false;
             }
 
-            return type.GetProperty(method.Name.Substring(4), BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic) != null;
+            return type?.GetProperty(method.Name[4..], bindingAttr: BindingFlags.Instance | BindingFlags.Static) != null;
         }
 
-        internal static async Task<object> InvokeAsync(MethodInfo method, object obj, params object[] parameters)
+        internal static async Task<object?> InvokeAsync(MethodInfo method, object obj, params object[] parameters)
         {
-            var task = (Task)method.Invoke(obj, parameters);
-            await task;
-            var resultProperty = task.GetType().GetProperty("Result");
-            return resultProperty?.GetValue(task);
+            var result = method.Invoke(obj, parameters);
+            if (result is Task task)
+            {
+                await task;
+                var resultProperty = task.GetType().GetProperty("Result");
+                return resultProperty?.GetValue(task);
+            }
+            else return null;
+
         }
+
 
         public static List<string> GetNavigationPropertyNames(Type entityType)
         {
             var navigationPropertyNames = new List<string>();
 
-            foreach (var property in entityType.GetProperties())
+            foreach (PropertyInfo property in entityType.GetProperties())
             {
-                // ICollection<T> tipinde olan navigation property'leri kontrol et
+                // Check for ICollection<T> type navigation properties
                 if (property.PropertyType.IsGenericType &&
                     (property.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>)
                      || property.PropertyType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICollection<>))))
                 {
                     navigationPropertyNames.Add(property.Name);
                 }
-
-                // Tekil navigation property'leri kontrol et
+                // Check for single navigation properties
                 else if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
                 {
-                    bool isVirtual = property.GetGetMethod().IsVirtual;
+                    MethodInfo? getMethod = property.GetGetMethod();
+                    bool isVirtual = getMethod != null && getMethod.IsVirtual;
                     if (isVirtual && property.PropertyType.Namespace == "System.Data.Entity.DynamicProxies")
-                        continue; // EF dynamic proxy, yoksay
+                        continue; // Ignore EF dynamic proxy
 
                     navigationPropertyNames.Add(property.Name);
                 }
@@ -298,5 +313,6 @@ namespace Core.Helpers.Helpers
 
             return navigationPropertyNames;
         }
+
     }
 }

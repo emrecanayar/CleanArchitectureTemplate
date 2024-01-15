@@ -15,35 +15,36 @@ namespace Core.Helpers.Extensions
             return query;
         }
 
-        public static IOrderedQueryable<TSource> AscOrDescOrder<TSource>(this IQueryable<TSource> query, ESort eSort, string propertyName)
+        public static IOrderedQueryable<TSource>? AscOrDescOrder<TSource>(this IQueryable<TSource> query, ESort eSort, string propertyName)
         {
             var entityType = typeof(TSource);
 
-            var propertyInfo = entityType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            var propertyInfo = entityType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
+                ?? entityType.GetProperty("Id");
 
-            if (propertyInfo is null)
-                propertyInfo = entityType.GetProperty("Id");
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException($"Unable to find the property '{propertyName}' or 'Id' on type '{entityType.Name}'.");
+            }
 
             ParameterExpression arg = Expression.Parameter(entityType, "x");
             MemberExpression property = Expression.Property(arg, propertyInfo.Name);
-            var selector = Expression.Lambda(property, new ParameterExpression[] { arg });
+            var selector = Expression.Lambda(property, arg);
 
-            var enumarableType = typeof(Queryable);
+            var enumerableType = typeof(Queryable);
 
             var sortType = eSort == ESort.ASC ? "OrderBy" : "OrderByDescending";
 
-            var method = enumarableType.GetMethods()
-                .Where(m => m.Name == sortType && m.IsGenericMethodDefinition)
-                .Where(m =>
-                {
-                    var parameters = m.GetParameters().ToList();
-                    return parameters.Count == 2;
-                }).Single();
+            var method = enumerableType.GetMethods()
+                .Single(m => m.Name == sortType && m.IsGenericMethodDefinition && m.GetParameters().Length == 2);
 
             MethodInfo genericMethod = method.MakeGenericMethod(entityType, propertyInfo.PropertyType);
 
-            var newQuery = (IOrderedQueryable<TSource>)genericMethod.Invoke(genericMethod, new object[] { query, selector });
+            var newQuery = (IOrderedQueryable<TSource>?)genericMethod.Invoke(null, new object[] { query, selector })
+                ?? throw new InvalidOperationException("Unable to invoke the generic method.");
+
             return newQuery;
         }
+
     }
 }

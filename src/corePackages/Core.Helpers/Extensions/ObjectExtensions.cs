@@ -26,18 +26,42 @@ namespace Core.Helpers.Extensions
         /// <param name="obj">Object to be converted</param>
         /// <typeparam name="T">Type of the target object</typeparam>
         /// <returns>Converted object</returns>
-        public static T To<T>(this object obj)
-            where T : struct
+        public static T To<T>(this object obj) where T : struct
         {
+            if (obj == null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
             if (typeof(T) == typeof(Guid) || typeof(T) == typeof(TimeSpan))
             {
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
+                var objString = obj.ToString();
+                if (objString == null)
+                {
+                    throw new InvalidOperationException("Unable to convert the object to a string.");
+                }
+
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                var result = converter.ConvertFromInvariantString(objString);
+                if (result == null)
+                {
+                    throw new InvalidOperationException("Unable to convert the string to the target type.");
+                }
+
+                return (T)result;
             }
+
             if (typeof(T).IsEnum)
             {
+                var objString = obj.ToString();
+                if (objString == null)
+                {
+                    throw new InvalidOperationException("Unable to convert the object to a string.");
+                }
+
                 if (Enum.IsDefined(typeof(T), obj))
                 {
-                    return (T)Enum.Parse(typeof(T), obj.ToString());
+                    return (T)Enum.Parse(typeof(T), objString);
                 }
                 else
                 {
@@ -47,6 +71,7 @@ namespace Core.Helpers.Extensions
 
             return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
+
 
         /// <summary>
         /// Check if an item is in a list.

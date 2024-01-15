@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
 
 namespace Core.Helpers.Extensions
 {
@@ -12,11 +14,17 @@ namespace Core.Helpers.Extensions
         /// <param name="context"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static DbSet<T> Set<T>(this DbContext context, Type t)
-            where T : class
+        public static DbSet<T>? Set<T>(this DbContext context, Type t) where T : class
         {
-            return (DbSet<T>)context.GetType().GetMethod("Set").MakeGenericMethod(t).Invoke(context, null);
+            MethodInfo? setMethod = context.GetType().GetMethod("Set");
+            if (setMethod == null)
+            {
+                throw new InvalidOperationException("Unable to find the 'Set' method on DbContext.");
+            }
+
+            return (DbSet<T>?)setMethod.MakeGenericMethod(t).Invoke(context, null);
         }
+
 
         /// <summary>
         /// Returns the DbSet object as a queryable of the desired type (T).
@@ -27,16 +35,31 @@ namespace Core.Helpers.Extensions
         /// <param name="context"></param>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        public static IQueryable<T> QueryableOf<T>(this DbContext context, string typeName)
-            where T : class
+        public static IQueryable<T> QueryableOf<T>(this DbContext context, string typeName) where T : class
         {
-            var type = context.Model.FindEntityType(typeName);
-            var q = (IQueryable)context
-                .GetType()
-                .GetMethod("Set")
-                .MakeGenericMethod(type.ClrType)
-                .Invoke(context, null);
+            IEntityType? type = context.Model.FindEntityType(typeName);
+            if (type == null)
+            {
+                throw new InvalidOperationException($"Unable to find the entity type '{typeName}'.");
+            }
+
+            MethodInfo? setMethod = context.GetType().GetMethod("Set");
+            if (setMethod == null)
+            {
+                throw new InvalidOperationException("Unable to find the 'Set' method on DbContext.");
+            }
+
+            Type clearType = type.ClrType;
+
+            IQueryable? q = (IQueryable?)setMethod.MakeGenericMethod(clearType).Invoke(context, null);
+            if (q == null)
+            {
+                throw new InvalidOperationException("The 'Set' method returned null.");
+            }
+
             return q.OfType<T>();
         }
+
+
     }
 }

@@ -29,7 +29,7 @@ namespace Core.Helpers.Helpers
             return htmlContent;
         }
 
-        private static string aggregateQueryParams(object queryParams)
+        public static string AggregateQueryParams(object queryParams)
         {
             var dataStrings = new List<string>();
             foreach (var property in queryParams.GetType().GetProperties())

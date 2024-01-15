@@ -2,7 +2,7 @@
 
 namespace Core.Helpers.Helpers
 {
-    public class RandomPasswordHelper
+    public static class RandomPasswordHelper
     {
         private static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
         private static int DEFAULT_MAX_PASSWORD_LENGTH = 10;
@@ -12,27 +12,24 @@ namespace Core.Helpers.Helpers
         private static string PASSWORD_CHARS_SPECIAL = "!@#$%^&*()_-=+{}:;\\<>?|,./`[]'";
 
 
-        public static string Generate()
+        public static string? Generate()
         {
             return Generate(DEFAULT_MIN_PASSWORD_LENGTH,
                             DEFAULT_MAX_PASSWORD_LENGTH);
         }
 
-        public static string Generate(int length)
+        public static string? Generate(int length)
         {
             return Generate(length, length);
         }
 
-        public static string Generate(int minLength, int maxLength, bool special = true)
+        public static string? Generate(int minLength, int maxLength, bool special = true)
         {
-
             if (minLength <= 0 || maxLength <= 0 || minLength > maxLength)
                 return null;
 
-
-
-            List<char[]> charGroups = new List<char[]>
-        {
+            List<char[]> charGroups = new()
+            {
             PASSWORD_CHARS_LCASE.ToCharArray(),
             PASSWORD_CHARS_UCASE.ToCharArray(),
             PASSWORD_CHARS_NUMERIC.ToCharArray()
@@ -56,19 +53,19 @@ namespace Core.Helpers.Helpers
                 leftGroupsOrder[i] = i;
 
             byte[] randomBytes = new byte[4];
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(randomBytes);
+            RandomNumberGenerator.Fill(randomBytes);
             int seed = (randomBytes[0] & 0x7f) << 24 |
                         randomBytes[1] << 16 |
                         randomBytes[2] << 8 |
                         randomBytes[3];
 
-            Random random = new Random(seed);
-            char[] password = null;
+            Random random = new(seed);
+            char[] password;
             if (minLength < maxLength)
                 password = new char[random.Next(minLength, maxLength + 1)];
             else
                 password = new char[minLength];
+
             int nextCharIdx;
             int nextGroupIdx;
             int nextLeftGroupsOrderIdx;
