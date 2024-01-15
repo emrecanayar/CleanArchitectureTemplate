@@ -13,6 +13,8 @@ namespace Core.Domain.Entities
         {
             UserId = userId;
             OperationClaimId = operationClaimId;
+            User = default!;
+            OperationClaim = default!;
         }
 
         public UserOperationClaim(Guid id, Guid userId, Guid operationClaimId)
@@ -21,6 +23,8 @@ namespace Core.Domain.Entities
             Id = id;
             UserId = userId;
             OperationClaimId = operationClaimId;
+            User = default!;
+            OperationClaim = default!;
         }
     }
 }

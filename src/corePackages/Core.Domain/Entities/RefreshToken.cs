@@ -18,6 +18,7 @@ namespace Core.Domain.Entities
         {
             Token = string.Empty;
             CreatedByIp = string.Empty;
+            User = default!;
         }
 
         public RefreshToken(Guid userId, string token, DateTime expires, string createdByIp)
@@ -26,6 +27,7 @@ namespace Core.Domain.Entities
             Token = token;
             Expires = expires;
             CreatedByIp = createdByIp;
+            User = default!;
         }
 
         public RefreshToken(Guid id, Guid userId, string token, DateTime expires, string createdByIp)
@@ -36,6 +38,7 @@ namespace Core.Domain.Entities
             Token = token;
             Expires = expires;
             CreatedByIp = createdByIp;
+            User = default!;
         }
     }
 }

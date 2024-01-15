@@ -11,6 +11,7 @@ namespace Core.Domain.Entities
         public OtpAuthenticator()
         {
             SecretKey = Array.Empty<byte>();
+            User = default!;
         }
 
         public OtpAuthenticator(Guid userId, byte[] secretKey, bool isVerified)
@@ -18,6 +19,7 @@ namespace Core.Domain.Entities
             UserId = userId;
             SecretKey = secretKey;
             IsVerified = isVerified;
+            User = default!;
         }
 
         public OtpAuthenticator(Guid id, Guid userId, byte[] secretKey, bool isVerified)
@@ -27,6 +29,7 @@ namespace Core.Domain.Entities
             UserId = userId;
             SecretKey = secretKey;
             IsVerified = isVerified;
+            User = default!;
         }
     }
 }
