@@ -6,6 +6,7 @@ using Core.Application.Pipelines.CheckId;
 using Core.Application.Pipelines.DbLogging;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Performance;
+using Core.Application.Pipelines.Security;
 using Core.Application.Pipelines.Transaction;
 using Core.Application.Pipelines.Validation;
 using Core.Application.Rules;
@@ -32,6 +33,7 @@ public static class ApplicationServiceRegistration
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            configuration.AddOpenBehavior(typeof(DecryptionBehavior<,>));
             configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
             configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
@@ -54,6 +56,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<Logging>();
         services.AddScoped(typeof(BaseBusinessRules<,>));
         services.AddSingleton<CustomStringLocalizer>();
+        services.AddScoped<IDecryptService, DecryptService>();
 
         services.AddStackExchangeRedisCache(options =>
         {

@@ -1,6 +1,7 @@
 using Application;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.Application.Pipelines.Security;
 using Core.BackgroundJob.Extensions;
 using Core.BackgroundJob.Services;
 using Core.CrossCuttingConcerns.Exceptions.Extensions;
@@ -26,7 +27,10 @@ using webAPI.Persistence.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    options.ModelBinderProviders.Insert(0, new DecryptedJsonModelBinderProvider());
+})
  .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
  .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -139,6 +143,7 @@ app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<DecryptionMiddleware>();
 app.ConfigureCustomExceptionMiddleware();
 
 app.UseHangfireServer();
