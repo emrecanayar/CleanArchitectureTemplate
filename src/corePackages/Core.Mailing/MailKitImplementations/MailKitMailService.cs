@@ -10,15 +10,13 @@ namespace Core.Mailing.MailKitImplementations;
 public class MailKitMailService : IMailService
 {
     private readonly MailSettings _mailSettings;
-    private DkimSigner? _signer;
 
     public MailKitMailService(IConfiguration configuration)
     {
         const string configurationSection = "MailSettings";
         _mailSettings =
             configuration.GetSection(configurationSection).Get<MailSettings>()
-            ?? throw new NullReferenceException($"\"{configurationSection}\" section cannot found in configuration.");
-        _signer = null;
+            ?? throw new InvalidOperationException($"\"{configurationSection}\" section cannot found in configuration.");
     }
 
     public void SendMail(Mail mail)
@@ -68,7 +66,7 @@ public class MailKitMailService : IMailService
 
         if (_mailSettings.DkimPrivateKey != null && _mailSettings.DkimSelector != null && _mailSettings.DomainName != null)
         {
-            _signer = new DkimSigner(key: ReadPrivateKeyFromPemEncodedString(), _mailSettings.DomainName, _mailSettings.DkimSelector)
+            DkimSigner signer = new DkimSigner(key: ReadPrivateKeyFromPemEncodedString(), _mailSettings.DomainName, _mailSettings.DkimSelector)
             {
                 HeaderCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Simple,
                 BodyCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Simple,
@@ -76,7 +74,7 @@ public class MailKitMailService : IMailService
                 QueryMethod = "dns/txt"
             };
             HeaderId[] headers = { HeaderId.From, HeaderId.Subject, HeaderId.To };
-            _signer.Sign(email, headers);
+            signer.Sign(email, headers);
         }
 
         smtp = new SmtpClient();
