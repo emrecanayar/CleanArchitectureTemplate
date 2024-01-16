@@ -28,7 +28,6 @@ public static class IQueryableDynamicFilterExtensions
         { "doesnotcontain", "Contains" },
         { "any", "any" },
     };
-
     public static IQueryable<T> ToDynamic<T>(this IQueryable<T> query, DynamicQuery dynamicQuery)
     {
         if (dynamicQuery.Filter is not null)
@@ -37,18 +36,16 @@ public static class IQueryableDynamicFilterExtensions
             query = Sort(query, dynamicQuery.Sort);
         return query;
     }
-
     private static IQueryable<T> Filter<T>(IQueryable<T> queryable, Filter filter)
     {
         IList<Filter> filters = GetAllFilters(filter);
         string?[] values = filters.Select(f => f.Value).ToArray();
         string where = Transform(filter, filters);
-        if (!string.IsNullOrEmpty(where) && values != null)
+        if (!string.IsNullOrEmpty(where))
             queryable = queryable.Where(where, values);
 
         return queryable;
     }
-
     private static IQueryable<T> Sort<T>(IQueryable<T> queryable, IEnumerable<Sort> sort)
     {
         foreach (Sort item in sort)
@@ -67,7 +64,6 @@ public static class IQueryableDynamicFilterExtensions
 
         return queryable;
     }
-
     public static IList<Filter> GetAllFilters(Filter filter)
     {
         List<Filter> filters = new();
@@ -78,12 +74,17 @@ public static class IQueryableDynamicFilterExtensions
     {
         var method = typeof(EntityFrameworkQueryableExtensions)
             .GetMethods(BindingFlags.Static | BindingFlags.Public)
-            .FirstOrDefault(m => m.Name == nameof(EntityFrameworkQueryableExtensions.Include) && m.GetParameters().Length == 2)
-            .MakeGenericMethod(typeof(T), includeExpression.ReturnType);
+            .FirstOrDefault(m => m.Name == nameof(EntityFrameworkQueryableExtensions.Include) && m.GetParameters().Length == 2);
 
-        return (IQueryable<T>)method.Invoke(null, new object[] { query, includeExpression });
+        if (method == null)
+        {
+            throw new InvalidOperationException("Include method not found.");
+        }
+
+        var genericMethod = method.MakeGenericMethod(typeof(T), includeExpression.ReturnType);
+
+        return (IQueryable<T>)genericMethod.Invoke(null, new object[] { query, includeExpression }) ?? throw new InvalidOperationException("Method invocation returned null.");
     }
-
     private static void GetFilters(Filter filter, IList<Filter> filters)
     {
         filters.Add(filter);

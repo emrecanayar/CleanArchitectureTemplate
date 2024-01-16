@@ -10,10 +10,11 @@ namespace Core.Persistence.Extensions
         public static void RegisterAllEntities<T>(this ModelBuilder modelBuilder, params Assembly[] assemblies)
         {
             var types = assemblies.SelectMany(a => a.GetExportedTypes())
-                                  .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && c.Namespace.StartsWith(_entityNamespace) && typeof(T).IsAssignableFrom(c));
+                                  .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && c.Namespace != null && c.Namespace.StartsWith(_entityNamespace) && typeof(T).IsAssignableFrom(c));
             foreach (var type in types)
                 modelBuilder.Entity(type);
         }
+
 
         public static void RegisterAllConfigurations(this ModelBuilder modelBuilder, params Assembly[] assemblies)
         {
