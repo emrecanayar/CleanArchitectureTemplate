@@ -29,6 +29,11 @@ public class AuthController : BaseController
             ?? throw new NullReferenceException($"\"{configurationSection}\" section cannot found in configuration.");
     }
 
+    /// <summary>
+    /// Logs in a user with the provided login details.
+    /// </summary>
+    /// <param name="userForLoginDto">The login details of the user.</param>
+    /// <returns>A response indicating the result of the login operation.</returns>
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
     {
@@ -40,6 +45,7 @@ public class AuthController : BaseController
 
         return Ok(result.Data.ToHttpResponse());
     }
+
 
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
