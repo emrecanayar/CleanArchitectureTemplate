@@ -8,7 +8,7 @@ namespace Core.Utilities.ApiDoc
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var isAuthorized = (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>()
+            bool isAuthorized = (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>()
                                  .Any()
                              || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any())
                             && !context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>()
