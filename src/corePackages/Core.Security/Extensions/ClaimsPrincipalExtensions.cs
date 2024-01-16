@@ -12,6 +12,10 @@ public static class ClaimsPrincipalExtensions
 
     public static List<string>? ClaimRoles(this ClaimsPrincipal claimsPrincipal) => claimsPrincipal?.Claims(ClaimTypes.Role);
 
-    public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal) =>
-            Guid.Parse(claimsPrincipal?.Claims(ClaimTypes.NameIdentifier)?.FirstOrDefault());
+    public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
+    {
+        string? claimValue = claimsPrincipal?.Claims(ClaimTypes.NameIdentifier)?.FirstOrDefault();
+        return claimValue == null ? throw new InvalidOperationException("User ID claim not found.") : Guid.Parse(claimValue);
+    }
+
 }
