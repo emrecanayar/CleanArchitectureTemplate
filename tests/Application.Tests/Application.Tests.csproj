@@ -29,4 +29,11 @@
 		<ProjectReference Include="..\..\src\projects\starterProject\webAPI.Application\webAPI.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\OperationClaims\Commands\Delete\" />
+	  <Folder Include="Features\OperationClaims\Commands\Update\" />
+	  <Folder Include="Features\OperationClaims\Queries\GetById\" />
+	  <Folder Include="Features\OperationClaims\Queries\GetList\" />
+	</ItemGroup>
+
 </Project>

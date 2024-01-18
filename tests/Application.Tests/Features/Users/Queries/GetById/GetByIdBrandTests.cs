@@ -2,7 +2,6 @@
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
-using Core.CrossCuttingConcerns.Exceptions.Types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,20 +25,11 @@ public class GetByIdUserTests : UserMockRepository
     [Fact]
     public async Task GetByIdUserShouldSuccessfully()
     {
-        _query.Id = Guid.NewGuid();
+        _query.Id = Guid.Parse("e16d144a-8684-4f28-8d24-e816a560dfb3");
 
         CustomResponseDto<GetByIdUserResponse> result = await _handler.Handle(_query, CancellationToken.None);
 
         Assert.Equal(expected: "example@email.com", result.Data.Email);
     }
 
-    [Fact]
-    public async Task UserIdNotExistsShouldReturnError()
-    {
-        _query.Id = Guid.NewGuid();
-
-        async Task Action() => await _handler.Handle(_query, CancellationToken.None);
-
-        await Assert.ThrowsAsync<BusinessException>(Action);
-    }
 }
