@@ -14,6 +14,6 @@ internal class ValidationProblemDetails : ProblemDetails
         Detail = "One or more validation errors occurred.";
         Errors = errors;
         Status = StatusCodes.Status400BadRequest;
-        Type = "https://example.com/probs/validation";
+        Type = "https://httpstatuses.com/400";
     }
 }
