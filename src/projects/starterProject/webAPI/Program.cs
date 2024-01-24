@@ -143,7 +143,7 @@ app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<DecryptionMiddleware>();
+//app.UseMiddleware<DecryptionMiddleware>();
 app.ConfigureCustomExceptionMiddleware();
 
 app.UseHangfireServer();
