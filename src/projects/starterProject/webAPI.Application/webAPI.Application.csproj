@@ -20,4 +20,8 @@
 	  <ProjectReference Include="..\..\..\corePackages\Core.Security\Core.Security.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\UploadedFiles\Models\" />
+	</ItemGroup>
+
 </Project>
