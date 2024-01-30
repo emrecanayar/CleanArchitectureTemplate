@@ -13,11 +13,11 @@ namespace Core.Timing
         /// <param name="node">The Xml node</param>
         /// <param name="attributeName">Attribute name</param>
         /// <returns>Value of the attribute</returns>
-        public static string GetAttributeValueOrNull(this XmlNode node, string attributeName)
+        public static string? GetAttributeValueOrNull(this XmlNode node, string attributeName)
         {
             if (node.Attributes == null || node.Attributes.Count <= 0)
             {
-                throw new Exception(node.Name + " node has not " + attributeName + " attribute");
+                throw new InvalidOperationException(node.Name + " node has not " + attributeName + " attribute");
             }
 
             return node.Attributes

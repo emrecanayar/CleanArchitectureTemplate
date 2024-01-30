@@ -2,6 +2,6 @@
 {
     public class CustomHttpContextHashing
     {
-        public string SecurityKey { get; set; }
+        public string SecurityKey { get; set; } = string.Empty;
     }
 }

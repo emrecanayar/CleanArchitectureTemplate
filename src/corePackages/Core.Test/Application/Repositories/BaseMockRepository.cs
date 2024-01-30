@@ -20,7 +20,7 @@ public abstract class BaseMockRepository<TRepository, TEntity, TEntityId, TMappi
     public Mock<TRepository> MockRepository;
     public TBusinessRules BusinessRules;
 
-    public BaseMockRepository(TFakeData fakeData)
+    protected BaseMockRepository(TFakeData fakeData)
     {
         MapperConfiguration mapperConfig =
             new(c =>

@@ -16,7 +16,7 @@ namespace Core.Json
             return false;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var date = base.ReadJson(reader, objectType, existingValue, serializer) as DateTime?;
 
@@ -25,10 +25,13 @@ namespace Core.Json
                 return Clock.Normalize(date.Value);
             }
 
-            return null;
+            // Return a default value when date doesn't have a value
+            return DateTime.MinValue;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+
+
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             var date = value as DateTime?;
             base.WriteJson(writer, date.HasValue ? Clock.Normalize(date.Value) : value, serializer);

@@ -10,6 +10,6 @@ internal class BusinessProblemDetails : ProblemDetails
         Title = "Rule violation";
         Detail = detail;
         Status = StatusCodes.Status400BadRequest;
-        Type = "https://example.com/probs/business";
+        Type = "https://httpstatuses.com/400";
     }
 }

@@ -33,7 +33,7 @@ namespace Core.Timing
                 return WindowsTimeZoneMappings[windowsTimezoneId];
             }
 
-            throw new Exception($"Unable to map {windowsTimezoneId} to iana timezone.");
+            throw new InvalidOperationException($"Unable to map {windowsTimezoneId} to iana timezone.");
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Core.Timing
                 return IanaTimeZoneMappings[ianaTimezoneId];
             }
 
-            throw new Exception(string.Format("Unable to map {0} to windows timezone.", ianaTimezoneId));
+            throw new InvalidOperationException(string.Format("Unable to map {0} to windows timezone.", ianaTimezoneId));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Core.Timing
         public static DateTimeOffset ConvertToDateTimeOffset(DateTime date, string timeZoneId)
         {
             var timeZone = FindTimeZoneInfo(timeZoneId);
-            var offset = timeZone.BaseUtcOffset;
+            TimeSpan offset = timeZone.BaseUtcOffset;
             var rule = timeZone.GetAdjustmentRules().FirstOrDefault(x => date >= x.DateStart && date <= x.DateEnd);
 
             if (!timeZone.SupportsDaylightSavingTime || rule == null)
@@ -149,11 +149,11 @@ namespace Core.Timing
 
         private static DateTime GetDaylightTransition(DateTime date, TimeZoneInfo.TransitionTime transitionTime)
         {
-            var daylightTime = new DateTime(date.Year, transitionTime.Month, 1);
+            var daylightTime = new DateTime(date.Year, transitionTime.Month, 1, 0, 0, 0, DateTimeKind.Local); // Assuming local time
 
             if (transitionTime.IsFixedDateRule)
             {
-                daylightTime = new DateTime(daylightTime.Year, daylightTime.Month, transitionTime.Day, transitionTime.TimeOfDay.Hour, transitionTime.TimeOfDay.Minute, transitionTime.TimeOfDay.Second);
+                daylightTime = new DateTime(daylightTime.Year, daylightTime.Month, transitionTime.Day, transitionTime.TimeOfDay.Hour, transitionTime.TimeOfDay.Minute, transitionTime.TimeOfDay.Second, DateTimeKind.Local); // Assuming local time
             }
             else
             {
@@ -165,7 +165,8 @@ namespace Core.Timing
                 daylightTime.Day,
                 transitionTime.TimeOfDay.Hour,
                 transitionTime.TimeOfDay.Minute,
-                transitionTime.TimeOfDay.Second);
+                transitionTime.TimeOfDay.Second,
+                DateTimeKind.Local); // Assuming local time
 
             return daylightTime;
         }
@@ -173,7 +174,7 @@ namespace Core.Timing
         //from https://stackoverflow.com/questions/6140018/how-to-calculate-2nd-friday-of-month-in-c-sharp
         private static DateTime NthOf(this DateTime currentDate, int occurrence, DayOfWeek day)
         {
-            var firstDay = new DateTime(currentDate.Year, currentDate.Month, 1);
+            var firstDay = new DateTime(currentDate.Year, currentDate.Month, 1, 0, 0, 0, currentDate.Kind);
 
             var firstOccurrence = firstDay.DayOfWeek == day ? firstDay : firstDay.AddDays(day - firstDay.DayOfWeek);
 
@@ -181,6 +182,7 @@ namespace Core.Timing
 
             return firstOccurrence.AddDays(7 * (occurrence - 1));
         }
+
 
         public static DateTime? ConvertTimeByIanaTimeZoneId(DateTime? date, string fromIanaTimeZoneId, string toIanaTimeZoneId)
         {
@@ -192,8 +194,14 @@ namespace Core.Timing
             var sourceTimeZone = FindTimeZoneInfo(IanaToWindows(fromIanaTimeZoneId));
             var destinationTimeZone = FindTimeZoneInfo(IanaToWindows(toIanaTimeZoneId));
 
+            if (sourceTimeZone == null || destinationTimeZone == null)
+            {
+                throw new InvalidOperationException("Source or destination timezone not found.");
+            }
+
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
+
 
         public static DateTime? ConvertTimeFromUtcByIanaTimeZoneId(DateTime? date, string toIanaTimeZoneId)
         {
@@ -205,12 +213,12 @@ namespace Core.Timing
             return ConvertTimeByIanaTimeZoneId(date, fromIanaTimeZoneId, "Etc/UTC");
         }
 
-        public static TimeZoneInfo FindTimeZoneInfo(string windowsOrIanaTimeZoneId)
+        public static TimeZoneInfo? FindTimeZoneInfo(string windowsOrIanaTimeZoneId)
         {
             return null;
         }
 
-        public static List<string> GetWindowsTimeZoneIds(bool ignoreTimeZoneNotFoundException = true)
+        public static List<string>? GetWindowsTimeZoneIds(bool ignoreTimeZoneNotFoundException = true)
         {
             return null;
         }
@@ -234,19 +242,29 @@ namespace Core.Timing
 
                 var resourceName = resourceNames.First(r => r.Contains("WindowsZones.xml"));
 
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    var bytes = stream.GetAllBytes();
-                    var xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
-                    var xmlDocument = new XmlDocument();
-                    xmlDocument.LoadXml(xmlString);
-                    var windowsMappingNodes = xmlDocument.SelectNodes("//supplementalData/windowsZones/mapTimezones/mapZone[@territory='001']");
-                    var ianaMappingNodes = xmlDocument.SelectNodes("//supplementalData/windowsZones/mapTimezones/mapZone");
-                    AddWindowsMappingsToDictionary(WindowsTimeZoneMappings, windowsMappingNodes);
-                    AddIanaMappingsToDictionary(IanaTimeZoneMappings, ianaMappingNodes);
+                    if (stream != null)
+                    {
+                        byte[] bytes = stream.GetAllBytes();
+                        string xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
+                        XmlDocument xmlDocument = new XmlDocument();
+                        xmlDocument.LoadXml(xmlString);
+                        var windowsMappingNodes = xmlDocument.SelectNodes("//supplementalData/windowsZones/mapTimezones/mapZone[@territory='001']");
+                        var ianaMappingNodes = xmlDocument.SelectNodes("//supplementalData/windowsZones/mapTimezones/mapZone");
+                        if (windowsMappingNodes != null)
+                        {
+                            AddWindowsMappingsToDictionary(WindowsTimeZoneMappings, windowsMappingNodes);
+                        }
+                        if (ianaMappingNodes != null)
+                        {
+                            AddIanaMappingsToDictionary(IanaTimeZoneMappings, ianaMappingNodes);
+                        }
+                    }
                 }
             }
         }
+
 
         private static void AddWindowsMappingsToDictionary(Dictionary<string, string> timeZoneMappings, XmlNodeList defaultMappingNodes)
         {

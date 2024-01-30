@@ -37,15 +37,15 @@ namespace Core.Json
         /// <summary>
         /// Deserializes an object serialized with <see cref="SerializeWithType(object)"/> methods.
         /// </summary>
-        public static T DeserializeWithType<T>(string serializedObj)
+        public static T? DeserializeWithType<T>(string serializedObj)
         {
-            return (T)DeserializeWithType(serializedObj);
+            return (T?)DeserializeWithType(serializedObj);
         }
 
         /// <summary>
         /// Deserializes an object serialized with <see cref="SerializeWithType(object)"/> methods.
         /// </summary>
-        public static object DeserializeWithType(string serializedObj)
+        public static object? DeserializeWithType(string serializedObj)
         {
             var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator);
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));

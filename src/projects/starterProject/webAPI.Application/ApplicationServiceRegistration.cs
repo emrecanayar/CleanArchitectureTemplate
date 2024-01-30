@@ -6,10 +6,12 @@ using Core.Application.Pipelines.CheckId;
 using Core.Application.Pipelines.DbLogging;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Performance;
+using Core.Application.Pipelines.Security;
 using Core.Application.Pipelines.Transaction;
 using Core.Application.Pipelines.Validation;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Logging.DbLog;
+using Core.CrossCuttingConcerns.Logging.DbLog.Profiles;
 using Core.CrossCuttingConcerns.Logging.Serilog;
 using Core.CrossCuttingConcerns.Logging.Serilog.Logger;
 using Core.ElasticSearch;
@@ -28,10 +30,12 @@ public static class ApplicationServiceRegistration
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(typeof(DbLogProfile));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            configuration.AddOpenBehavior(typeof(DecryptionBehavior<,>));
             configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
             configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
@@ -54,6 +58,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<Logging>();
         services.AddScoped(typeof(BaseBusinessRules<,>));
         services.AddSingleton<CustomStringLocalizer>();
+        services.AddScoped<IDecryptService, DecryptService>();
 
         services.AddStackExchangeRedisCache(options =>
         {

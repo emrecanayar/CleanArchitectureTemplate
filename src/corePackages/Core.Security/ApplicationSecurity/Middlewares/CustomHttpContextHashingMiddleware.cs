@@ -14,7 +14,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
-        private Stopwatch _stopwatch;
+        private Stopwatch? _stopwatch;
         private readonly string securitykey = "zKbVE-yEO'Gg9n7)e[8vJOf=dsUf&eP}";
 
         public CustomHttpContextHashingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
@@ -80,7 +80,6 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                 List<KeyValuePair<string, string>> queryparameters = new List<KeyValuePair<string, string>>();
                 KeyValuePair<string, string> newqueryparameter = new KeyValuePair<string, string>(queryKeyValues[0], queryKeyValues[1]);
                 queryparameters.Add(newqueryparameter);
-                var contentType = context.Request.ContentType;
                 var queryString = new QueryBuilder(queryparameters);
                 context.Request.QueryString = queryString.ToQueryString();
             }
@@ -119,7 +118,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                     using (var reader = new StreamReader(request))
                     {
                         api.Body = await reader.ReadToEndAsync();
-                        if (String.IsNullOrEmpty(api.Body) != true)
+                        if (!String.IsNullOrEmpty(api.Body))
                         {
                             JObject json = JObject.Parse(api.Body);
                             if (json["value"] != null)

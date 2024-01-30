@@ -155,7 +155,7 @@
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year - 1, 1, 1), new DateTime(now.Year, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year - 1, 1, 1, 0, 0, 0, now.Kind), new DateTime(now.Year, 1, 1, 0, 0, 0, now.Kind).AddMilliseconds(-1));
             }
         }
 
@@ -167,7 +167,7 @@
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year, 1, 1), new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year, 1, 1, 0, 0, 0, now.Kind), new DateTime(now.Year + 1, 1, 1, 0, 0, 0, now.Kind).AddMilliseconds(-1));
             }
         }
 
@@ -179,7 +179,7 @@
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year + 1, 1, 1, 0, 0, 0, now.Kind), new DateTime(now.Year + 2, 1, 1, 0, 0, 0, now.Kind).AddMilliseconds(-1));
             }
         }
 

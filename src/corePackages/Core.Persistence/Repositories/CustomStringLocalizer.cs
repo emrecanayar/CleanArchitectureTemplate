@@ -3,7 +3,6 @@ using Core.Domain.Entities;
 using Core.Persistence.Constants;
 using Core.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using static Core.Domain.ComplexTypes.Enums;
 
@@ -11,24 +10,11 @@ namespace Core.Persistence.Repositories
 {
     public class CustomStringLocalizer
     {
-        private static CultureInfo _culture;
-        private readonly IConfiguration _configuration;
-        private const string STR_DICTIONARY_DYNAMIC_FILTER = "dynamic";
+        private static CultureInfo? _culture = CultureInfo.CurrentCulture;
 
-        public CustomStringLocalizer(IConfiguration configuration)
-        {
-            _culture = CultureInfo.CurrentCulture;
-            _configuration = configuration;
-        }
+        public CultureInfo GetCulture() => _culture ?? default!;
 
-        public CustomStringLocalizer(CultureInfo culture, IConfiguration configuration) : this(configuration)
-        {
-            _culture = culture;
-        }
-
-        public CultureInfo GetCulture() => _culture;
-
-        public void SetCulture(string symbol)
+        public static void SetCulture(string symbol)
         {
             _culture = new CultureInfo(symbol);
         }
@@ -46,7 +32,7 @@ namespace Core.Persistence.Repositories
         {
 
             using var db = createDbContext();
-            List<Dictionary> dictionaries = new List<Dictionary>();
+            List<Dictionary> dictionaries;
             if (getAllTranslations)
             {
                 dictionaries = db.Set<Dictionary>().Include(nameof(Dictionary.Language)).Where(x => x.EntryKey == name).ToList();
@@ -88,7 +74,7 @@ namespace Core.Persistence.Repositories
             get
             {
                 using var db = createDbContext();
-                List<Dictionary> dictionaries = new List<Dictionary>();
+                List<Dictionary> dictionaries;
                 if (getAllTranslations)
                 {
                     dictionaries = db.Set<Dictionary>().Include(nameof(Dictionary.Language)).Where(x => x.EntryKey == name).ToList();
@@ -117,7 +103,12 @@ namespace Core.Persistence.Repositories
             CultureInfo culture = _culture ?? CultureInfo.CurrentCulture;
 
             using LocalizationDbContext db = createDbContext();
-            Language lang = db.Set<Language>().Where(x => x.Status == RecordStatu.Active && x.Symbol == culture.Name).AsNoTracking().FirstOrDefault();
+            Language? lang = db.Set<Language>().Where(x => x.Status == RecordStatu.Active && x.Symbol == culture.Name).AsNoTracking().FirstOrDefault();
+
+            if (lang == null)
+            {
+                throw new InvalidOperationException("No matching language found.");
+            }
 
             return new LanguageDto
             {
@@ -142,12 +133,17 @@ namespace Core.Persistence.Repositories
             return langs;
         }
 
-        public string GetUserCulture(Guid userId)
+        public string? GetUserCulture(Guid userId)
         {
             using LocalizationDbContext db = createDbContext();
-            User user = db.Set<User>().Where(x => x.Status == RecordStatu.Active).AsNoTracking().FirstOrDefault();
-            return Enum.GetName(user.CultureType);
+            User? user = db.Set<User>().Where(x => x.Status == RecordStatu.Active).AsNoTracking().FirstOrDefault();
 
+            if (user == null)
+            {
+                throw new InvalidOperationException("No matching user found.");
+            }
+
+            return Enum.GetName(user.CultureType);
         }
 
         private static LocalizationDbContext createDbContext()

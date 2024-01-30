@@ -41,7 +41,7 @@ namespace Core.Application.Pipelines.Localization
             }
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(lang);
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
-            _localizer.SetCulture(lang);
+            CustomStringLocalizer.SetCulture(lang);
 
             return await next();
         }

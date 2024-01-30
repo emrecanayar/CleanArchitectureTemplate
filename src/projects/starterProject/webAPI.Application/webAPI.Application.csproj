@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,7 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="MediatR" Version="12.1.1" />
+		<PackageReference Include="MediatR" Version="12.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -18,6 +18,10 @@
 	  <ProjectReference Include="..\..\..\corePackages\Core.ElasticSearch\Core.ElasticSearch.csproj" />
 	  <ProjectReference Include="..\..\..\corePackages\Core.Mailing\Core.Mailing.csproj" />
 	  <ProjectReference Include="..\..\..\corePackages\Core.Security\Core.Security.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Features\UploadedFiles\Models\" />
 	</ItemGroup>
 
 </Project>

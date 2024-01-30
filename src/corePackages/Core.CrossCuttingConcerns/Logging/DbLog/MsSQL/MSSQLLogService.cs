@@ -1,24 +1,26 @@
-﻿using Core.CrossCuttingConcerns.Logging.DbLog.Dto;
+﻿using AutoMapper;
+using Core.CrossCuttingConcerns.Logging.DbLog.Dto;
 using Core.CrossCuttingConcerns.Logging.DbLog.MsSQL.Contexts;
 using Core.Domain.Entities;
-using Core.Helpers.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Core.CrossCuttingConcerns.Logging.DbLog.MsSQL
 {
-    public class MSSQLLogService : ILogService
+    public class MsSqlLogService : ILogService
     {
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public MSSQLLogService(IConfiguration configuration)
+        public MsSqlLogService(IConfiguration configuration, IMapper mapper)
         {
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task CreateLog(LogDto logDto)
         {
-            Log log = logDto.ToMap<Log>();
+            Log log = _mapper.Map<Log>(logDto);
             await logToDb(log);
         }
         private async Task logToDb(Log log)
@@ -31,7 +33,9 @@ namespace Core.CrossCuttingConcerns.Logging.DbLog.MsSQL
             }
             catch (Exception exception)
             {
-                throw exception;
+                throw new InvalidOperationException($"DB Logging Exception: {exception.Message} {Environment.NewLine} " +
+                                                    $"Source: {exception.Source} {Environment.NewLine}" +
+                                                    $"Stack Tree: {exception.StackTrace}");
             }
         }
 

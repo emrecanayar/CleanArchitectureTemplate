@@ -1,6 +1,8 @@
-﻿namespace Core.Application.Dtos;
+﻿using Core.Application.Pipelines.Security;
 
-public class UserForRegisterDto : IDto
+namespace Core.Application.Dtos;
+
+public class UserForRegisterDto : IDto, IDecryptedModel
 {
     public string Email { get; set; }
     public string Password { get; set; }

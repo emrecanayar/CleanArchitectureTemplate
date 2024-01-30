@@ -61,8 +61,17 @@ namespace Core.Helpers.Helpers
 
         public static int CompareDays(DateTime dt1, DateTime dt2)
         {
-            return DateTime.Compare(DiscardTime(dt1).Value, DiscardTime(dt2).Value);
+            var dt1DiscardedTime = DiscardTime(dt1);
+            var dt2DiscardedTime = DiscardTime(dt2);
+
+            if (!dt1DiscardedTime.HasValue || !dt2DiscardedTime.HasValue)
+            {
+                throw new InvalidOperationException("Unable to discard the time from the date.");
+            }
+
+            return DateTime.Compare(dt1DiscardedTime.Value, dt2DiscardedTime.Value);
         }
+
 
         public static int CompareYearMonth(DateTime dt1, DateTime dt2)
         {
@@ -76,7 +85,7 @@ namespace Core.Helpers.Helpers
 
         public static DateTime DiscardDayTime(DateTime d)
         {
-            return new DateTime(d.Year, d.Month, 1, 0, 0, 0);
+            return new DateTime(d.Year, d.Month, 1, 0, 0, 0, d.Kind);
         }
 
         public static DateTime? DiscardTime(DateTime? d)
@@ -107,27 +116,13 @@ namespace Core.Helpers.Helpers
             }
             else
             {
-                GregorianCalendar foundCal = null;
-                DateTimeFormatInfo dtfi = null;
+                GregorianCalendar? foundCal = null;
+                DateTimeFormatInfo? dtfi = null;
 
-                foreach (System.Globalization.Calendar cal in culture.OptionalCalendars)
-                {
-                    if (cal is GregorianCalendar)
-                    {
-                        // Return the first Gregorian calendar with CalendarType == Localized
-                        // Otherwise return the first Gregorian calendar
-                        if (foundCal == null)
-                        {
-                            foundCal = cal as GregorianCalendar;
-                        }
+                var optionalCalendars = culture.OptionalCalendars.OfType<GregorianCalendar>().ToList();
 
-                        if (((GregorianCalendar)cal).CalendarType == GregorianCalendarTypes.Localized)
-                        {
-                            foundCal = cal as GregorianCalendar;
-                            break;
-                        }
-                    }
-                }
+                foundCal = optionalCalendars.Find(cal => cal.CalendarType == GregorianCalendarTypes.Localized)
+                    ?? optionalCalendars.FirstOrDefault();
 
                 if (foundCal == null)
                 {
@@ -144,6 +139,7 @@ namespace Core.Helpers.Helpers
                 return dtfi;
             }
         }
+
 
         public static bool InRange(DateTime date, DateTime start, DateTime end)
         {

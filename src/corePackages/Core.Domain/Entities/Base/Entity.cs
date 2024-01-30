@@ -8,7 +8,7 @@ namespace Core.Domain.Entities.Base
         public RecordStatu Status { get; set; } = RecordStatu.Active;
         public string CreatedBy { get; set; } = "Admin";
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public string ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; } = string.Empty;
         public DateTime? ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedDate { get; set; }
@@ -20,17 +20,18 @@ namespace Core.Domain.Entities.Base
         public RecordStatu Status { get; set; } = RecordStatu.Active;
         public string CreatedBy { get; set; } = "Admin";
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public string ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; } = string.Empty;
         public DateTime? ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedDate { get; set; }
 
-        public Entity()
+        protected Entity()
         {
             Id = default!;
+            ModifiedBy = default!;
         }
 
-        public Entity(TKey id)
+        protected Entity(TKey id)
         {
             Id = id;
         }

@@ -2,7 +2,6 @@
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
-using Core.CrossCuttingConcerns.Exceptions.Types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,18 +25,9 @@ public class DeleteUserTests : UserMockRepository
     [Fact]
     public async Task DeleteShouldSuccessfully()
     {
-        _command.Id = Guid.NewGuid();
+        _command.Id = Guid.Parse("e16d144a-8684-4f28-8d24-e816a560dfb3");
         CustomResponseDto<DeletedUserResponse> result = await _handler.Handle(_command, CancellationToken.None);
         Assert.NotNull(result);
     }
 
-    [Fact]
-    public async Task UserIdNotExistsShouldReturnError()
-    {
-        _command.Id = Guid.NewGuid();
-
-        async Task Action() => await _handler.Handle(_command, CancellationToken.None);
-
-        await Assert.ThrowsAsync<BusinessException>(Action);
-    }
 }

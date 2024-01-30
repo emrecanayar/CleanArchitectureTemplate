@@ -11,6 +11,7 @@
         public const string LANGUAGE = "Languages";
         public const string DICTIONARY = "Dictionaries";
         public const string LOG = "Logs";
+        public const string UPLOADED_FILE = "UploadedFiles";
 
     }
 }

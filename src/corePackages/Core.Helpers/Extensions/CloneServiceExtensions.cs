@@ -4,7 +4,7 @@ namespace Core.Helpers.Extensions
 {
     public static class CloneServiceExtensions
     {
-        public static T Clone<T>(this T source)
+        public static T? Clone<T>(this T source)
         {
             if (ReferenceEquals(source, null))
             {

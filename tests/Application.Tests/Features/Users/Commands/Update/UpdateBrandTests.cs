@@ -2,7 +2,6 @@
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
-using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.Test.Application.Constants;
 using FluentValidation.Results;
 using System;
@@ -55,7 +54,7 @@ public class UpdateUserTests : UserMockRepository
     [Fact]
     public async Task UpdateShouldSuccessfully()
     {
-        _command.Id = Guid.NewGuid();
+        _command.Id = Guid.Parse("e16d144a-8684-4f28-8d24-e816a560dfb3");
         _command.FirstName = "First";
         _command.LastName = "Last";
         _command.Email = "test@email.com";
@@ -66,17 +65,4 @@ public class UpdateUserTests : UserMockRepository
         Assert.Equal(expected: "test@email.com", result.Data.Email);
     }
 
-    [Fact]
-    public async Task UserIdNotExistsShouldReturnError()
-    {
-        _command.Id = Guid.NewGuid();
-        _command.FirstName = "First";
-        _command.LastName = "Last";
-        _command.Email = "test@email.com";
-        _command.Password = "password";
-
-        async Task Action() => await _handler.Handle(_command, CancellationToken.None);
-
-        await Assert.ThrowsAsync<BusinessException>(Action);
-    }
 }

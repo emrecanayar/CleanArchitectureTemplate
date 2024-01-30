@@ -1,6 +1,6 @@
 ﻿namespace Core.Helpers.Helpers
 {
-    public class FileInfoHelper
+    public static class FileInfoHelper
     {
         public static string GetFileName(string path)
         {
@@ -9,7 +9,7 @@
             return fileName[0].ToString();
         }
 
-        public static string GetFileExtension(string path)
+        public static string? GetFileExtension(string path)
         {
             FileInfo fileInfo = new FileInfo(path);
             return fileInfo.Extension?.ToLower();

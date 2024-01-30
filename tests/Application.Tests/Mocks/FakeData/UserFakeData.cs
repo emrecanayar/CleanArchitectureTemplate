@@ -15,7 +15,7 @@ public class UserFakeData : BaseFakeData<User, Guid>
             {
                 new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("e16d144a-8684-4f28-8d24-e816a560dfb3"),
                     FirstName = "Emre Can",
                     LastName = "Ayar",
                     Email = "example@email.com",
@@ -27,7 +27,7 @@ public class UserFakeData : BaseFakeData<User, Guid>
                 },
                 new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("b55c4530-45e8-4391-83a7-70273067edab"),
                     FirstName = "Uğur Can",
                     LastName = "Balcı",
                     Email = "example2@email.com",

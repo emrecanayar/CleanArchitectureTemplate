@@ -3,6 +3,7 @@ using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
 using Core.Application.Dtos;
+using Core.Application.Pipelines.Security;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.JWT;
@@ -12,10 +13,11 @@ using static Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Login;
 
-public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
+public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>, IHttpRequestRelated
 {
     public UserForLoginDto UserForLoginDto { get; set; }
     public string IpAddress { get; set; }
+    public string HttpRequestBody { get; set; }
 
     public LoginCommand()
     {

@@ -7,26 +7,36 @@ namespace Core.Persistence.Constants
 {
     public static class LocalizationConnectionString
     {
-        public static IConfiguration AppSetting { get; }
-        private static HttpContext _httpContext => new HttpContextAccessor().HttpContext;
-        private static IWebHostEnvironment _env => (IWebHostEnvironment)_httpContext.RequestServices.GetService(typeof(IWebHostEnvironment));
+        private static readonly HttpContextAccessor HttpContextAccessor = new();
+        private static HttpContext? _httpContext => HttpContextAccessor.HttpContext;
+        private static IWebHostEnvironment? _env => _httpContext?.RequestServices.GetService(typeof(IWebHostEnvironment)) as IWebHostEnvironment;
 
-        static LocalizationConnectionString()
+        public static IConfiguration AppSetting { get; } = InitializeAppSetting();
+
+        private static IConfiguration InitializeAppSetting()
         {
+            if (_httpContext == null || _env == null)
+            {
+                throw new InvalidOperationException("HttpContext or IWebHostEnvironment is not available.");
+            }
+
             bool result = _env.IsProduction();
 
             if (result)
-                AppSetting = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+            {
+                return new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+            }
             else
-                AppSetting = new ConfigurationBuilder()
-                     .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.Development.json").Build();
-
+            {
+                return new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.Development.json").Build();
+            }
         }
 
-        public static string Execute()
+        public static string? Execute()
         {
-            string connectionString = AppSetting.GetConnectionString("RunflowConnectionString");
+            string? connectionString = AppSetting.GetConnectionString("RunflowConnectionString");
             return connectionString;
 
         }

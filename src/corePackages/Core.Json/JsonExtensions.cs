@@ -5,20 +5,15 @@ namespace Core.Json
 {
     public static class JsonExtensions
     {
-        private static readonly CustomCamelCasePropertyNamesContractResolver SharedCamelCasePropertyNamesContractResolver;
-        private static readonly CustomContractResolver SharedContractResolver;
+        private static readonly CustomCamelCasePropertyNamesContractResolver SharedCamelCasePropertyNamesContractResolver = new CustomCamelCasePropertyNamesContractResolver();
+        private static readonly CustomContractResolver SharedContractResolver = new CustomContractResolver();
 
-        static JsonExtensions()
-        {
-            SharedCamelCasePropertyNamesContractResolver = new CustomCamelCasePropertyNamesContractResolver();
-            SharedContractResolver = new CustomContractResolver();
-        }
 
         /// <summary>
         /// Converts given object to JSON string.
         /// </summary>
         /// <returns></returns>
-        public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
+        public static string? ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
             var settings = new JsonSerializerSettings();
 
@@ -43,7 +38,7 @@ namespace Core.Json
         /// Converts given object to JSON string using custom <see cref="JsonSerializerSettings"/>.
         /// </summary>
         /// <returns></returns>
-        public static string ToJsonString(this object obj, JsonSerializerSettings settings)
+        public static string? ToJsonString(this object obj, JsonSerializerSettings settings)
         {
             return obj != null
                 ? JsonConvert.SerializeObject(obj, settings)
@@ -56,7 +51,7 @@ namespace Core.Json
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static T FromJsonString<T>(this string value)
+        public static T? FromJsonString<T>(this string value)
         {
             return value.FromJsonString<T>(new JsonSerializerSettings());
         }
@@ -68,7 +63,7 @@ namespace Core.Json
         /// <param name="value"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static T FromJsonString<T>(this string value, JsonSerializerSettings settings)
+        public static T? FromJsonString<T>(this string value, JsonSerializerSettings settings)
         {
             return value != null
                 ? JsonConvert.DeserializeObject<T>(value, settings)
@@ -82,7 +77,7 @@ namespace Core.Json
         /// <param name="type"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static object FromJsonString(this string value, [NotNull] Type type, JsonSerializerSettings settings)
+        public static object? FromJsonString(this string value, [NotNull] Type type, JsonSerializerSettings settings)
         {
             if (type == null)
             {

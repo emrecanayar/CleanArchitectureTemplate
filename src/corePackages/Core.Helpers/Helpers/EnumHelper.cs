@@ -33,17 +33,25 @@ namespace Core.Helpers.Helpers
 
         public static string GetDisplayValue(T value)
         {
-            var fieldInfo = value.GetType().GetField(value.ToString());
+            var fieldInfo = value.GetType().GetField(value.ToString()) ?? throw new InvalidOperationException($"Unable to find the field '{value}' on type '{value.GetType().Name}'.");
 
-            var descriptionAttributes = fieldInfo.GetCustomAttributes(
-                typeof(DisplayAttribute), false) as DisplayAttribute[];
+            DisplayAttribute[]? descriptionAttributes = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false) as DisplayAttribute[];
 
-            if (descriptionAttributes[0].ResourceType != null)
-                return LookupResource(descriptionAttributes[0].ResourceType, descriptionAttributes[0].Name);
+            if (descriptionAttributes == null || descriptionAttributes.Length == 0)
+            {
+                return value.ToString();
+            }
 
-            if (descriptionAttributes == null) return string.Empty;
-            return (descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
+            var displayAttribute = descriptionAttributes[0];
+
+            if (displayAttribute.ResourceType != null && displayAttribute.Name != null)
+            {
+                return LookupResource(displayAttribute.ResourceType, displayAttribute.Name);
+            }
+
+            return displayAttribute.Name ?? value.ToString();
         }
+
 
         public static Dictionary<int, string> GetEnumValuesAndNames(Type enumType)
         {
@@ -54,7 +62,12 @@ namespace Core.Helpers.Helpers
 
             foreach (int value in Enum.GetValues(enumType))
             {
-                string name = Enum.GetName(enumType, value);
+                string? name = Enum.GetName(enumType, value);
+                if (name is null)
+                {
+                    throw new InvalidOperationException($"Unable to find the name for the enum value '{value}'.");
+                }
+
                 dictionary.Add(value, name);
             }
 
@@ -67,12 +80,18 @@ namespace Core.Helpers.Helpers
             var resourceKeyProperty = resourceManagerProvider.GetProperty(resourceKey,
                 BindingFlags.Static | BindingFlags.Public, null, typeof(string),
                 new Type[0], null);
-            if (resourceKeyProperty != null)
+
+            if (resourceKeyProperty?.GetMethod != null)
             {
-                return (string)resourceKeyProperty.GetMethod.Invoke(null, null);
+                var result = resourceKeyProperty.GetMethod.Invoke(null, null);
+                if (result != null)
+                {
+                    return (string)result;
+                }
             }
 
-            return resourceKey;
+            return resourceKey ?? throw new InvalidOperationException("The resource key is null.");
         }
+
     }
 }

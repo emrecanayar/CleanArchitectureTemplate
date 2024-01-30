@@ -11,6 +11,7 @@ namespace Core.Domain.Entities
 
         public EmailAuthenticator()
         {
+            User = default!;
         }
 
         public EmailAuthenticator(Guid id, Guid userId, string? activationKey, bool isVerified) : this()
