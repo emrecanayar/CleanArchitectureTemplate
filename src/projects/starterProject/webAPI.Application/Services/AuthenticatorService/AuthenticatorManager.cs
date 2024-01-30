@@ -5,7 +5,7 @@ using Core.Mailing;
 using Core.Security.EmailAuthenticator;
 using Core.Security.OtpAuthenticator;
 using MimeKit;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Services.AuthenticatorService;
 

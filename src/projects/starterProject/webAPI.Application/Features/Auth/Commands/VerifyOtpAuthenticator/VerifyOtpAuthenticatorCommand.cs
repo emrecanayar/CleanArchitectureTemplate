@@ -4,7 +4,7 @@ using Application.Services.Repositories;
 using Application.Services.UsersService;
 using Core.Domain.Entities;
 using MediatR;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.VerifyOtpAuthenticator;
 

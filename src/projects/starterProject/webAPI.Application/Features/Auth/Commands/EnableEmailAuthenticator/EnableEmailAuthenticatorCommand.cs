@@ -7,7 +7,7 @@ using Core.Mailing;
 using MediatR;
 using MimeKit;
 using System.Web;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.EnableEmailAuthenticator;
 

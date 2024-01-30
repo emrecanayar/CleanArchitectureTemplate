@@ -1,5 +1,5 @@
 ﻿using Core.Security.JWT;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Login;
 

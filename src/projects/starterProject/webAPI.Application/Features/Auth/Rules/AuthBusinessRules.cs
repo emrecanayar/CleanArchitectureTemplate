@@ -4,7 +4,7 @@ using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Rules;
 

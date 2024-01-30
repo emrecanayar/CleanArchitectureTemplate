@@ -1,4 +1,4 @@
-﻿using static Core.Domain.ComplexTypes.Enums;
+﻿using Core.Domain.ComplexTypes.Enums;
 
 namespace webAPI.Application.Features.UploadedFiles.Dtos
 {

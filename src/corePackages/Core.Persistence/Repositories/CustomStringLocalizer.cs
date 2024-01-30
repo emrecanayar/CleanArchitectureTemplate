@@ -4,7 +4,7 @@ using Core.Persistence.Constants;
 using Core.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Core.Persistence.Repositories
 {

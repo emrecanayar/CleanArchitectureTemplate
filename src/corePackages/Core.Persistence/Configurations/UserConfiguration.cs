@@ -5,7 +5,7 @@ using Core.Persistence.Constants;
 using Core.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Core.Persistence.Configurations
 {
