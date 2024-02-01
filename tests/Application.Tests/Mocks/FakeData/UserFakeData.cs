@@ -2,7 +2,7 @@
 using Core.Test.Application.FakeData;
 using System;
 using System.Collections.Generic;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Tests.Mocks.FakeData;
 

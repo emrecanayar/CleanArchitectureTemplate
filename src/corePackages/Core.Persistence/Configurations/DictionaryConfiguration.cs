@@ -12,7 +12,7 @@ namespace Core.Persistence.Configurations
         {
             builder.Property(x => x.LanguageId).HasColumnName("LanguageId").IsRequired(true);
             builder.Property(x => x.EntryKey).HasColumnName("EntryKey").HasMaxLength(50);
-            builder.Property(x => x.EntryValue).HasColumnName("EntryValue").HasColumnType("text");
+            builder.Property(x => x.EntryValue).HasColumnName("EntryValue").HasColumnType(LengthContraints.MAX);
             builder.Property(x => x.Entity).HasColumnName("Entity").HasMaxLength(50);
             builder.Property(x => x.Property).HasColumnName("Property").HasMaxLength(50);
             builder.Property(x => x.ValueType).HasColumnName("ValueType").HasMaxLength(50);

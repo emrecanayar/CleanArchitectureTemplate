@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Entities.Base;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Core.Domain.Entities
 {

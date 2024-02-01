@@ -8,7 +8,7 @@ using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
 using System.Net;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Register;
 

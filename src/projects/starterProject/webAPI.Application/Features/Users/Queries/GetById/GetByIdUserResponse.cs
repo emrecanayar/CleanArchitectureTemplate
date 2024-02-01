@@ -1,5 +1,5 @@
 using Core.Application.Responses;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Users.Queries.GetById;
 

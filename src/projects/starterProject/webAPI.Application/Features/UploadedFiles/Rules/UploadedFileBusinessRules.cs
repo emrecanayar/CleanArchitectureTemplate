@@ -4,7 +4,7 @@ using Core.Domain.Entities;
 using Core.Helpers.Helpers;
 using Core.Persistence.Paging;
 using webAPI.Application.Services.Repositories;
-using static Core.Domain.ComplexTypes.Enums;
+using Core.Domain.ComplexTypes.Enums;
 
 namespace webAPI.Application.Features.UploadedFiles.Rules
 {
