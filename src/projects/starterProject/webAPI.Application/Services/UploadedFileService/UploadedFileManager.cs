@@ -57,7 +57,7 @@ namespace webAPI.Application.Services.UploadedFileService
 
             uploadedFileDto.Path = FileHelper.GetURLForFileFromFullPath(webRootPath, newLocationFullPath);
 
-            return new UploadedFileResponseDto { Id = uploadedFileDto.Id, Path = uploadedFileDto.Path };
+            return new UploadedFileResponseDto { Id = uploadedFile.Id, Path = uploadedFileDto.Path };
         }
 
         private static string DocumentTransferNewLocation(string fileFullPath, string newFolder, string webRootPath)
