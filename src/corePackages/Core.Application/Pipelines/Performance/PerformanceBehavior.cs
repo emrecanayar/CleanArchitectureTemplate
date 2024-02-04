@@ -8,18 +8,15 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     where TRequest : IRequest<TResponse>, IIntervalRequest
 {
     private readonly ILogger<PerformanceBehavior<TRequest, TResponse>> _logger;
-    private readonly Stopwatch _stopwatch;
-
-    public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger, Stopwatch stopwatch)
+    public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger)
     {
         _logger = logger;
-        _stopwatch = stopwatch;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         string requestName = request.GetType().Name;
-
+        Stopwatch _stopwatch = new Stopwatch();
         TResponse response;
 
         try
