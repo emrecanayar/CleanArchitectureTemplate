@@ -2,9 +2,9 @@ using Application.Features.Auth.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
+using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
-using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Rules;
 

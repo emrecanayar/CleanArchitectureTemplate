@@ -3,12 +3,12 @@ using Application.Services.AuthService;
 using Application.Services.Repositories;
 using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
+using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
 using System.Net;
-using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Register;
 

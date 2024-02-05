@@ -23,8 +23,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using webAPI.Persistence.Modules;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
@@ -157,4 +155,3 @@ app.UseHangfireDashboard("/job", new DashboardOptions
 app.MapControllers();
 
 app.Run();
-
