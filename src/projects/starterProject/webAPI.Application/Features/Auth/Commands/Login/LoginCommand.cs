@@ -3,21 +3,19 @@ using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
 using Core.Application.Dtos;
-using Core.Application.Pipelines.Security;
 using Core.Application.ResponseTypes.Concrete;
+using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
 using System.Net;
-using Core.Domain.ComplexTypes.Enums;
 
 namespace Application.Features.Auth.Commands.Login;
 
-public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>, IHttpRequestRelated
+public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
 {
     public UserForLoginDto UserForLoginDto { get; set; }
     public string IpAddress { get; set; }
-    public string HttpRequestBody { get; set; }
 
     public LoginCommand()
     {

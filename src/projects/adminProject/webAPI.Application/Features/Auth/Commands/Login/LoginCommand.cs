@@ -1,5 +1,4 @@
 ﻿using Core.Application.Dtos;
-using Core.Application.Pipelines.Security;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
@@ -13,11 +12,10 @@ using webAPI.Application.Services.UsersService;
 
 namespace webAPI.Application.Features.Auth.Commands.Login
 {
-    public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>, IHttpRequestRelated
+    public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
     {
         public UserForLoginDto UserForLoginDto { get; set; }
         public string IpAddress { get; set; }
-        public string HttpRequestBody { get; set; }
 
         public LoginCommand()
         {
