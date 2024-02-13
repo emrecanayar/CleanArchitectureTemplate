@@ -113,13 +113,12 @@ namespace Core.Application.Pipelines.DbLogging
             await _logging.CreateLog(new MsSqlLogService(_configuration, _mapper), data);
         }
 
-        private Task handleExceptionAsync(Exception exception) =>
-        exception switch
+        private Task handleExceptionAsync(Exception exception) => exception switch
         {
             BusinessException businessException => throw new BusinessException(businessException.Message),
             AuthorizationException authorizationException => throw new AuthorizationException(authorizationException.Message),
             NotFoundException notFoundException => throw new NotFoundException(notFoundException.Message),
-            _ => throw new Exception(exception.Message)
+            _ => throw new Exception(exception.Message, exception.InnerException)
         };
     }
 }
