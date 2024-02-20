@@ -160,6 +160,37 @@ public class EfRepositoryBase<TEntity, TEntityId, TContext> : IAsyncRepository<T
             queryable = queryable.Where(predicate);
         return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
     }
+
+    public async Task<IPaginate<TEntity>> GetListByDynamicPredicateAsync(DynamicQuery dynamic, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, Expression<Func<TEntity, bool>>? predicate = null, int index = 0, int size = 10, bool enableTracking = true, CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> queryable = Query().AsQueryable().ToDynamic(dynamic);
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+        if (include != null) queryable = include(queryable);
+        if (predicate != null) queryable = queryable.Where(predicate);
+        return await queryable.ToPaginateAsync(index, size, 0, cancellationToken);
+    }
+
+    public async Task<IPaginate<TEntity>> GetListByDynamicOrderByAsync(DynamicQuery dynamic, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, int index = 0, int size = 10, bool enableTracking = true, CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> queryable = Query().AsQueryable().ToDynamic(dynamic);
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+        if (include != null) queryable = include(queryable);
+        if (orderBy != null)
+            return await orderBy(queryable).ToPaginateAsync(index, size, 0, cancellationToken);
+        return await queryable.ToPaginateAsync(index, size, 0, cancellationToken);
+    }
+
+    public async Task<IPaginate<TEntity>> GetListIgnoreByDynamicAsync(DynamicQuery dynamic, Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, int index = 0, int size = 10, bool enableTracking = true, CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> queryable = Query().AsQueryable().ToDynamic(dynamic);
+        if (!enableTracking) queryable = queryable.AsNoTracking();
+        if (include != null) queryable = include(queryable);
+        if (predicate != null) queryable = queryable.Where(predicate);
+        return await queryable.IgnoreQueryFilters().ToPaginateAsync(index, size, 0, cancellationToken);
+    }
+
+
+
     public async Task<IList<TEntity>> GetToListByDynamicAsync(
     DynamicQuery dynamic,
     Expression<Func<TEntity, bool>>? predicate = null,
