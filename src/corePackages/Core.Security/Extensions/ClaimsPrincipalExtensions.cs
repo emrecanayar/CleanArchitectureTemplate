@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Core.CrossCuttingConcerns.Exceptions.Types;
+using System.Security.Claims;
 
 namespace Core.Security.Extensions;
 
@@ -15,7 +16,7 @@ public static class ClaimsPrincipalExtensions
     public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
     {
         string? claimValue = claimsPrincipal?.Claims(ClaimTypes.NameIdentifier)?.FirstOrDefault();
-        return claimValue == null ? throw new InvalidOperationException("User ID claim not found.") : Guid.Parse(claimValue);
+        return claimValue == null ? throw new AuthorizationException("User ID claim not found.") : Guid.Parse(claimValue);
     }
 
 }
