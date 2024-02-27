@@ -1,6 +1,6 @@
 ﻿namespace Core.Persistence.Logs
 {
-    public class EntityFrameworkQueryLog
+    public static class EntityFrameworkQueryLog
     {
         public static void LogQuery(string query)
         {
@@ -9,6 +9,11 @@
             {
                 writer.WriteLine(query);
             }
+        }
+
+        public static void LogConsole(string query)
+        {
+            Console.WriteLine(query);
         }
     }
 }
