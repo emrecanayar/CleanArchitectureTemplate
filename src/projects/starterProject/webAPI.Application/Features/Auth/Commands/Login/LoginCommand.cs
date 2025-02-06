@@ -1,7 +1,9 @@
 ﻿using Application.Features.Auth.Rules;
+using Application.Features.Users.Queries.GetById;
 using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
+using AutoMapper;
 using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.ComplexTypes.Enums;
@@ -35,18 +37,20 @@ public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
         private readonly IAuthenticatorService _authenticatorService;
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
-
+        private readonly IMapper _mapper;
         public LoginCommandHandler(
             IUserService userService,
             IAuthService authService,
             AuthBusinessRules authBusinessRules,
-            IAuthenticatorService authenticatorService
+            IAuthenticatorService authenticatorService,
+            IMapper mapper
         )
         {
             _userService = userService;
             _authService = authService;
             _authBusinessRules = authBusinessRules;
             _authenticatorService = authenticatorService;
+            _mapper = mapper;
         }
 
         public async Task<CustomResponseDto<LoggedResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -80,6 +84,8 @@ public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
 
             loggedResponse.AccessToken = createdAccessToken;
             loggedResponse.RefreshToken = addedRefreshToken;
+            loggedResponse.User = _mapper.Map<GetByIdUserResponse>(user);
+
             return CustomResponseDto<LoggedResponse>.Success((int)HttpStatusCode.OK, loggedResponse, true);
         }
     }
