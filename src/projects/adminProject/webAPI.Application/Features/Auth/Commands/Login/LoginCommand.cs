@@ -1,4 +1,5 @@
-﻿using Core.Application.Dtos;
+﻿using AutoMapper;
+using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
@@ -6,6 +7,7 @@ using Core.Security.JWT;
 using MediatR;
 using System.Net;
 using webAPI.Application.Features.Auth.Rules;
+using webAPI.Application.Features.Users.Queries.GetById;
 using webAPI.Application.Services.AuthenticatorService;
 using webAPI.Application.Services.AuthService;
 using webAPI.Application.Services.UsersService;
@@ -35,18 +37,20 @@ namespace webAPI.Application.Features.Auth.Commands.Login
             private readonly IAuthenticatorService _authenticatorService;
             private readonly IAuthService _authService;
             private readonly IUserService _userService;
-
+            private readonly IMapper _mapper;
             public LoginCommandHandler(
                 IUserService userService,
                 IAuthService authService,
                 AuthBusinessRules authBusinessRules,
-                IAuthenticatorService authenticatorService
+                IAuthenticatorService authenticatorService,
+                IMapper mapper
             )
             {
                 _userService = userService;
                 _authService = authService;
                 _authBusinessRules = authBusinessRules;
                 _authenticatorService = authenticatorService;
+                _mapper = mapper;
             }
 
             public async Task<CustomResponseDto<LoggedResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -80,6 +84,8 @@ namespace webAPI.Application.Features.Auth.Commands.Login
 
                 loggedResponse.AccessToken = createdAccessToken;
                 loggedResponse.RefreshToken = addedRefreshToken;
+                loggedResponse.User = _mapper.Map<GetByIdUserResponse>(user);
+
                 return CustomResponseDto<LoggedResponse>.Success((int)HttpStatusCode.OK, loggedResponse, true);
             }
         }

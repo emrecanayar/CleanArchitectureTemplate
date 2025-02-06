@@ -1,5 +1,6 @@
 ﻿using Core.Domain.ComplexTypes.Enums;
 using Core.Security.JWT;
+using webAPI.Application.Features.Users.Queries.GetById;
 
 namespace webAPI.Application.Features.Auth.Commands.Login
 {
@@ -8,13 +9,21 @@ namespace webAPI.Application.Features.Auth.Commands.Login
         public AccessToken? AccessToken { get; set; }
         public Core.Domain.Entities.RefreshToken? RefreshToken { get; set; }
         public AuthenticatorType? RequiredAuthenticatorType { get; set; }
-
+        public GetByIdUserResponse User { get; set; }
         public LoggedHttpResponse ToHttpResponse() =>
-            new() { AccessToken = AccessToken, RequiredAuthenticatorType = RequiredAuthenticatorType };
+            new()
+            {
+                AccessToken = AccessToken,
+                RefreshToken = RefreshToken,
+                User = User,
+                RequiredAuthenticatorType = RequiredAuthenticatorType
+            };
 
         public class LoggedHttpResponse
         {
             public AccessToken? AccessToken { get; set; }
+            public Core.Domain.Entities.RefreshToken? RefreshToken { get; set; }
+            public GetByIdUserResponse User { get; set; }
             public AuthenticatorType? RequiredAuthenticatorType { get; set; }
         }
     }
