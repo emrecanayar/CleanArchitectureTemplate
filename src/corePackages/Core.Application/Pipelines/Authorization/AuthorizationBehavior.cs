@@ -3,7 +3,6 @@ using Core.Security.Constants;
 using Core.Security.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Application.Pipelines.Authorization;
 
@@ -24,11 +23,13 @@ public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
         if (userRoleClaims == null)
             throw new AuthorizationException("You are not authenticated.");
 
-        bool isNotMatchedAUserRoleClaimWithRequestRoles = userRoleClaims
-            .FirstOrDefault(
+        bool isNotMatchedAUserRoleClaimWithRequestRoles = string.IsNullOrEmpty(
+            userRoleClaims.FirstOrDefault(
                 userRoleClaim => userRoleClaim == GeneralOperationClaims.Admin || request.Roles.Any(role => role == userRoleClaim)
-            )
-            .IsNullOrEmpty();
+                )
+            ?? string.Empty
+            );
+
         if (isNotMatchedAUserRoleClaimWithRequestRoles)
             throw new AuthorizationException("You are not authorized.");
 

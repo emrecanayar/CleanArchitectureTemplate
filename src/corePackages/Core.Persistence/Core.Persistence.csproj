@@ -20,7 +20,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.7" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 

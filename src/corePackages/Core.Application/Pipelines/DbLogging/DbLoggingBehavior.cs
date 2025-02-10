@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Diagnostics;
 
 namespace Core.Application.Pipelines.DbLogging
@@ -32,12 +33,29 @@ namespace Core.Application.Pipelines.DbLogging
             HttpContext? httpContext = _httpContextAccessor.HttpContext;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            string requestBody = await readRequestBody(httpContext.Request);
             var settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                NullValueHandling = NullValueHandling.Ignore,
+            };
+            settings.ContractResolver = new DefaultContractResolver
+            {
+                IgnoreSerializableAttribute = true
+            };
+            settings.Error = (sender, args) =>
+            {
+                args.ErrorContext.Handled = true;
             };
 
+            string requestBody = await readRequestBody(httpContext.Request);
+            try
+            {
+                requestBody += JsonConvert.SerializeObject(request, settings);
+            }
+            catch
+            {
+            }
             Domain.Entities.Log logEntry = createLogEntry(httpContext, requestBody);
 
             // Response
@@ -68,7 +86,6 @@ namespace Core.Application.Pipelines.DbLogging
                 // Veritabanına log kaydını eklenir.
                 await addLogToDatabase(logEntry);
             }
-
 
         }
         private async Task<string> readRequestBody(HttpRequest request)
