@@ -46,7 +46,13 @@ public class AuthBusinessRules : BaseBusinessRules
             throw new BusinessException(AuthMessages.EmailActivationKeyDontExists);
         return Task.CompletedTask;
     }
+    public Task IsConfirmPasswordForChangePassword(string newPassword, string confirmPassword)
+    {
+        bool result = newPassword.Equals(confirmPassword);
+        if (result is false) throw new BusinessException(AuthMessages.PasswordDontMatch);
 
+        return Task.CompletedTask;
+    }
     public Task UserShouldBeExistsWhenSelected(User? user)
     {
         if (user == null)

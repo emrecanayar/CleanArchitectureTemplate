@@ -20,6 +20,10 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

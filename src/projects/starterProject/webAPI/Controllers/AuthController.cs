@@ -1,11 +1,14 @@
 ﻿using Application.Features.Auth.Commands.EnableEmailAuthenticator;
 using Application.Features.Auth.Commands.EnableOtpAuthenticator;
+using Application.Features.Auth.Commands.ForgotPassword;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.RefreshToken;
 using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.RevokeToken;
 using Application.Features.Auth.Commands.VerifyEmailAuthenticator;
 using Application.Features.Auth.Commands.VerifyOtpAuthenticator;
+using Application.Features.Auths.Commands.ChangePassword;
+using Application.Features.Auths.Commands.ResetPassword;
 using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
@@ -45,7 +48,6 @@ public class AuthController : BaseController
 
         return Ok(result.Data.ToHttpResponse());
     }
-
 
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
@@ -109,6 +111,31 @@ public class AuthController : BaseController
         return Ok();
     }
 
+    [HttpPost("ForgotPassword")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand forgotPasswordCommand)
+    {
+        forgotPasswordCommand.IpAddress = getIpAddress();
+        var result = await Mediator.Send(forgotPasswordCommand);
+
+        return Ok(result);
+    }
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand changePasswordCommand)
+    {
+        var result = await Mediator.Send(changePasswordCommand);
+
+        return Ok(result);
+    }
+
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand changePasswordCommand)
+    {
+        changePasswordCommand.UserId = getUserIdFromRequest();
+        var result = await Mediator.Send(changePasswordCommand);
+
+        return Ok(result);
+    }
     private string getRefreshTokenFromCookies() =>
         Request.Cookies["refreshToken"] ?? throw new ArgumentException("Refresh token is not found in request cookies.");
 

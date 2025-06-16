@@ -1,0 +1,7 @@
+﻿namespace Core.Domain.Constants
+{
+    public class StaticParameter
+    {
+        public const string ForgotPasswordMailTemplate = "<!DOCTYPE html>\r\n<html lang=\"tr\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>Şifre Sıfırlama</title>\r\n  <style>\r\n    body {\r\n      font-family: Arial, sans-serif;\r\n      background-color: #f4f4f4;\r\n      padding: 20px;\r\n    }\r\n    .container {\r\n      background-color: #ffffff;\r\n      max-width: 600px;\r\n      margin: auto;\r\n      border-radius: 8px;\r\n      box-shadow: 0 2px 6px rgba(0,0,0,0.1);\r\n      padding: 30px;\r\n    }\r\n    .btn {\r\n      display: inline-block;\r\n      background-color: #007bff;\r\n      color: white;\r\n      padding: 12px 24px;\r\n      border-radius: 5px;\r\n      text-decoration: none;\r\n      margin-top: 20px;\r\n\t  font-weight:bold;\r\n    }\r\n    .footer {\r\n      margin-top: 30px;\r\n      font-size: 12px;\r\n      color: #777;\r\n      text-align: center;\r\n    }\r\n  </style>\r\n</head>\r\n<body>\r\n  <div class=\"container\">\r\n    <h2>Şifre Sıfırlama Talebi</h2>\r\n    <p>Merhaba {Username},</p>\r\n    <p>Şifrenizi sıfırlamak için bir istek aldık. Aşağıdaki geçici şifreniz verilmiştir.</p>\r\n    <a class=\"btn\">{Password}</a>\r\n    <p>Bu isteği siz yapmadıysanız, lütfen bu e-postayı dikkate almayın. Hesabınız güvende kalacaktır.</p>\r\n    <div class=\"footer\">\r\n      © 2025 MeTech. Tüm hakları saklıdır.\r\n    </div>\r\n  </div>\r\n</body>\r\n</html>\r\n";
+    }
+}
