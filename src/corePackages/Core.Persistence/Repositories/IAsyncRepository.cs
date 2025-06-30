@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Core.Persistence.Repositories;
 
-public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>
+public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
     where TEntity : Entity<TEntityId>
     where TEntityId : struct, IEquatable<TEntityId>
 {
@@ -73,7 +73,6 @@ public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>
                                      Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
                                      int index = 0, int size = 10, bool enableTracking = true,
                                      CancellationToken cancellationToken = default);
-
 
     Task<bool> AnyAsync(
         Expression<Func<TEntity, bool>>? predicate = null,

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Core.Persistence.Repositories;
 
-public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>
+public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
    where TEntity : Entity<TEntityId>
    where TEntityId : struct, IEquatable<TEntityId>
 {
