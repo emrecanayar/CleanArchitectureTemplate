@@ -5,7 +5,7 @@ namespace Core.Domain.Entities.Base
     public abstract class Entity : IEntity<Guid>, ISoftDelete, IAuditable, IHasTimestamps
     {
         public Guid Id { get; set; }
-        public RecordStatu Status { get; set; } = RecordStatu.Active;
+        public RecordStatu? Status { get; set; } = RecordStatu.Active;
         public string CreatedBy { get; set; } = "Admin";
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string ModifiedBy { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ namespace Core.Domain.Entities.Base
        where TKey : IEquatable<TKey>
     {
         public TKey Id { get; set; }
-        public RecordStatu Status { get; set; } = RecordStatu.Active;
+        public RecordStatu? Status { get; set; } = RecordStatu.Active;
         public string CreatedBy { get; set; } = "Admin";
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string ModifiedBy { get; set; } = string.Empty;

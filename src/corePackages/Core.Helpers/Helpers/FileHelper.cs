@@ -1,6 +1,6 @@
-﻿using ImageProcessor;
-using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using System.Text;
 
 namespace Core.Helpers.Helpers
@@ -141,7 +141,6 @@ namespace Core.Helpers.Helpers
             }
         }
 
-
         public static void WriteText(string filePath, string text, Encoding encoding)
         {
             File.WriteAllText(filePath, text, encoding);
@@ -155,7 +154,7 @@ namespace Core.Helpers.Helpers
         public static GenerateUrl GenerateURLForFile(IFormFile file, string webRootPath, string folderPath)
         {
             var name = file.FileName.Split('.')[0].Replace(" ", string.Empty);
-            var type = file.ContentType.ToLower().Contains("image") ? ".webp" : Path.GetExtension(file.FileName);
+            var type = !file.ContentType.StartsWith("image/") ? ".webp" : Path.GetExtension(file.FileName);
             CheckDirectoryExists(Path.Combine(webRootPath, folderPath.Replace("/", "\\")));
 
             return new GenerateUrl
@@ -228,15 +227,17 @@ namespace Core.Helpers.Helpers
         {
             using (FileStream fs = File.Create(directory.Replace("/", "\\")))
             {
-                if (file.ContentType.ToLower().Contains("image"))
+                if (!file.ContentType.StartsWith("image/"))
 
                 {
-                    using (ImageFactory imageFactory = new ImageFactory())
+                    using var image = Image.Load(file.OpenReadStream());
+
+                    var encoder = new WebpEncoder()
                     {
-                        imageFactory.Load(file.OpenReadStream())
-                                    .Format(new WebPFormat())
-                                    .Save(fs);
-                    }
+                        Quality = 100
+                    };
+
+                    image.Save(fs, encoder);
                 }
                 else
                 {
@@ -253,7 +254,6 @@ namespace Core.Helpers.Helpers
                 File.Delete(directory.Replace("/", "\\"));
             }
         }
-
 
         public class GenerateUrl
         {

@@ -11,8 +11,12 @@ using Core.Security.JWT;
 using Core.Utilities.ApiDoc;
 using Core.Utilities.Messages;
 using Hangfire;
+using Hangfire.SqlServer;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -21,31 +25,66 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using webAPI.Application;
+using webAPI.Extensions;
 using webAPI.Persistence.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
+var environment = builder.Environment.EnvironmentName;
 
+var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
 builder.Services.AddControllers(options =>
 {
     options.ModelBinderProviders.Insert(0, new DecryptedJsonModelBinderProvider());
 })
  .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
  .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Optimal;
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddSecurityServices();
 builder.Services.AddApplicationServices();
-builder.Services.AddHangfireServices();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddHealthChecks().AddSqlServer(connectionString);
+if (string.Equals(environment, "Production"))
+{
+    builder.Services.AddHangfireServices();
+    builder.Services.AddHangfireServer(options =>
+    {
+        options.WorkerCount = Environment.ProcessorCount * 2;
+
+    });
+    builder.Services.AddHangfire(config =>
+    {
+        config.UseStorage(new SqlServerStorage(connectionString, new SqlServerStorageOptions
+        {
+            SchemaName = "Hangfire", // Varsayýlan olarak 'Hangfire' þemasý
+            QueuePollInterval = TimeSpan.FromSeconds(15), // Kuyruk tarama aralýðý
+            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5), // Maksimum komut batch süresi
+            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5), // Kaybolan iþler için kaydýrma süresi
+            DashboardJobListLimit = 5000 // Dashboard'da gösterilecek iþ sayýsý
+
+        }));
+
+        //if (string.Equals(environment, "Production"))
+        {
+            config.ConfigureRecurringJobs();
+        }
+    });
+}
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new RepositoryModule()));
-
-
-builder.Services.AddHangfire(config =>
-    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
 
 builder.Services.AddCors(options =>
 {
@@ -115,13 +154,9 @@ builder.Services.AddSwaggerGen(opt =>
     opt.IncludeXmlComments(xmlPath);
 });
 
-
 var app = builder.Build();
 
 app.UseStaticFiles();
-
-var retryPolicyService = app.Services.GetRequiredService<IRetryPolicyService>();
-retryPolicyService.ApplyPolicy();
 
 app.UseSwagger(x =>
 {
@@ -143,15 +178,30 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.UseMiddleware<DecryptionMiddleware>();
 app.ConfigureCustomExceptionMiddleware();
+app.UseResponseCompression();
 
-app.UseHangfireServer();
-app.UseHangfireDashboard("/job", new DashboardOptions
+if (string.Equals(environment, "Production"))
 {
-    DashboardTitle = "Project Hangfire DashBoard",
-    AppPath = "/Home/HangfireAbout",
+    var retryPolicyService = app.Services.GetRequiredService<IRetryPolicyService>();
+    retryPolicyService.ApplyPolicy();
 
-});
+    app.UseHangfireServer();
+    app.UseHangfireDashboard("/job", new DashboardOptions
+    {
+        DashboardTitle = "Project Hangfire DashBoard",
+        AppPath = "/Home/HangfireAbout",
+
+    });
+}
 
 app.MapControllers();
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
+app.UseHealthChecksUI(config =>
+{
+    config.UIPath = "/monitor"; // Arayüz adresi
+});
 app.Run();

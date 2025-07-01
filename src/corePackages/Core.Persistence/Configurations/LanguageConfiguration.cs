@@ -14,7 +14,10 @@ namespace Core.Persistence.Configurations
             builder.Property(x => x.Name).HasColumnName("Name").HasMaxLength(LengthContraints.NameMaxLength);
             builder.Property(x => x.Symbol).HasColumnName("Symbol").HasMaxLength(LengthContraints.SymbolMaxLength);
             builder.Property(x => x.Flag).HasColumnName("Flag").HasMaxLength(50);
-            builder.HasMany(p => p.Dictionaries);
+            builder.HasMany(p => p.Dictionaries).WithOne(o => o.Language)
+             .HasForeignKey(o => o.LanguageId)
+             .OnDelete(DeleteBehavior.Cascade)
+             .IsRequired(false);
             builder.ToTable(TableNameConstants.LANGUAGE);
         }
     }

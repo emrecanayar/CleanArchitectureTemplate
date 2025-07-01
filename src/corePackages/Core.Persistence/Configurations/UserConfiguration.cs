@@ -1,11 +1,11 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.ComplexTypes.Enums;
+using Core.Domain.Entities;
 using Core.Helpers.Helpers;
 using Core.Persistence.Configurations.Base;
 using Core.Persistence.Constants;
 using Core.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Core.Domain.ComplexTypes.Enums;
 
 namespace Core.Persistence.Configurations
 {
@@ -25,7 +25,11 @@ namespace Core.Persistence.Configurations
             builder.HasMany(u => u.UserOperationClaims);
             builder.HasMany(u => u.RefreshTokens);
             builder.HasMany(u => u.EmailAuthenticators);
-            builder.HasMany(u => u.OtpAuthenticators);
+            builder.HasMany(u => u.OtpAuthenticators)
+              .WithOne(o => o.User)
+              .HasForeignKey(o => o.UserId)
+              .OnDelete(DeleteBehavior.Cascade)
+              .IsRequired(false);
             builder.ToTable(TableNameConstants.USER);
             builder.HasData(getSeeds());
         }
@@ -48,7 +52,8 @@ namespace Core.Persistence.Configurations
                     Email = "admin@admin.com",
                     Status = RecordStatu.Active,
                     PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
+                    PasswordSalt = passwordSalt,
+                    CreatedDate = new DateTime(2025, 7, 1, 13, 3, 57, 929, DateTimeKind.Local).AddTicks(6015)
                 };
             users.Add(adminUser);
 
