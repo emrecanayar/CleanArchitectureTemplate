@@ -10,15 +10,19 @@ namespace webAPI.Controllers
     public class UploadedFilesController : BaseController
     {
         private readonly IConfiguration _configuration;
-        public UploadedFilesController(IConfiguration configuration)
+        private readonly IWebHostEnvironment _environment;
+
+        public UploadedFilesController(IConfiguration configuration, IWebHostEnvironment environment)
         {
             this._configuration = configuration;
+            _environment = environment;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddFile(IFormFile file)
         {
-            CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _configuration.GetSection("WebRootPath").Value });
+            CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _environment.WebRootPath });
+            //CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _configuration.GetSection("WebRootPath").Value });
             return Created("", result);
         }
 

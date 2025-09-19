@@ -6,6 +6,6 @@ namespace webAPI.Application.Services.UploadedFileService
     public interface IUploadedFileService
     {
         Task<UploadedFile> AddOrUpdateDocument(UploadedFileDto uploadedFileDto);
-        Task<UploadedFileResponseDto?> TransferFile(string token, string newFolderPath, string webRootPath);
+        Task<UploadedFileResponseDto> TransferFile(string token, string newFolderPath);
     }
 }

@@ -29,18 +29,21 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFile
 
             public async Task<CustomResponseDto<UploadedFileCreatedDto>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
             {
-                FileHelper.GenerateUrl filePath = FileHelper.GenerateURLForFile(request.File, request.WebRootPath, UPLOADEDFILE_FOLDER);
-                UploadedFile uploadedFile = await this._uploadedFileService.AddOrUpdateDocument(new UploadedFileDto
-                {
-                    FileType = this._uploadedFileBusinessRules.DetectFileType(filePath.Path),
-                    FileName = request.File.FileName + filePath.FileType,
-                    Path = filePath.Path,
-                    Extension = FileInfoHelper.GetFileExtension(filePath.Path),
-                    Directory = request.File.Name,
-                });
+                FileHelper.GenerateUrl file = FileHelper.GenerateURLForFile(request.File, request.WebRootPath, UPLOADEDFILE_FOLDER);
 
-                FileHelper.Upload(request.File, request.WebRootPath, filePath.Path);
-                return CustomResponseDto<UploadedFileCreatedDto>.Success((int)HttpStatusCode.Created, new UploadedFileCreatedDto { Path = filePath.Path, Token = uploadedFile.Token }, true);
+                var uploadedFileDto = new UploadedFileDto
+                {
+                    FileType = this._uploadedFileBusinessRules.DetectFileType(file.Path),
+                    FileName = string.Concat(file.FileName, file.Extension),
+                    Path = file.Path,
+                    Extension = file.Extension,
+                    Directory = Path.GetDirectoryName(file.Path),
+                };
+
+                UploadedFile uploadedFile = await this._uploadedFileService.AddOrUpdateDocument(uploadedFileDto);
+
+                FileHelper.Upload(request.File, request.WebRootPath, file.Path);
+                return CustomResponseDto<UploadedFileCreatedDto>.Success((int)HttpStatusCode.Created, new UploadedFileCreatedDto { Path = file.Path, Token = uploadedFile.Token }, true);
             }
         }
     }

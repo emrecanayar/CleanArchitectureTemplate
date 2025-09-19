@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using System.Text;
@@ -153,16 +154,30 @@ namespace Core.Helpers.Helpers
 
         public static GenerateUrl GenerateURLForFile(IFormFile file, string webRootPath, string folderPath)
         {
-            var name = file.FileName.Split('.')[0].Replace(" ", string.Empty);
-            var type = !file.ContentType.StartsWith("image/") ? ".webp" : Path.GetExtension(file.FileName);
-            CheckDirectoryExists(Path.Combine(webRootPath, folderPath.Replace("/", "\\")));
+            var directoryPath = Path.Combine(webRootPath, folderPath.Replace("/", "\\"));
+            CheckDirectoryExists(directoryPath);
 
+            var name = Path.GetFileNameWithoutExtension(file.FileName);
+            var type = file.ContentType.StartsWith("image/") ? ".webp" : Path.GetExtension(file.FileName);
+            LogHelper.LogToFileAsync("GenerateURLForFile.log", $"{JsonConvert.SerializeObject(file)}");
+            string fullPath;
+            string uniqueName;
+            int count = 1;
+
+            do
+            {
+                uniqueName = count == 1 ? name : $"{name}_{count}";
+                fullPath = Path.Combine(directoryPath, uniqueName + type);
+                count++;
+            } while (File.Exists(fullPath));
+            string path = $"{folderPath.Replace(" ", string.Empty)}/{uniqueName}{type}".Replace("\\", "/");
             return new GenerateUrl
             {
                 FileType = type,
                 FileName = name,
-                Path = $"{folderPath.Replace(" ", string.Empty)}/{name}{type}".Replace("\\", "/"),
-                Extension = FileInfoHelper.GetFileExtension($"{folderPath.Replace(" ", string.Empty)}/{name}{type}".Replace("\\", "/")),
+                Path = path,
+                Directory = Path.GetDirectoryName(path),
+                Extension = FileInfoHelper.GetFileExtension(path),
             };
         }
         public static string Upload(IFormFile file, string webRootPath, string filePath)
@@ -212,6 +227,7 @@ namespace Core.Helpers.Helpers
                 type.ToLower() != ".png" &&
                 type.ToLower() != ".jpg" &&
                 type.ToLower() != ".svg" &&
+                type.ToLower() != ".webp" &&
                 type.ToLower() != ".mp4";
         }
 

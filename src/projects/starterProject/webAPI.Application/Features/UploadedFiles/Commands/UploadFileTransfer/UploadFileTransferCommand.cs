@@ -35,7 +35,7 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFileTransfer
 
             public async Task<CustomResponseDto<UploadedFileTransferDto>> Handle(UploadFileTransferCommand request, CancellationToken cancellationToken)
             {
-                UploadedFileResponseDto result = await this._uploadedFileService.TransferFile(request.Token, request.NewFolderPath, request.WebRootPath);
+                UploadedFileResponseDto result = await this._uploadedFileService.TransferFile(request.Token, request.NewFolderPath);
 
                 var addedOrUpdatedResult = await this._uploadedFileService.AddOrUpdateDocument(new UploadedFileDto
                 {
