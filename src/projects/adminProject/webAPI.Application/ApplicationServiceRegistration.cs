@@ -1,4 +1,5 @@
-﻿using Core.Application.Base.Rules;
+﻿using System.Reflection;
+using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching.DisturbedCache;
 using Core.Application.Pipelines.CheckId;
@@ -20,7 +21,6 @@ using Core.Mailing.MailKitImplementations;
 using Core.Persistence.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using webAPI.Application.Services.AuthService;
 
 namespace webAPI.Application

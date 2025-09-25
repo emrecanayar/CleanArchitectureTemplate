@@ -1,10 +1,10 @@
-﻿using Application.Features.Users.Commands.Delete;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Features.Users.Commands.Delete;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using static Application.Features.Users.Commands.Delete.DeleteUserCommand;
 

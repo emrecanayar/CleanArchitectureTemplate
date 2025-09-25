@@ -1,13 +1,13 @@
-﻿using Application.Features.Users.Commands.Update;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Features.Users.Commands.Update;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Test.Application.Constants;
 using FluentValidation.Results;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using static Application.Features.Users.Commands.Update.UpdateUserCommand;
 

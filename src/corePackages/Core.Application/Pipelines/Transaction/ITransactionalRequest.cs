@@ -1,3 +1,5 @@
 ﻿namespace Core.Application.Pipelines.Transaction;
 
-public interface ITransactionalRequest { }
+public interface ITransactionalRequest
+{
+}

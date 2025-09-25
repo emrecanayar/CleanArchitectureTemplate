@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Requests;
@@ -8,7 +9,6 @@ using Core.Persistence.Dynamic;
 using Core.Persistence.Paging;
 using Core.Persistence.Repositories;
 using MediatR;
-using System.Net;
 
 namespace Core.Application.Base.Queries.GetList
 {
@@ -18,15 +18,19 @@ namespace Core.Application.Base.Queries.GetList
      where TModel : BasePageableModel
     {
         public PageRequest PageRequest { get; set; }
+
         public IncludeProperty? IncludeProperty { get; set; }
+
         public string[] Roles { get; set; }
+
         public bool RequiresAuthorization { get; set; }
 
-        public GetListQuery(string[] roles = null, bool requiresAuthorization = false)
+        public GetListQuery(string[] roles, bool requiresAuthorization = false)
         {
             Roles = roles ?? Array.Empty<string>();
             RequiresAuthorization = requiresAuthorization;
         }
+
         public class GetListQueryHandler : IRequestHandler<GetListQuery<TEntity, TEntityId, TModel>, CustomResponseDto<TModel>>
         {
             private readonly IRepository<TEntity, TEntityId> _repository;
@@ -42,8 +46,7 @@ namespace Core.Application.Base.Queries.GetList
                 _baseBusinessRules = baseBusinessRules;
             }
 
-            public async Task<CustomResponseDto<TModel>> Handle(GetListQuery<TEntity, TEntityId, TModel> request,
-                                                              CancellationToken cancellationToken)
+            public async Task<CustomResponseDto<TModel>> Handle(GetListQuery<TEntity, TEntityId, TModel> request, CancellationToken cancellationToken)
             {
                 IQueryable<TEntity> query = _asyncRepository.Query();
 
@@ -62,8 +65,6 @@ namespace Core.Application.Base.Queries.GetList
                 TModel mappedTModel = _mapper.Map<TModel>(entities);
                 return CustomResponseDto<TModel>.Success((int)HttpStatusCode.OK, mappedTModel, isSuccess: true);
             }
-
         }
     }
 }
-

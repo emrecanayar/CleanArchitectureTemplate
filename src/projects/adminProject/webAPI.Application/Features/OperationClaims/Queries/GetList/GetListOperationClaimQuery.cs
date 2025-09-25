@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using MediatR;
-using System.Net;
 using webAPI.Application.Services.Repositories;
 
 namespace webAPI.Application.Features.OperationClaims.Queries.GetList

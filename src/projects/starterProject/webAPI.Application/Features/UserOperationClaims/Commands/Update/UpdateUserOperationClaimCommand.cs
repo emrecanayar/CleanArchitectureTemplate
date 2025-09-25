@@ -1,3 +1,4 @@
+using System.Net;
 using Application.Features.UserOperationClaims.Constants;
 using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
@@ -6,7 +7,6 @@ using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
-using System.Net;
 using static Application.Features.UserOperationClaims.Constants.UserOperationClaimsOperationClaims;
 
 namespace Application.Features.UserOperationClaims.Commands.Update;

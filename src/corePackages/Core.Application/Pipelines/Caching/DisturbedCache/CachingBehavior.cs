@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using System.Text;
+using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace Core.Application.Pipelines.Caching.DisturbedCache
 {
@@ -12,7 +12,7 @@ namespace Core.Application.Pipelines.Caching.DisturbedCache
     {
         private readonly IDistributedCache _cache;
         private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
-        private readonly CacheSettings _cacheSettings;
+        private readonly CacheSettings? _cacheSettings;
 
         public CachingBehavior(IDistributedCache cache, ILogger<CachingBehavior<TRequest, TResponse>> logger, IConfiguration configuration)
         {
@@ -23,13 +23,16 @@ namespace Core.Application.Pipelines.Caching.DisturbedCache
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            TResponse response;
-            if (request.BypassCache) return await next();
+            TResponse? response;
+            if (request.BypassCache)
+            {
+                return await next();
+            }
 
             async Task<TResponse> GetResponseAndAddToCache()
             {
                 response = await next();
-                TimeSpan? slidingExpiration = request.SlidingExpiration ?? TimeSpan.FromDays(_cacheSettings.SlidingExpiration);
+                TimeSpan? slidingExpiration = request.SlidingExpiration ?? TimeSpan.FromDays(_cacheSettings!.SlidingExpiration);
                 DistributedCacheEntryOptions cacheOptions = new() { SlidingExpiration = slidingExpiration };
                 byte[] serializeData = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response));
                 await _cache.SetAsync(request.CacheKey, serializeData, cacheOptions, cancellationToken);
@@ -48,7 +51,7 @@ namespace Core.Application.Pipelines.Caching.DisturbedCache
                 _logger.LogInformation($"Added to Cache -> {request.CacheKey}");
             }
 
-            return response;
+            return response!;
         }
     }
 }

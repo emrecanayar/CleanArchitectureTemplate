@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 using webAPI.Application.Features.Auth.Rules;
 using webAPI.Application.Features.Users.Queries.GetById;
 using webAPI.Application.Services.AuthenticatorService;

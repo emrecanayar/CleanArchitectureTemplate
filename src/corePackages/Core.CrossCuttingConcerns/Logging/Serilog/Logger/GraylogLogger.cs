@@ -21,9 +21,8 @@ public class GraylogLogger : LoggerServiceBase
                 {
                     HostnameOrAddress = logConfiguration.HostnameOrAddress,
                     Port = logConfiguration.Port,
-                    TransportType = TransportType.Udp
-                }
-            )
+                    TransportType = TransportType.Udp,
+                })
             .CreateLogger();
     }
 }

@@ -1,9 +1,9 @@
-﻿using Application.Features.OperationClaims.Rules;
+﻿using System.Linq.Expressions;
+using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
 using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
 
 namespace Application.Services.OperationClaims;
 

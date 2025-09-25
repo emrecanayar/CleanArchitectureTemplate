@@ -1,9 +1,9 @@
-﻿using Application.Features.OperationClaims.Commands.Create;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Application.Features.OperationClaims.Commands.Create;
 using Application.Tests.Mocks.FakeData;
 using Application.Tests.Mocks.Repositories;
 using Core.Application.ResponseTypes.Concrete;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using static Application.Features.OperationClaims.Commands.Create.CreateOperationClaimCommand;
 

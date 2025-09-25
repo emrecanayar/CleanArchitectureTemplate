@@ -1,9 +1,9 @@
-﻿using Core.Application.Base.Constants;
+﻿using System.Linq.Expressions;
+using Core.Application.Base.Constants;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.Domain.Entities.Base;
 using Core.Persistence.Repositories;
-using System.Linq.Expressions;
 
 namespace Core.Application.Base.Rules
 {
@@ -21,12 +21,19 @@ namespace Core.Application.Base.Rules
         public async Task BaseIdShouldExistWhenSelected(TEntityId id)
         {
             TEntity? baseData = await _asyncRepository.GetAsync(x => x.Id.Equals(id), enableTracking: false);
-            if (baseData is null) throw new BusinessException(typeof(TEntity).Name + BaseMessages.EntityDoesNotExist);
+            if (baseData is null)
+            {
+                throw new BusinessException(typeof(TEntity).Name + BaseMessages.EntityDoesNotExist);
+            }
         }
 
         public Task BaseShouldBeExist(TEntity? baseData)
         {
-            if (baseData is null) throw new NotFoundException(typeof(TEntity).Name + BaseMessages.EntityDoesNotExist);
+            if (baseData is null)
+            {
+                throw new NotFoundException(typeof(TEntity).Name + BaseMessages.EntityDoesNotExist);
+            }
+
             return Task.CompletedTask;
         }
 
@@ -43,9 +50,5 @@ namespace Core.Application.Base.Rules
 
             return Expression.Lambda(expression, parameterExpression);
         }
-
-
-
-
     }
 }

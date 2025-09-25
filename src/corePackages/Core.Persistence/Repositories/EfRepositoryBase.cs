@@ -1,13 +1,13 @@
-﻿using Core.Domain.Entities.Base;
+﻿using System.Collections;
+using System.Linq.Expressions;
+using System.Reflection;
+using Core.Domain.Entities.Base;
 using Core.Persistence.Dynamic;
 using Core.Persistence.Paging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Core.Persistence.Repositories;
 

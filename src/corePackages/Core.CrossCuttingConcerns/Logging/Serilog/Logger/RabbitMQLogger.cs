@@ -25,7 +25,7 @@ public class RabbitMQLogger : LoggerServiceBase
                 Username = rabbitMQConfiguration.Username,
                 Password = rabbitMQConfiguration.Password,
                 ExchangeType = rabbitMQConfiguration.ExchangeType,
-                RouteKey = rabbitMQConfiguration.RouteKey
+                RouteKey = rabbitMQConfiguration.RouteKey,
             };
         rabbitMQConfiguration.Hostnames.ForEach(config.Hostnames.Add);
 
@@ -35,8 +35,7 @@ public class RabbitMQLogger : LoggerServiceBase
                 {
                     clientConfiguration.From(config);
                     sinkConfiguration.TextFormatter = new JsonFormatter();
-                }
-            )
+                })
             .CreateLogger();
     }
 }

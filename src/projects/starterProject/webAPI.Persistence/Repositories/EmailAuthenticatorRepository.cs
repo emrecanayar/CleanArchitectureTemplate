@@ -8,5 +8,7 @@ namespace Persistence.Repositories;
 public class EmailAuthenticatorRepository : EfRepositoryBase<EmailAuthenticator, Guid, BaseDbContext>, IEmailAuthenticatorRepository
 {
     public EmailAuthenticatorRepository(BaseDbContext context)
-        : base(context) { }
+        : base(context)
+    {
+    }
 }

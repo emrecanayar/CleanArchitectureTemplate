@@ -1,4 +1,6 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using System.Text.Json.Serialization;
+using Application.Features.Auth.Rules;
 using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
@@ -10,15 +12,15 @@ using Core.Domain.Entities;
 using Core.Mailing;
 using MediatR;
 using MimeKit;
-using System.Net;
-using System.Text.Json.Serialization;
 
 namespace Application.Features.Auth.Commands.ForgotPassword;
 
 public class ForgotPasswordCommand : IRequest<CustomResponseDto<bool>>
 {
     public string Email { get; set; }
-    [JsonIgnore] public string? IpAddress { get; set; }
+
+    [JsonIgnore]
+    public string? IpAddress { get; set; }
 
     public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, CustomResponseDto<bool>>
     {
@@ -29,6 +31,7 @@ public class ForgotPasswordCommand : IRequest<CustomResponseDto<bool>>
         private readonly IUserService _userService;
         private readonly IUserRepository _userRepository;
         private readonly IMailService _mailService;
+
         public ForgotPasswordCommandHandler(
             IMapper mapper,
             IUserService userService,
@@ -36,8 +39,7 @@ public class ForgotPasswordCommand : IRequest<CustomResponseDto<bool>>
             AuthBusinessRules authBusinessRules,
             IAuthenticatorService authenticatorService,
             IUserRepository userRepository,
-            IMailService mailService
-        )
+            IMailService mailService)
         {
             _mapper = mapper;
             _userService = userService;
@@ -53,13 +55,12 @@ public class ForgotPasswordCommand : IRequest<CustomResponseDto<bool>>
             User? user = await _userService.GetAsync(
                predicate: u => u.Email == request.Email,
                enableTracking: false,
-               cancellationToken: cancellationToken
-           );
+               cancellationToken: cancellationToken);
 
             await _authBusinessRules.UserShouldBeExistsWhenSelected(user);
             string password = TempPasswordCreator();
             Core.Security.Hashing.HashingHelper.CreatePasswordHash(password, passwordHash: out byte[] passwordHash, passwordSalt: out byte[] passwordSalt);
-            user.PasswordHash = passwordHash;
+            user!.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             await _userRepository.UpdateAsync(user);
@@ -78,13 +79,14 @@ public class ForgotPasswordCommand : IRequest<CustomResponseDto<bool>>
                 };
                 await _mailService.SendEmailAsync(mail);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
+
             return CustomResponseDto<bool>.Success((int)HttpStatusCode.OK, true, true);
         }
 
-        public static string TempPasswordCreator(int uzunluk = 8)
+        public string TempPasswordCreator(int uzunluk = 8)
         {
             const string karakterler = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
             var rastgele = new Random();

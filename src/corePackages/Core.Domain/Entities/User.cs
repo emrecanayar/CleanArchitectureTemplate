@@ -1,21 +1,32 @@
-﻿using Core.Domain.Entities.Base;
-using Core.Domain.ComplexTypes.Enums;
+﻿using Core.Domain.ComplexTypes.Enums;
+using Core.Domain.Entities.Base;
 
 namespace Core.Domain.Entities
 {
     public class User : Entity<Guid>
     {
         public string FirstName { get; set; }
+
         public string LastName { get; set; }
+
         public string Email { get; set; }
+
         public byte[] PasswordSalt { get; set; }
+
         public byte[] PasswordHash { get; set; }
+
         public AuthenticatorType AuthenticatorType { get; set; }
+
         public CultureType CultureType { get; set; }
+
         public virtual ICollection<UserOperationClaim> UserOperationClaims { get; set; } = null!;
+
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = null!;
+
         public virtual ICollection<EmailAuthenticator> EmailAuthenticators { get; set; } = null!;
+
         public virtual ICollection<OtpAuthenticator> OtpAuthenticators { get; set; } = null!;
+
         public User()
         {
             FirstName = string.Empty;
@@ -32,8 +43,7 @@ namespace Core.Domain.Entities
             byte[] passwordSalt,
             byte[] passwordHash,
             RecordStatu status,
-            AuthenticatorType authenticatorType
-        )
+            AuthenticatorType authenticatorType)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -52,8 +62,7 @@ namespace Core.Domain.Entities
             byte[] passwordSalt,
             byte[] passwordHash,
             RecordStatu status,
-            AuthenticatorType authenticatorType
-        )
+            AuthenticatorType authenticatorType)
             : base()
         {
             Id = Guid.Empty;
@@ -65,6 +74,5 @@ namespace Core.Domain.Entities
             Status = status;
             AuthenticatorType = authenticatorType;
         }
-
     }
 }

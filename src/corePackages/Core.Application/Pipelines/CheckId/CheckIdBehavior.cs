@@ -18,7 +18,7 @@ namespace Core.Application.Pipelines.CheckId
         {
             if (request is IRequestWithId requestWithId)
             {
-                if (requestWithId.Id == null || requestWithId.Id == 0)
+                if (requestWithId.Id == 0)
                 {
                     throw new BusinessException("Id param is missing");
                 }

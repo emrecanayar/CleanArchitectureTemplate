@@ -1,7 +1,7 @@
-﻿using Core.Application.ResponseTypes.Concrete;
+﻿using System.Net;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Helpers.Helpers;
 using MediatR;
-using System.Net;
 using webAPI.Application.Features.UploadedFiles.Dtos;
 using webAPI.Application.Features.UploadedFiles.Rules;
 using webAPI.Application.Services.UploadedFileService;

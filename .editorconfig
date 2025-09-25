@@ -1,4 +1,77 @@
-﻿[*.cs]
+﻿# .editorconfig for C# with StyleCop-like rules
 
-# CS1591: Missing XML comment for publicly visible type or member
+root = true
+
+[*.cs]
+
+###########################
+# Documentation rules
+###########################
+# Company name for file headers
+
+# Document exposed/internal/private elements
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1011.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1208.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1402.severity = none
 dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1602.severity = none
+dotnet_diagnostic.SA1604.severity = none
+dotnet_diagnostic.SA1606.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.CS8618.severity = none
+dotnet_diagnostic.CS8601.severity = none
+dotnet_diagnostic.CS8619.severity = none
+dotnet_diagnostic.CS0693.severity = none
+dotnet_diagnostic.CS8714.severity = none
+
+###########################
+# Ordering rules
+###########################
+# System using directives first
+dotnet_sort_system_directives_first = true
+# Using directives outside namespace
+dotnet_style_qualification_for_event = false
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_property = false
+
+# Element order (approximation, C# doesn't support full SA ordering)
+csharp_element_ordering = kind, accessibility, constant, readonly, static, instance
+
+###########################
+# Layout rules
+###########################
+# Require newline at end of file
+insert_final_newline = true
+
+###########################
+# Naming rules
+###########################
+# Field naming
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.severity = warning
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.style = camel_case_with_underscore
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.accessibility = private
+dotnet_naming_symbols.private_fields.required_modifiers = 
+
+dotnet_naming_style.camel_case_with_underscore.capitalization = camel_case
+dotnet_naming_style.camel_case_with_underscore.required_prefix = _
+
+###########################
+# Maintainability rules
+###########################
+# Allow regions (kapalı)
+dotnet_diagnostic.SA1124.severity = warning

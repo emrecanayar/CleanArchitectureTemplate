@@ -1,11 +1,11 @@
-﻿using Core.Application.Dtos;
+﻿using System.Net;
+using Core.Application.Dtos;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Helpers.Helpers;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 using webAPI.Application.Features.Auth.Rules;
 using webAPI.Application.Services.AuthService;
 using webAPI.Application.Services.Repositories;

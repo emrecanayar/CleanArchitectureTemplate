@@ -3,7 +3,9 @@
     public class SearchByQueryParameters : SearchParameters
     {
         public string QueryName { get; set; } = string.Empty;
+
         public string Query { get; set; } = string.Empty;
+
         public string[] Fields { get; set; }
 
         public SearchByQueryParameters()

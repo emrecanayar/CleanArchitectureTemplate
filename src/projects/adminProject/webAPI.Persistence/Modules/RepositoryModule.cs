@@ -1,6 +1,6 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using Core.Persistence.Contexts;
-using System.Reflection;
 using Module = Autofac.Module;
 
 

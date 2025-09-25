@@ -15,7 +15,6 @@
 
         internal UnspecifiedClockProvider()
         {
-
         }
     }
 }

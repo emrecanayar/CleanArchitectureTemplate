@@ -1,5 +1,5 @@
-﻿using Core.CrossCuttingConcerns.Exceptions.Types;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using Core.CrossCuttingConcerns.Exceptions.Types;
 
 namespace Core.Security.Extensions;
 

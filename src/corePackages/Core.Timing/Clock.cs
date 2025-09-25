@@ -6,12 +6,16 @@
     public static class Clock
     {
         /// <summary>
-        /// This object is used to perform all <see cref="Clock"/> operations.
+        /// Gets or sets this object is used to perform all <see cref="Clock"/> operations.
         /// Default value: <see cref="UnspecifiedClockProvider"/>.
         /// </summary>
         public static IClockProvider Provider
         {
-            get { return _provider; }
+            get
+            {
+                return _provider;
+            }
+
             set
             {
                 if (value == null)
@@ -38,7 +42,7 @@
         public static DateTimeKind Kind => Provider.Kind;
 
         /// <summary>
-        /// Returns true if multiple timezone is supported, returns false if not.
+        /// Gets a value indicating whether returns true if multiple timezone is supported, returns false if not.
         /// </summary>
         public static bool SupportsMultipleTimezone => Provider.SupportsMultipleTimezone;
 
@@ -46,7 +50,7 @@
         /// Normalizes given <see cref="DateTime"/> using current <see cref="Provider"/>.
         /// </summary>
         /// <param name="dateTime">DateTime to be normalized.</param>
-        /// <returns>Normalized DateTime</returns>
+        /// <returns>Normalized DateTime.</returns>
         public static DateTime Normalize(DateTime dateTime)
         {
             return Provider.Normalize(dateTime);

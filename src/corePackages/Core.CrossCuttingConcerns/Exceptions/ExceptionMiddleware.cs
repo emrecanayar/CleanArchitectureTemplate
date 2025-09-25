@@ -42,19 +42,19 @@ public class ExceptionMiddleware
     private Task logException(HttpContext context, Exception exception)
     {
         List<LogParameter> logParameters = new()
-            {
+        {
             new LogParameter
-                {
+            {
                 Type = context.GetType().Name,
-                Value = context
-                }
-            };
+                Value = context,
+            },
+        };
 
         LogDetail logDetail = new()
         {
             MethodName = _next.Method.Name,
             Parameters = logParameters,
-            User = _contextAccessor.HttpContext?.User.Identity?.Name ?? "?"
+            User = _contextAccessor.HttpContext?.User.Identity?.Name ?? "?",
         };
 
         _loggerService.Info($"Logging Exception: {exception.Message} {Environment.NewLine} " +

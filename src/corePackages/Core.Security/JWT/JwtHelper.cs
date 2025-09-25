@@ -1,11 +1,11 @@
-﻿using Core.Domain.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Core.Domain.Entities;
 using Core.Security.Encryption;
 using Core.Security.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Core.Security.JWT;
 

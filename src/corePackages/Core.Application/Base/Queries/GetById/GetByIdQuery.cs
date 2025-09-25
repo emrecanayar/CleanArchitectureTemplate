@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
@@ -7,7 +8,6 @@ using Core.Persistence.Dynamic;
 using Core.Persistence.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace Core.Application.Base.Queries.GetById
 {
@@ -17,11 +17,14 @@ namespace Core.Application.Base.Queries.GetById
     where TModel : class
     {
         public TEntityId Id { get; set; }
+
         public IncludeProperty? IncludeProperty { get; set; }
+
         public string[] Roles { get; set; }
+
         public bool RequiresAuthorization { get; set; }
 
-        public GetByIdQuery(string[] roles = null, bool requiresAuthorization = false)
+        public GetByIdQuery(string[] roles, bool requiresAuthorization = false)
         {
             Roles = roles ?? Array.Empty<string>();
             RequiresAuthorization = requiresAuthorization;
@@ -40,8 +43,7 @@ namespace Core.Application.Base.Queries.GetById
                 _baseBusinessRules = baseBusinessRules;
             }
 
-            public async Task<CustomResponseDto<TModel>> Handle(GetByIdQuery<TEntity, TEntityId, TModel> request,
-                                                    CancellationToken cancellationToken)
+            public async Task<CustomResponseDto<TModel>> Handle(GetByIdQuery<TEntity, TEntityId, TModel> request, CancellationToken cancellationToken)
             {
                 await _baseBusinessRules.BaseIdShouldExistWhenSelected(request.Id);
                 IQueryable<TEntity> query = _asyncRepository.Query();
@@ -58,7 +60,7 @@ namespace Core.Application.Base.Queries.GetById
                 }
 
                 query = query.Where(x => x.Id.Equals(request.Id));
-                TEntity entity = await query.SingleOrDefaultAsync();
+                TEntity? entity = await query.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
                 TModel mappedTModel = _mapper.Map<TModel>(entity);
                 return CustomResponseDto<TModel>.Success((int)HttpStatusCode.OK, mappedTModel, isSuccess: true);

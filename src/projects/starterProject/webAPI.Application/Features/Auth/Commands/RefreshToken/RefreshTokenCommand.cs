@@ -1,11 +1,11 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using Application.Features.Auth.Rules;
 using Application.Services.AuthService;
 using Application.Services.UsersService;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Auth.Commands.RefreshToken;
 

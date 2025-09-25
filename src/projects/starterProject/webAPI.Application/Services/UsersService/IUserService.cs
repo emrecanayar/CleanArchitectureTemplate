@@ -1,7 +1,7 @@
-﻿using Core.Domain.Entities;
+﻿using System.Linq.Expressions;
+using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
 
 namespace Application.Services.UsersService;
 
@@ -12,8 +12,7 @@ public interface IUserService
         Func<IQueryable<User>, IIncludableQueryable<User, object>>? include = null,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
 
     Task<IPaginate<User>?> GetListAsync(
         Expression<Func<User, bool>>? predicate = null,
@@ -23,10 +22,11 @@ public interface IUserService
         int size = 10,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
 
     Task<User> AddAsync(User user);
+
     Task<User> UpdateAsync(User user);
+
     Task<User> DeleteAsync(User user, bool permanent = false);
 }

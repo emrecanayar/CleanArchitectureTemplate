@@ -8,5 +8,7 @@ namespace Persistence.Repositories;
 public class UserRepository : EfRepositoryBase<User, Guid, BaseDbContext>, IUserRepository
 {
     public UserRepository(BaseDbContext context)
-        : base(context) { }
+        : base(context)
+    {
+    }
 }

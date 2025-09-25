@@ -3,6 +3,7 @@
     public interface ICacheRemoverRequestInMemory
     {
         bool BypassCache { get; }
+
         string CacheKey { get; }
     }
 }

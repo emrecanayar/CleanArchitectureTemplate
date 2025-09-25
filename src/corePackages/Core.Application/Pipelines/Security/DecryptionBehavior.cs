@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Application.Pipelines.Security
 {
-    public class DecryptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>, IHttpRequestRelated
+    public class DecryptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>, IHttpRequestRelated
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -16,7 +17,7 @@ namespace Core.Application.Pipelines.Security
         {
             var context = _httpContextAccessor.HttpContext;
 
-            if (context.Items.ContainsKey("DecryptedRequestBody"))
+            if (context!.Items.ContainsKey("DecryptedRequestBody"))
             {
                 var modifiedBody = context.Items["DecryptedRequestBody"] as string;
 

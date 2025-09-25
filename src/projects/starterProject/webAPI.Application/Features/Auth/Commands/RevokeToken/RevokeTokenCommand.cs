@@ -1,9 +1,9 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using Application.Features.Auth.Rules;
 using Application.Services.AuthService;
 using AutoMapper;
 using Core.Application.ResponseTypes.Concrete;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Auth.Commands.RevokeToken;
 

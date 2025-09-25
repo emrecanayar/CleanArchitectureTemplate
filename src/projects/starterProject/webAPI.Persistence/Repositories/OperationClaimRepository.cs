@@ -8,5 +8,7 @@ namespace Persistence.Repositories;
 public class OperationClaimRepository : EfRepositoryBase<OperationClaim, Guid, BaseDbContext>, IOperationClaimRepository
 {
     public OperationClaimRepository(BaseDbContext context)
-        : base(context) { }
+        : base(context)
+    {
+    }
 }

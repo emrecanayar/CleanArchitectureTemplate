@@ -1,11 +1,11 @@
-﻿using Core.Helpers.Helpers;
+﻿using System.Diagnostics;
+using Core.Helpers.Helpers;
 using Core.Security.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using UAParser;
 
 namespace Core.Security.ApplicationSecurity.Middlewares

@@ -10,6 +10,7 @@ namespace Core.ElasticSearch
     public class ElasticSearchManager : IElasticSearch
     {
         private readonly ConnectionSettings _connectionSettings;
+
         public ElasticSearchManager(IConfiguration configuration)
         {
             ElasticSearchConfig? settings = configuration.GetSection("ElasticSearchConfig").Get<ElasticSearchConfig>();
@@ -21,18 +22,15 @@ namespace Core.ElasticSearch
             SingleNodeConnectionPool pool = new(new Uri(settings.ConnectionString));
             _connectionSettings = new ConnectionSettings(pool, (builtInSerializer, connectionSettings) => new JsonNetSerializer(builtInSerializer, connectionSettings, () => new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             }));
         }
-
-
 
         public IReadOnlyDictionary<IndexName, IndexState> GetIndexList()
         {
             ElasticClient elasticClient = new(_connectionSettings);
             return elasticClient.Indices.Get(new GetIndexRequest(Indices.All)).Indices;
         }
-
 
         public async Task<IElasticSearchResult> InsertManyAsync(string indexName, object[] items)
         {
@@ -50,7 +48,9 @@ namespace Core.ElasticSearch
         {
             ElasticClient elasticClient = GetElasticClient(indexModel.IndexName);
             if (elasticClient.Indices.Exists(indexModel.IndexName).Exists)
+            {
                 return new ElasticSearchResult(false, "Index already exists");
+            }
 
             CreateIndexResponse? response = await elasticClient.Indices.CreateAsync(indexModel.IndexName, se =>
                                                 se.Settings(a => a.NumberOfReplicas(
@@ -64,7 +64,6 @@ namespace Core.ElasticSearch
                 response.IsValid ? "Success" : response.ServerError.Error.Reason);
         }
 
-
         public async Task<IElasticSearchResult> DeleteByElasticIdAsync(ElasticSearchModel model)
         {
             ElasticClient elasticClient = GetElasticClient(model.IndexName);
@@ -75,8 +74,8 @@ namespace Core.ElasticSearch
                 response.IsValid ? "Success" : response.ServerError.Error.Reason);
         }
 
-
-        public async Task<List<ElasticSearchGetModel<T>>> GetAllSearch<T>(SearchParameters parameters) where T : class
+        public async Task<List<ElasticSearchGetModel<T>>> GetAllSearch<T>(SearchParameters parameters)
+            where T : class
         {
             ElasticClient elasticClient = GetElasticClient(parameters.IndexName);
             ISearchResponse<T>? searchResponse = await elasticClient.SearchAsync<T>(s => s
@@ -87,12 +86,11 @@ namespace Core.ElasticSearch
             List<ElasticSearchGetModel<T>> list = searchResponse.Hits.Select(x => new ElasticSearchGetModel<T>
             {
                 ElasticId = x.Id,
-                Item = x.Source
+                Item = x.Source,
             }).ToList();
 
             return list;
         }
-
 
         public async Task<List<ElasticSearchGetModel<T>>> GetSearchByField<T>(SearchByFieldParameters fieldParameters)
             where T : class
@@ -106,12 +104,11 @@ namespace Core.ElasticSearch
             List<ElasticSearchGetModel<T>> list = searchResponse.Hits.Select(x => new ElasticSearchGetModel<T>
             {
                 ElasticId = x.Id,
-                Item = x.Source
+                Item = x.Source,
             }).ToList();
 
             return list;
         }
-
 
         public async Task<List<ElasticSearchGetModel<T>>> GetSearchBySimpleQueryString<T>(
             SearchByQueryParameters queryParameters)
@@ -144,12 +141,11 @@ namespace Core.ElasticSearch
             List<ElasticSearchGetModel<T>> list = searchResponse.Hits.Select(x => new ElasticSearchGetModel<T>
             {
                 ElasticId = x.Id,
-                Item = x.Source
+                Item = x.Source,
             }).ToList();
 
             return list;
         }
-
 
         public async Task<IElasticSearchResult> InsertAsync(ElasticSearchInsertUpdateModel model)
         {
@@ -174,15 +170,14 @@ namespace Core.ElasticSearch
                 response.IsValid ? "Success" : response.ServerError.Error.Reason);
         }
 
-
         private ElasticClient GetElasticClient(string indexName)
         {
             if (string.IsNullOrEmpty(indexName))
+            {
                 throw new ArgumentNullException(indexName, "Index name cannot be null or empty ");
+            }
 
             return new ElasticClient(_connectionSettings);
         }
-
-
     }
 }

@@ -11,7 +11,8 @@ namespace Core.Application.ObjectPool
             _poolProvider = new DefaultObjectPoolProvider();
         }
 
-        public ObjectPool<T> Create<T>() where T : class, new()
+        public ObjectPool<T> Create<T>()
+            where T : class, new()
         {
             return _poolProvider.Create(new DefaultPooledObjectPolicy<T>());
         }

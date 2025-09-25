@@ -24,7 +24,7 @@ public class PostgreSqlLogger : LoggerServiceBase
             { "exception", new ExceptionColumnWriter() },
             { "properties", new LogEventSerializedColumnWriter() },
             { "props_test", new PropertiesColumnWriter() },
-            { "machine_name", new SinglePropertyColumnWriter(propertyName: "MachineName", format: "l") }
+            { "machine_name", new SinglePropertyColumnWriter(propertyName: "MachineName", format: "l") },
         };
 
         global::Serilog.Core.Logger loggerConfiguration = new LoggerConfiguration().WriteTo
@@ -32,8 +32,7 @@ public class PostgreSqlLogger : LoggerServiceBase
                 postgreConfiguration.ConnectionString,
                 postgreConfiguration.TableName,
                 columnWriters,
-                needAutoCreateTable: postgreConfiguration.NeedAutoCreateTable
-            )
+                needAutoCreateTable: postgreConfiguration.NeedAutoCreateTable)
             .CreateLogger();
         Logger = loggerConfiguration;
     }

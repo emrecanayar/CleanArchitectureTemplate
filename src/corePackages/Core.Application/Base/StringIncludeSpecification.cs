@@ -2,7 +2,8 @@
 
 namespace Core.Application.Base
 {
-    public class StringIncludeSpecification<TEntity> where TEntity : class
+    public class StringIncludeSpecification<TEntity>
+        where TEntity : class
     {
         public List<string> Includes { get; } = new List<string>();
 
@@ -18,6 +19,7 @@ namespace Core.Application.Base
             {
                 query = query.Include(includeProperty);
             }
+
             return query;
         }
     }

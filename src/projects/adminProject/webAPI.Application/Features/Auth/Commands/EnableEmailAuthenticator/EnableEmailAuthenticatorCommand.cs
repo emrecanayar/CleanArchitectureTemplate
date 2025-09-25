@@ -1,9 +1,9 @@
-﻿using Core.Domain.ComplexTypes.Enums;
+﻿using System.Web;
+using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Mailing;
 using MediatR;
 using MimeKit;
-using System.Web;
 using webAPI.Application.Features.Auth.Rules;
 using webAPI.Application.Services.AuthenticatorService;
 using webAPI.Application.Services.Repositories;

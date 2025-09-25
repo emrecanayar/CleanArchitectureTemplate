@@ -1,7 +1,7 @@
-﻿using Core.Security.Models;
+﻿using System.Net;
+using Core.Security.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System.Net;
 
 namespace Core.Security.ApplicationSecurity.Middlewares
 {

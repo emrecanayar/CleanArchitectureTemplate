@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics;
+using AutoMapper;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using Core.CrossCuttingConcerns.Logging.DbLog.Dto;
 using Core.CrossCuttingConcerns.Logging.DbLog.MsSQL;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Diagnostics;
 
 namespace Core.Application.Pipelines.DbLogging
 {
@@ -41,14 +41,14 @@ namespace Core.Application.Pipelines.DbLogging
             };
             settings.ContractResolver = new DefaultContractResolver
             {
-                IgnoreSerializableAttribute = true
+                IgnoreSerializableAttribute = true,
             };
             settings.Error = (sender, args) =>
             {
                 args.ErrorContext.Handled = true;
             };
 
-            string requestBody = await readRequestBody(httpContext.Request);
+            string requestBody = await readRequestBody(httpContext!.Request);
             try
             {
                 requestBody += JsonConvert.SerializeObject(request, settings);
@@ -56,6 +56,7 @@ namespace Core.Application.Pipelines.DbLogging
             catch
             {
             }
+
             Domain.Entities.Log logEntry = createLogEntry(httpContext, requestBody);
 
             // Response
@@ -68,26 +69,25 @@ namespace Core.Application.Pipelines.DbLogging
                 logEntry.LogDate = DateTime.Now;
                 logEntry.ResponseTime = stopwatch.ElapsedMilliseconds;
                 return response;
-
             }
             catch (Exception ex)
             {
                 logEntry.Exception = ex.ToString();
                 logEntry.ExceptionMessage = ex.Message;
-                logEntry.InnerException = ex.InnerException?.ToString();
-                logEntry.InnerExceptionMessage = ex.InnerException?.Message;
+                logEntry.InnerException = ex.InnerException!.ToString();
+                logEntry.InnerExceptionMessage = ex.InnerException!.Message;
                 logEntry.StatusCode = httpContext.Response.StatusCode;
 
                 await handleExceptionAsync(ex);
-                return default;
+                return default!;
             }
             finally
             {
                 // Veritabanına log kaydını eklenir.
                 await addLogToDatabase(logEntry);
             }
-
         }
+
         private async Task<string> readRequestBody(HttpRequest request)
         {
             request.EnableBuffering();

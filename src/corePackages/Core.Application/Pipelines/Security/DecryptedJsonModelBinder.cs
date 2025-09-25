@@ -31,6 +31,4 @@ namespace Core.Application.Pipelines.Security
             return Task.CompletedTask;
         }
     }
-
-
 }

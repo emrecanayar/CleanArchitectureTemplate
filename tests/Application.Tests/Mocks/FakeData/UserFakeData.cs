@@ -1,8 +1,8 @@
-﻿using Core.Domain.Entities;
-using Core.Test.Application.FakeData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Core.Domain.ComplexTypes.Enums;
+using Core.Domain.Entities;
+using Core.Test.Application.FakeData;
 
 namespace Application.Tests.Mocks.FakeData;
 

@@ -1,3 +1,4 @@
+using System.Net;
 using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
@@ -5,7 +6,6 @@ using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace Application.Features.OperationClaims.Queries.GetById;
 

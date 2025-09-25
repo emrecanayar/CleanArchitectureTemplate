@@ -1,9 +1,10 @@
-﻿using Core.Persistence.Dynamic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Core.Persistence.Dynamic;
 
 namespace Core.Application.Base
 {
-    public class IncludeSpecification<TEntity> where TEntity : class
+    public class IncludeSpecification<TEntity>
+        where TEntity : class
     {
         public List<LambdaExpression> Includes { get; } = new List<LambdaExpression>();
 

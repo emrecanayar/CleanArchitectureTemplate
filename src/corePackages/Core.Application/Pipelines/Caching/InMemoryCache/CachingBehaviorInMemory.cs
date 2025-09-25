@@ -1,11 +1,11 @@
-﻿using Core.Application.Pipelines.Caching.DisturbedCache;
+﻿using System.Text;
+using Core.Application.Pipelines.Caching.DisturbedCache;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace Core.Application.Pipelines.Caching.InMemoryCache
 {
@@ -14,7 +14,7 @@ namespace Core.Application.Pipelines.Caching.InMemoryCache
     {
         private readonly IMemoryCache _cache;
         private readonly ILogger<CachingBehaviorInMemory<TRequest, TResponse>> _logger;
-        private readonly CacheSettings _cacheSettings;
+        private readonly CacheSettings? _cacheSettings;
 
         public CachingBehaviorInMemory(IMemoryCache cache, ILogger<CachingBehaviorInMemory<TRequest, TResponse>> logger, IConfiguration configuration)
         {
@@ -25,13 +25,16 @@ namespace Core.Application.Pipelines.Caching.InMemoryCache
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            TResponse response;
-            if (request.BypassCache) return await next();
+            TResponse? response;
+            if (request.BypassCache)
+            {
+                return await next();
+            }
 
             async Task<TResponse> GetResponseAndAddToCache()
             {
                 response = await next();
-                TimeSpan? slidingExpiration = request.SlidingExpiration ?? TimeSpan.FromDays(_cacheSettings.SlidingExpiration);
+                TimeSpan? slidingExpiration = request.SlidingExpiration ?? TimeSpan.FromDays(_cacheSettings!.SlidingExpiration);
                 MemoryCacheEntryOptions cacheOptions = new() { SlidingExpiration = slidingExpiration };
                 byte[] serializeData = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response));
                 _cache.Set(request.CacheKey, serializeData, cacheOptions);
@@ -50,7 +53,7 @@ namespace Core.Application.Pipelines.Caching.InMemoryCache
                 _logger.LogInformation($"Added to Cache -> {request.CacheKey}");
             }
 
-            return response;
+            return response!;
         }
     }
 }

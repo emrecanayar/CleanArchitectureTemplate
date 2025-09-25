@@ -21,9 +21,8 @@ public class ElasticSearchLogger : LoggerServiceBase
                 {
                     AutoRegisterTemplate = true,
                     AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                    CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true)
-                }
-            )
+                    CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true),
+                })
             .CreateLogger();
     }
 }

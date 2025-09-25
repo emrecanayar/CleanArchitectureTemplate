@@ -16,8 +16,7 @@ namespace Core.Application.Pipelines.Security
                 return new DecryptedJsonModelBinder();
             }
 
-            return null;
+            return null!;
         }
     }
-
 }

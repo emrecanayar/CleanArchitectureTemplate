@@ -1,8 +1,8 @@
-﻿using Core.Helpers.Helpers;
+﻿using System.Reflection;
+using Core.Helpers.Helpers;
 using Core.Timing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Reflection;
 
 namespace Core.Json
 {

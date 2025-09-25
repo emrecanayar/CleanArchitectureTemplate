@@ -1,4 +1,5 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using Application.Features.Auth.Rules;
 using Application.Features.Users.Queries.GetById;
 using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
@@ -10,7 +11,6 @@ using Core.Domain.ComplexTypes.Enums;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Auth.Commands.Login;
 

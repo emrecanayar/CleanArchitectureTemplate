@@ -7,7 +7,8 @@ namespace webAPI.Persistence.Repositories
 {
     public class UploadedFileRepository : EfRepositoryBase<UploadedFile, Guid, BaseDbContext>, IUploadedFileRepository
     {
-        public UploadedFileRepository(BaseDbContext context) : base(context)
+        public UploadedFileRepository(BaseDbContext context)
+            : base(context)
         {
         }
     }

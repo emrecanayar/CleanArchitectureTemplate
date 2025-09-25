@@ -14,7 +14,6 @@ namespace Core.Application.Pipelines.Security
             _decryptService = decryptService;
         }
 
-
         public async Task InvokeAsync(HttpContext context)
         {
             context.Request.EnableBuffering();
@@ -31,7 +30,7 @@ namespace Core.Application.Pipelines.Security
                 JObject json = JObject.Parse(requestBody);
                 if (json["value"] != null)
                 {
-                    string encryptedValue = json["value"].ToString();
+                    string encryptedValue = json["value"]!.ToString();
                     string decryptedValue = _decryptService.Decrypt(encryptedValue);
                     context.Items["DecryptedRequestBody"] = decryptedValue;
                 }

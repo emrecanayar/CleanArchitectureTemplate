@@ -1,4 +1,5 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using Application.Features.Auth.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using Core.Application.Dtos;
@@ -8,7 +9,6 @@ using Core.Domain.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Auth.Commands.Register;
 

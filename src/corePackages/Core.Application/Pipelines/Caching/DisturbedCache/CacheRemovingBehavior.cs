@@ -19,7 +19,10 @@ namespace Core.Application.Pipelines.Caching.DisturbedCache
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             TResponse response;
-            if (request.BypassCache) return await next();
+            if (request.BypassCache)
+            {
+                return await next();
+            }
 
             async Task<TResponse> GetResponseAndRemoveCache()
             {

@@ -23,6 +23,7 @@ namespace Core.CrossCuttingConcerns.Logging.DbLog.MsSQL
             Log log = _mapper.Map<Log>(logDto);
             await logToDb(log);
         }
+
         private async Task logToDb(Log log)
         {
             try

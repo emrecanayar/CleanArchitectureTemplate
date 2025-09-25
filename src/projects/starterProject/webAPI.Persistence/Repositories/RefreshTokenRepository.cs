@@ -8,5 +8,7 @@ namespace Persistence.Repositories;
 public class RefreshTokenRepository : EfRepositoryBase<RefreshToken, Guid, BaseDbContext>, IRefreshTokenRepository
 {
     public RefreshTokenRepository(BaseDbContext context)
-        : base(context) { }
+        : base(context)
+    {
+    }
 }

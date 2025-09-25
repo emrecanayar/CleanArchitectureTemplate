@@ -1,3 +1,4 @@
+using System.Net;
 using Application.Features.Users.Constants;
 using Application.Features.Users.Rules;
 using Application.Services.Repositories;
@@ -6,7 +7,6 @@ using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
-using System.Net;
 using static Application.Features.Users.Constants.UsersOperationClaims;
 
 namespace Application.Features.Users.Commands.Delete;

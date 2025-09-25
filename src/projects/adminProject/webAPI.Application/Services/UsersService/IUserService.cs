@@ -1,7 +1,7 @@
-﻿using Core.Domain.Entities;
+﻿using System.Linq.Expressions;
+using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
 
 namespace webAPI.Application.Services.UsersService
 {

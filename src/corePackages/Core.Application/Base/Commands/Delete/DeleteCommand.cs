@@ -1,10 +1,10 @@
-﻿using Core.Application.Base.Rules;
+﻿using System.Net;
+using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities.Base;
 using Core.Persistence.Repositories;
 using MediatR;
-using System.Net;
 
 namespace Core.Application.Base.Commands.Delete
 {
@@ -14,10 +14,12 @@ namespace Core.Application.Base.Commands.Delete
        where TModel : IEntityModel<TEntityId>
     {
         public TModel Model { get; set; }
+
         public string[] Roles { get; set; }
+
         public bool RequiresAuthorization { get; set; }
 
-        public DeleteCommand(TModel model, string[] roles = null, bool requiresAuthorization = false)
+        public DeleteCommand(TModel model, string[] roles, bool requiresAuthorization = false)
         {
             Model = model;
             Roles = roles ?? Array.Empty<string>();
@@ -39,11 +41,10 @@ namespace Core.Application.Base.Commands.Delete
             {
                 await _baseBusinessRules.BaseIdShouldExistWhenSelected(request.Model.Id);
                 TEntity? entity = await _asyncRepository.GetAsync(x => x.Id.Equals(request.Model.Id));
-                await _asyncRepository.DeleteAsync(entity);
+                await _asyncRepository.DeleteAsync(entity!);
 
                 return CustomResponseDto<bool>.Success((int)HttpStatusCode.OK, true, isSuccess: true);
             }
         }
     }
-
 }

@@ -1,3 +1,5 @@
 ﻿namespace Core.Application.Responses;
 
-public interface IResponse { }
+public interface IResponse
+{
+}

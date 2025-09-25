@@ -16,7 +16,7 @@ namespace Core.BackgroundJob.Filters
         /// <summary>
         /// Durum seçim olayını ele alır ve hata durumunda bir işleme geri bildirim sağlar.
         /// </summary>
-        /// <param name="context">Durum seçim bağlamı</param>
+        /// <param name="context">Durum seçim bağlamı.</param>
         public void OnStateElection(ElectStateContext context)
         {
             var failedState = context.CandidateState as FailedState;
@@ -26,5 +26,4 @@ namespace Core.BackgroundJob.Filters
             }
         }
     }
-
 }

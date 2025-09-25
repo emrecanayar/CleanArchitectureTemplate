@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Requests;
@@ -8,7 +9,6 @@ using Core.Persistence.Dynamic;
 using Core.Persistence.Paging;
 using Core.Persistence.Repositories;
 using MediatR;
-using System.Net;
 
 namespace Core.Application.Base.Queries.GetListByDynamic
 {
@@ -18,11 +18,14 @@ namespace Core.Application.Base.Queries.GetListByDynamic
       where TModel : BasePageableModel
     {
         public PageRequest PageRequest { get; set; }
+
         public DynamicIncludeProperty? DynamicIncludeProperty { get; set; }
+
         public string[] Roles { get; set; }
+
         public bool RequiresAuthorization { get; set; }
 
-        public GetListByDynamicQuery(string[] roles = null, bool requiresAuthorization = false)
+        public GetListByDynamicQuery(string[] roles, bool requiresAuthorization = false)
         {
             Roles = roles ?? Array.Empty<string>();
             RequiresAuthorization = requiresAuthorization;
@@ -41,8 +44,7 @@ namespace Core.Application.Base.Queries.GetListByDynamic
                 _baseBusinessRules = baseBusinessRules;
             }
 
-            public async Task<CustomResponseDto<TModel>> Handle(GetListByDynamicQuery<TEntity, TEntityId, TModel> request,
-                                                              CancellationToken cancellationToken)
+            public async Task<CustomResponseDto<TModel>> Handle(GetListByDynamicQuery<TEntity, TEntityId, TModel> request, CancellationToken cancellationToken)
             {
                 IQueryable<TEntity> query = _asyncRepository.Query();
 
@@ -56,17 +58,16 @@ namespace Core.Application.Base.Queries.GetListByDynamic
 
                     query = includeSpecification.ApplyIncludes(query);
                 }
-                query = query.ToDynamic(request.DynamicIncludeProperty.Dynamic);
+
+                query = query.ToDynamic(request.DynamicIncludeProperty!.Dynamic!);
 
                 IPaginate<TEntity> entities = await query.ToPaginateAsync(
                     index: request.PageRequest.PageIndex,
-                    size: request.PageRequest.PageSize
-                );
+                    size: request.PageRequest.PageSize);
 
                 TModel mappedTModel = _mapper.Map<TModel>(entities);
                 return CustomResponseDto<TModel>.Success((int)HttpStatusCode.OK, mappedTModel, isSuccess: true);
             }
-
         }
     }
 }

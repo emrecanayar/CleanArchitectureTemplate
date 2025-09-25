@@ -1,3 +1,4 @@
+using System.Net;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Requests;
@@ -6,7 +7,6 @@ using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Persistence.Paging;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Users.Queries.GetList;
 

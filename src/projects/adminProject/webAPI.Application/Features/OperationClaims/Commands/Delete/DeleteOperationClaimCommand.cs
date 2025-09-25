@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using webAPI.Application.Features.OperationClaims.Constants;
 using webAPI.Application.Features.OperationClaims.Rules;
 using webAPI.Application.Services.Repositories;

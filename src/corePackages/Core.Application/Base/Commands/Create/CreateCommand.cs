@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities.Base;
 using Core.Persistence.Repositories;
 using MediatR;
-using System.Net;
 
 namespace Core.Application.Base.Commands.Create
 {
@@ -19,7 +19,7 @@ namespace Core.Application.Base.Commands.Create
 
         public bool RequiresAuthorization { get; set; }
 
-        public CreateCommand(TModel model, string[] roles = null, bool requiresAuthorization = false)
+        public CreateCommand(TModel model, string[] roles, bool requiresAuthorization = false)
         {
             Model = model;
             Roles = roles ?? Array.Empty<string>();
@@ -47,5 +47,4 @@ namespace Core.Application.Base.Commands.Create
             }
         }
     }
-
 }

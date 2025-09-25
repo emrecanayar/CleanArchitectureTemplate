@@ -7,18 +7,18 @@
     public class DateTimeRange : IDateTimeRange
     {
         /// <summary>
-        /// Start time of the datetime range.
+        /// Gets or sets start time of the datetime range.
         /// </summary>
         public DateTime StartTime { get; set; }
 
         /// <summary>
-        /// End time of the datetime range.
+        /// Gets or sets end time of the datetime range.
         /// </summary>
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// Gets the time span of the datetime range.  
-        /// When set, EndTime is recalculated
+        /// Gets or sets the time span of the datetime range.
+        /// When set, EndTime is recalculated.
         /// </summary>
         public TimeSpan TimeSpan
         {
@@ -29,18 +29,19 @@
         private static DateTime Now => Clock.Now;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimeRange"/> class.
         /// Creates a new <see cref="DateTimeRange"/> object.
         /// </summary>
         public DateTimeRange()
         {
-
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimeRange"/> class.
         /// Creates a new <see cref="DateTimeRange"/> object from the given <paramref name="startTime"/> and <paramref name="endTime"/>.
         /// </summary>
-        /// <param name="startTime">Start time of the datetime range</param>
-        /// <param name="endTime">End time of the datetime range</param>
+        /// <param name="startTime">Start time of the datetime range.</param>
+        /// <param name="endTime">End time of the datetime range.</param>
         public DateTimeRange(DateTime startTime, DateTime endTime)
         {
             StartTime = startTime;
@@ -48,10 +49,11 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimeRange"/> class.
         /// Creates a new <see cref="DateTimeRange"/> object from the given <paramref name="startTime"/> and <paramref name="timeSpan"/>.
         /// </summary>
-        /// <param name="startTime">Start time of the datetime range</param>
-        /// <param name="timeSpan">The span of time to calculate the EndTime</param>
+        /// <param name="startTime">Start time of the datetime range.</param>
+        /// <param name="timeSpan">The span of time to calculate the EndTime.</param>
         public DateTimeRange(DateTime startTime, TimeSpan timeSpan)
         {
             StartTime = startTime;
@@ -59,9 +61,10 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimeRange"/> class.
         /// Creates a new <see cref="DateTimeRange"/> object from given the <paramref name="dateTimeRange"/> object.
         /// </summary>
-        /// <param name="dateTimeRange">IDateTimeRange object</param>
+        /// <param name="dateTimeRange">IDateTimeRange object.</param>
         public DateTimeRange(IDateTimeRange dateTimeRange)
         {
             StartTime = dateTimeRange.StartTime;
@@ -146,7 +149,6 @@
             }
         }
 
-
         /// <summary>
         /// Gets a date range representing the last year.
         /// </summary>
@@ -182,7 +184,6 @@
                 return new DateTimeRange(new DateTime(now.Year + 1, 1, 1, 0, 0, 0, now.Kind), new DateTime(now.Year + 2, 1, 1, 0, 0, 0, now.Kind).AddMilliseconds(-1));
             }
         }
-
 
         /// <summary>
         /// Gets a date range representing the last 30 days (30x24 hours) including today.
@@ -233,9 +234,9 @@
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="DateTimeRange"/>.
+        /// Returns a <see cref="string"/> that represents the current <see cref="DateTimeRange"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="DateTimeRange"/>.</returns>
+        /// <returns>A <see cref="string"/> that represents the current <see cref="DateTimeRange"/>.</returns>
         public override string ToString()
         {
             return string.Format("[{0} - {1}]", StartTime, EndTime);

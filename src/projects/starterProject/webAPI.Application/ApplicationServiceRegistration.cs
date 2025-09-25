@@ -1,4 +1,5 @@
-﻿using Application.Services.AuthService;
+﻿using System.Reflection;
+using Application.Services.AuthService;
 using Core.Application.Base.Rules;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching.DisturbedCache;
@@ -21,7 +22,6 @@ using Core.Mailing.MailKitImplementations;
 using Core.Persistence.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Application;
 
@@ -47,7 +47,6 @@ public static class ApplicationServiceRegistration
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
 
-
         services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
         services.AddScopedWithManagers(typeof(IAuthService).Assembly);
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -65,7 +64,6 @@ public static class ApplicationServiceRegistration
             options.Configuration = "localhost:6379";
         });
 
-
         return services;
     }
 
@@ -73,15 +71,21 @@ public static class ApplicationServiceRegistration
         this IServiceCollection services,
         Assembly assembly,
         Type type,
-        Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null
-    )
+        Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null)
     {
         var types = assembly.GetTypes().Where(t => t.IsSubclassOf(type) && type != t).ToList();
         foreach (Type? item in types)
+        {
             if (addWithLifeCycle == null)
+            {
                 services.AddScoped(item);
+            }
             else
+            {
                 addWithLifeCycle(services, type);
+            }
+        }
+
         return services;
     }
 
@@ -92,7 +96,7 @@ public static class ApplicationServiceRegistration
 
         foreach (var serviceType in serviceTypes)
         {
-            var managerTypeName = serviceType.Name.Replace("Service", "Manager").ReplaceFirst("I", "");
+            var managerTypeName = serviceType.Name.Replace("Service", "Manager").ReplaceFirst("I", string.Empty);
             var managerType = assembly.GetTypes().SingleOrDefault(t => t.Name == managerTypeName);
 
             if (managerType != null)

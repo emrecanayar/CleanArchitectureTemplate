@@ -29,8 +29,6 @@ namespace Core.Json
             return DateTime.MinValue;
         }
 
-
-
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             var date = value as DateTime?;

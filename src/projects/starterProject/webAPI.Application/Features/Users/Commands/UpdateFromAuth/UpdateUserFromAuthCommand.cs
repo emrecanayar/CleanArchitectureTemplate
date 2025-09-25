@@ -1,4 +1,5 @@
-﻿using Application.Features.Users.Rules;
+﻿using System.Net;
+using Application.Features.Users.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using AutoMapper;
@@ -6,7 +7,6 @@ using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.Hashing;
 using MediatR;
-using System.Net;
 
 namespace Application.Features.Users.Commands.UpdateFromAuth;
 

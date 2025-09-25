@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using MediatR;
-using System.Net;
 using webAPI.Application.Features.UserOperationClaims.Rules;
 using webAPI.Application.Services.Repositories;
 

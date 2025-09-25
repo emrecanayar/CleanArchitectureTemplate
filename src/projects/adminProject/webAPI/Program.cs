@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.Application.Pipelines.Security;
@@ -21,9 +24,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using webAPI.Application;
 using webAPI.Extensions;
 using webAPI.Persistence.Modules;

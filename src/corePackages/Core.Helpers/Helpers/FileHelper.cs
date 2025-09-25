@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using System.Text;
+using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
-using System.Text;
 
 namespace Core.Helpers.Helpers
 {
@@ -72,8 +71,9 @@ namespace Core.Helpers.Helpers
         public static void DeleteFile(string file)
         {
             if (File.Exists(file))
-
+            {
                 File.Delete(file);
+            }
         }
 
         public static void ExistsFile(string filePath)
@@ -159,7 +159,6 @@ namespace Core.Helpers.Helpers
 
             var name = Path.GetFileNameWithoutExtension(file.FileName);
             var type = file.ContentType.StartsWith("image/") ? ".webp" : Path.GetExtension(file.FileName);
-            LogHelper.LogToFileAsync("GenerateURLForFile.log", $"{JsonConvert.SerializeObject(file)}");
             string fullPath;
             string uniqueName;
             int count = 1;
@@ -169,7 +168,8 @@ namespace Core.Helpers.Helpers
                 uniqueName = count == 1 ? name : $"{name}_{count}";
                 fullPath = Path.Combine(directoryPath, uniqueName + type);
                 count++;
-            } while (File.Exists(fullPath));
+            }
+            while (File.Exists(fullPath));
             string path = $"{folderPath.Replace(" ", string.Empty)}/{uniqueName}{type}".Replace("\\", "/");
             return new GenerateUrl
             {
@@ -180,11 +180,15 @@ namespace Core.Helpers.Helpers
                 Extension = FileInfoHelper.GetFileExtension(path),
             };
         }
+
         public static string Upload(IFormFile file, string webRootPath, string filePath)
         {
             var isNotValid = CheckFileTypeValid(Path.GetExtension(file.FileName));
             if (isNotValid)
+            {
                 throw new InvalidOperationException("Type is not valid!");
+            }
+
             CreateFile(Path.Combine(webRootPath, filePath), file);
             return $"{filePath}";
         }
@@ -204,7 +208,7 @@ namespace Core.Helpers.Helpers
 
         public static string GetURLForFileFromFullPath(string webRootPath, string fullPath)
         {
-            var path = fullPath.Replace(webRootPath, "");
+            var path = fullPath.Replace(webRootPath, string.Empty);
             return path.Substring(1).Replace("\\", "/");
         }
 
@@ -244,13 +248,12 @@ namespace Core.Helpers.Helpers
             using (FileStream fs = File.Create(directory.Replace("/", "\\")))
             {
                 if (!file.ContentType.StartsWith("image/"))
-
                 {
                     using var image = Image.Load(file.OpenReadStream());
 
                     var encoder = new WebpEncoder()
                     {
-                        Quality = 100
+                        Quality = 100,
                     };
 
                     image.Save(fs, encoder);
@@ -274,9 +277,13 @@ namespace Core.Helpers.Helpers
         public class GenerateUrl
         {
             public string? FileType { get; set; }
+
             public string? FileName { get; set; }
+
             public string? Path { get; set; }
+
             public string? Extension { get; set; }
+
             public string? Directory { get; set; }
         }
     }

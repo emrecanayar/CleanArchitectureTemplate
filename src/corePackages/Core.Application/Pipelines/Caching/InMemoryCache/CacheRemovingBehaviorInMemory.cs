@@ -18,8 +18,11 @@ namespace Core.Application.Pipelines.Caching.InMemoryCache
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            TResponse response;
-            if (request.BypassCache) return await next();
+            TResponse? response;
+            if (request.BypassCache)
+            {
+                return await next();
+            }
 
             async Task<TResponse> GetResponseAndRemoveCache()
             {

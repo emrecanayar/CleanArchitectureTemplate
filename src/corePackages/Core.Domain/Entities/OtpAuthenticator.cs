@@ -5,9 +5,13 @@ namespace Core.Domain.Entities
     public class OtpAuthenticator : Entity<Guid>
     {
         public Guid UserId { get; set; }
+
         public byte[] SecretKey { get; set; }
+
         public bool IsVerified { get; set; }
+
         public virtual User User { get; set; }
+
         public OtpAuthenticator()
         {
             SecretKey = Array.Empty<byte>();

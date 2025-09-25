@@ -1,8 +1,8 @@
-﻿using Core.Application.ResponseTypes.Concrete;
+﻿using System.Net;
+using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Security.JWT;
 using MediatR;
-using System.Net;
 using webAPI.Application.Features.Auth.Rules;
 using webAPI.Application.Services.AuthService;
 using webAPI.Application.Services.UsersService;

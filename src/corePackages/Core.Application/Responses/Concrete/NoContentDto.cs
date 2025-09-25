@@ -1,5 +1,6 @@
 ﻿namespace Core.Application.ResponseTypes.Concrete
 {
-    public class NoContentDto { }
-
+    public class NoContentDto
+    {
+    }
 }

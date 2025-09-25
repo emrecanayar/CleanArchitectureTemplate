@@ -1,4 +1,5 @@
-﻿using Application.Features.Auth.Rules;
+﻿using System.Net;
+using Application.Features.Auth.Rules;
 using Application.Features.Users.Constants;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
@@ -6,7 +7,6 @@ using Core.Application.ResponseTypes.Concrete;
 using Core.Domain.Entities;
 using Core.Helpers.Helpers;
 using MediatR;
-using System.Net;
 using static Application.Features.Users.Constants.UsersOperationClaims;
 
 namespace Application.Features.Auths.Commands.ResetPassword

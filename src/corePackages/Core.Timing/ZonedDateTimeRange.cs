@@ -2,13 +2,12 @@
 {
     /// <summary>
     /// A basic implementation of <see cref="IZonedDateTimeRange"/> to store a date range with a timezone.
-    /// Default timezone is UTC
+    /// Default timezone is UTC.
     /// </summary>
     public class ZonedDateTimeRange : DateTimeRange, IZonedDateTimeRange
     {
         public ZonedDateTimeRange()
         {
-
         }
 
         public ZonedDateTimeRange(string timezone)
@@ -16,33 +15,37 @@
             Timezone = timezone;
         }
 
-        public ZonedDateTimeRange(IDateTimeRange dateTimeRange, string timeZoneId) : base(dateTimeRange)
+        public ZonedDateTimeRange(IDateTimeRange dateTimeRange, string timeZoneId)
+            : base(dateTimeRange)
         {
             Timezone = timeZoneId;
         }
 
-        public ZonedDateTimeRange(IZonedDateTimeRange zonedDateTimeRange) : base(zonedDateTimeRange)
+        public ZonedDateTimeRange(IZonedDateTimeRange zonedDateTimeRange)
+            : base(zonedDateTimeRange)
         {
             Timezone = zonedDateTimeRange.Timezone;
         }
 
-        public ZonedDateTimeRange(DateTime startTime, DateTime endTime, string timeZoneId) : base(startTime, endTime)
+        public ZonedDateTimeRange(DateTime startTime, DateTime endTime, string timeZoneId)
+            : base(startTime, endTime)
         {
             Timezone = timeZoneId;
         }
 
-        public ZonedDateTimeRange(DateTime startTime, TimeSpan timeSpan, string timeZoneId) : base(startTime, timeSpan)
+        public ZonedDateTimeRange(DateTime startTime, TimeSpan timeSpan, string timeZoneId)
+            : base(startTime, timeSpan)
         {
             Timezone = timeZoneId;
         }
 
         /// <summary>
-        /// The Timezone of the datetime range
+        /// Gets or sets the Timezone of the datetime range.
         /// </summary>
         public string Timezone { get; set; } = "UTC";
 
         /// <summary>
-        /// The StartTime with Offset
+        /// Gets or sets the StartTime with Offset.
         /// </summary>
         public DateTimeOffset StartTimeOffset
         {
@@ -51,7 +54,7 @@
         }
 
         /// <summary>
-        /// The EndTime with Offset
+        /// Gets or sets the EndTime with Offset.
         /// </summary>
         public DateTimeOffset EndTimeOffset
         {
@@ -60,7 +63,7 @@
         }
 
         /// <summary>
-        /// The StartTime in UTC
+        /// Gets or sets the StartTime in UTC.
         /// </summary>
         public DateTime StartTimeUtc
         {
@@ -76,7 +79,7 @@
         }
 
         /// <summary>
-        /// The EndTime in UTC
+        /// Gets or sets the EndTime in UTC.
         /// </summary>
         public DateTime EndTimeUtc
         {
@@ -92,7 +95,7 @@
         }
 
         /// <summary>
-        /// The current time based on the timezone
+        /// Gets the current time based on the timezone.
         /// </summary>
         public DateTime Now
         {
@@ -196,7 +199,6 @@
             }
         }
 
-
         /// <summary>
         /// Gets a zoned date range representing the last year.
         /// </summary>
@@ -232,7 +234,6 @@
                 return new ZonedDateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1), Timezone);
             }
         }
-
 
         /// <summary>
         /// Gets a zoned date range representing the last 30 days (30x24 hours) including today.

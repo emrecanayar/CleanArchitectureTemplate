@@ -1,7 +1,7 @@
-﻿using Core.Helpers.Enums;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
+using Core.Helpers.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Helpers.Extensions
 {

@@ -31,5 +31,4 @@ namespace Core.Application.Pipelines.Retry
             throw new Exception($"Retry Pipeline: Maximum retry attempts of {_retryCount} exceeded.");
         }
     }
-
 }

@@ -5,8 +5,11 @@ namespace Core.Domain.Entities
     public class EmailAuthenticator : Entity<Guid>
     {
         public Guid UserId { get; set; }
+
         public string? ActivationKey { get; set; }
+
         public bool IsVerified { get; set; }
+
         public virtual User User { get; set; }
 
         public EmailAuthenticator()
@@ -14,7 +17,8 @@ namespace Core.Domain.Entities
             User = default!;
         }
 
-        public EmailAuthenticator(Guid id, Guid userId, string? activationKey, bool isVerified) : this()
+        public EmailAuthenticator(Guid id, Guid userId, string? activationKey, bool isVerified)
+            : this()
         {
             Id = id;
             UserId = userId;

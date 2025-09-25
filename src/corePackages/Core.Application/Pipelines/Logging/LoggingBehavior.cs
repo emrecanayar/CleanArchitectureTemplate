@@ -1,8 +1,8 @@
-﻿using Core.CrossCuttingConcerns.Logging;
+﻿using System.Text.Json;
+using Core.CrossCuttingConcerns.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace Core.Application.Pipelines.Logging;
 
@@ -23,7 +23,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         List<LogParameter> logParameters =
             new()
             {
-                new LogParameter { Type = request.GetType().Name, Value = request }
+                new LogParameter { Type = request.GetType().Name, Value = request },
             };
 
         LogDetail logDetail =
@@ -31,7 +31,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             {
                 MethodName = next.Method.Name,
                 Parameters = logParameters,
-                User = _httpContextAccessor.HttpContext.User.Identity?.Name ?? "?"
+                User = _httpContextAccessor!.HttpContext!.User.Identity?.Name ?? "?",
             };
 
         _loggerServiceBase.Info(JsonSerializer.Serialize(logDetail));

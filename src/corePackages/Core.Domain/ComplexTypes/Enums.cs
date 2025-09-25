@@ -2,7 +2,6 @@
 
 namespace Core.Domain.ComplexTypes.Enums
 {
-
     public enum RecordStatu
     {
         None = 0,
@@ -19,9 +18,8 @@ namespace Core.Domain.ComplexTypes.Enums
         Pps,
         Pdf,
         Img,
-        Mp4
+        Mp4,
     }
-
 
     public enum CultureType
     {
@@ -30,18 +28,17 @@ namespace Core.Domain.ComplexTypes.Enums
         US = 1,
         [Display(Name = "tr-TR")]
         TR = 2,
-
     }
 
     public enum AuthenticatorType
     {
         None = 0,
         Email = 1,
-        Otp = 2
+        Otp = 2,
     }
 
     public enum ConfirmationTypes
     {
-        None = 0
+        None = 0,
     }
 }

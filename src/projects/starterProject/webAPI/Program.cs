@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Application;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -22,16 +25,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using webAPI.Extensions;
 using webAPI.Persistence.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
 
-var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
+string? connectionString = builder.Configuration.GetConnectionString("ConnectionString");
 builder.Services.AddControllers(options =>
 {
     options.ModelBinderProviders.Insert(0, new DecryptedJsonModelBinderProvider());
@@ -56,14 +56,13 @@ builder.Services.AddSecurityServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHealthChecks().AddSqlServer(connectionString);
+builder.Services.AddHealthChecks().AddSqlServer(connectionString!);
 if (string.Equals(environment, "Production"))
 {
     builder.Services.AddHangfireServices();
     builder.Services.AddHangfireServer(options =>
     {
         options.WorkerCount = Environment.ProcessorCount * 2;
-
     });
     builder.Services.AddHangfire(config =>
     {
@@ -73,16 +72,16 @@ if (string.Equals(environment, "Production"))
             QueuePollInterval = TimeSpan.FromSeconds(15), // Kuyruk tarama aralýðý
             CommandBatchMaxTimeout = TimeSpan.FromMinutes(5), // Maksimum komut batch süresi
             SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5), // Kaybolan iþler için kaydýrma süresi
-            DashboardJobListLimit = 5000 // Dashboard'da gösterilecek iþ sayýsý
-
+            DashboardJobListLimit = 5000, // Dashboard'da gösterilecek iþ sayýsý
         }));
 
-        //if (string.Equals(environment, "Production"))
+        if (string.Equals(environment, "Production"))
         {
             config.ConfigureRecurringJobs();
         }
     });
 }
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new RepositoryModule()));
 
@@ -107,10 +106,10 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ValidIssuer = tokenOptions.Issuer,
+        ValidIssuer = tokenOptions!.Issuer,
         ValidAudience = tokenOptions.Audience,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
     };
 });
 
@@ -121,13 +120,13 @@ builder.Services.AddSwaggerGen(opt =>
     {
         Version = ProjectSwaggerMessages.Version,
         Title = ProjectSwaggerMessages.Title,
-        Description = ProjectSwaggerMessages.Description
+        Description = ProjectSwaggerMessages.Description,
     });
     opt.CustomOperationIds(apiDesc =>
     {
         return apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)
-            ? $"{methodInfo.DeclaringType.Name}.{methodInfo.Name}"
-            : new Guid().ToString();
+            ? $"{methodInfo!.DeclaringType!.Name}.{methodInfo.Name}"
+            : default(Guid).ToString();
     });
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -137,7 +136,7 @@ builder.Services.AddSwaggerGen(opt =>
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
         Description =
-            "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345.54321\""
+            "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345.54321\"",
     });
 
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -146,7 +145,7 @@ builder.Services.AddSwaggerGen(opt =>
             new OpenApiSecurityScheme
                 { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
             new string[] { }
-        }
+        },
     });
     opt.OperationFilter<AddAuthHeaderOperationFilter>();
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -176,7 +175,7 @@ app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseMiddleware<DecryptionMiddleware>();
+
 app.ConfigureCustomExceptionMiddleware();
 app.UseResponseCompression();
 
@@ -185,19 +184,17 @@ if (string.Equals(environment, "Production"))
     var retryPolicyService = app.Services.GetRequiredService<IRetryPolicyService>();
     retryPolicyService.ApplyPolicy();
 
-    app.UseHangfireServer();
     app.UseHangfireDashboard("/job", new DashboardOptions
     {
         DashboardTitle = "Project Hangfire DashBoard",
         AppPath = "/Home/HangfireAbout",
-
     });
 }
 
 app.MapControllers();
 app.UseHealthChecks("/health", new HealthCheckOptions
 {
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
 });
 
 app.UseHealthChecksUI(config =>

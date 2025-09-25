@@ -1,8 +1,8 @@
-﻿using Core.Application.Pipelines.Authorization;
+﻿using System.Net;
+using Core.Application.Pipelines.Authorization;
 using Core.Application.ResponseTypes.Concrete;
 using Core.Helpers.Helpers;
 using MediatR;
-using System.Net;
 
 namespace Core.Application.Base.Queries.GetListNavigationProperty
 {
@@ -10,9 +10,10 @@ namespace Core.Application.Base.Queries.GetListNavigationProperty
         where TEntity : class
     {
         public string[] Roles { get; set; }
+
         public bool RequiresAuthorization { get; set; }
 
-        public GetListNavigationPropertyQuery(string[] roles = null, bool requiresAuthorization = false)
+        public GetListNavigationPropertyQuery(string[] roles, bool requiresAuthorization = false)
         {
             Roles = roles ?? Array.Empty<string>();
             RequiresAuthorization = requiresAuthorization;

@@ -24,13 +24,14 @@ public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
             .Where(failure => failure != null)
             .GroupBy(
                 keySelector: p => p.PropertyName,
-                resultSelector: (propertyName, errors) =>
-                    new ValidationExceptionModel { Property = propertyName, Errors = errors.Select(e => e.ErrorMessage) }
-            )
+                resultSelector: (propertyName, errors) => new ValidationExceptionModel { Property = propertyName, Errors = errors.Select(e => e.ErrorMessage) })
             .ToList();
 
         if (errors.Any())
+        {
             throw new ValidationException(errors);
+        }
+
         TResponse response = await next();
         return response;
     }
