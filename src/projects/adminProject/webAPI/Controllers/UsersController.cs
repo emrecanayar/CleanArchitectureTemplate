@@ -33,7 +33,7 @@ namespace webAPI.Controllers
         public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
         {
             GetListUserQuery getListUserQuery = new() { PageRequest = pageRequest };
-            CustomResponseDto<GetListResponse<GetListUserListItemDto>> result = await Mediator.Send(getListUserQuery);
+            CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>> result = await Mediator.Send(getListUserQuery);
             return Ok(result);
         }
 

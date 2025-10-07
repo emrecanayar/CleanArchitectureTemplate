@@ -10,7 +10,7 @@ using webAPI.Application.Services.Repositories;
 
 namespace webAPI.Application.Features.UserOperationClaims.Queries.GetList
 {
-    public class GetListUserOperationClaimQuery : IRequest<CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>>
+    public class GetListUserOperationClaimQuery : IRequest<CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>>>
     {
         public PageRequest PageRequest { get; set; }
 
@@ -25,7 +25,7 @@ namespace webAPI.Application.Features.UserOperationClaims.Queries.GetList
         }
 
         public class GetListUserOperationClaimQueryHandler
-            : IRequestHandler<GetListUserOperationClaimQuery, CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>>
+            : IRequestHandler<GetListUserOperationClaimQuery, CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>>>
         {
             private readonly IUserOperationClaimRepository _userOperationClaimRepository;
             private readonly IMapper _mapper;
@@ -36,21 +36,21 @@ namespace webAPI.Application.Features.UserOperationClaims.Queries.GetList
                 _mapper = mapper;
             }
 
-            public async Task<CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>> Handle(
+            public async Task<CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>>> Handle(
                 GetListUserOperationClaimQuery request,
                 CancellationToken cancellationToken
             )
             {
-                IPaginate<UserOperationClaim> userOperationClaims = await _userOperationClaimRepository.GetListAsync(
+                IPaginate<UserOperationClaim> userOperationClaims = await _userOperationClaimRepository.GetPagedListAsync(
                     index: request.PageRequest.PageIndex,
                     size: request.PageRequest.PageSize
                 );
 
-                GetListResponse<GetListUserOperationClaimListItemDto> mappedUserOperationClaimListModel = _mapper.Map<
-                    GetListResponse<GetListUserOperationClaimListItemDto>
+                GetPagedListResponse<GetListUserOperationClaimListItemDto> mappedUserOperationClaimListModel = _mapper.Map<
+                    GetPagedListResponse<GetListUserOperationClaimListItemDto>
                 >(userOperationClaims);
 
-                return CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>>.Success((int)HttpStatusCode.OK, mappedUserOperationClaimListModel, true);
+                return CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>>.Success((int)HttpStatusCode.OK, mappedUserOperationClaimListModel, true);
             }
         }
     }

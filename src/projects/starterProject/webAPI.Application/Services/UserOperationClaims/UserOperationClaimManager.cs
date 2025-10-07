@@ -50,7 +50,7 @@ public class UserUserOperationClaimManager : IUserOperationClaimService
         CancellationToken cancellationToken = default
     )
     {
-        IPaginate<UserOperationClaim> userUserOperationClaimList = await _userUserOperationClaimRepository.GetListAsync(
+        IPaginate<UserOperationClaim> userUserOperationClaimList = await _userUserOperationClaimRepository.GetPagedListAsync(
             predicate,
             orderBy,
             include,

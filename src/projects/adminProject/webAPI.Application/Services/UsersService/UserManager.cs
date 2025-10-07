@@ -41,7 +41,7 @@ namespace webAPI.Application.Services.UsersService
             CancellationToken cancellationToken = default
         )
         {
-            IPaginate<User> userList = await _userRepository.GetListAsync(
+            IPaginate<User> userList = await _userRepository.GetPagedListAsync(
                 predicate,
                 orderBy,
                 include,

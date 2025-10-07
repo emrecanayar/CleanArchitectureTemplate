@@ -19,7 +19,7 @@ namespace webAPI.Application.Features.UploadedFiles.Rules
 
         public async Task FileTokenCanNotBeDuplicatedWhenInserted(string token)
         {
-            IPaginate<UploadedFile> result = await _uploadedFileRepository.GetListAsync(d => d.Token == token);
+            IPaginate<UploadedFile> result = await _uploadedFileRepository.GetPagedListAsync(d => d.Token == token);
             if (result.Items.Any()) throw new BusinessException("File token exists");
             await Task.CompletedTask;
         }

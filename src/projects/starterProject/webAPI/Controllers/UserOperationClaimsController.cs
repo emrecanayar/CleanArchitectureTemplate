@@ -24,7 +24,7 @@ public class UserOperationClaimsController : BaseController
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListUserOperationClaimQuery getListUserOperationClaimQuery = new() { PageRequest = pageRequest };
-        CustomResponseDto<GetListResponse<GetListUserOperationClaimListItemDto>> result = await Mediator.Send(getListUserOperationClaimQuery);
+        CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>> result = await Mediator.Send(getListUserOperationClaimQuery);
         return Ok(result);
     }
 

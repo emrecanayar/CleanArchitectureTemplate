@@ -17,7 +17,7 @@ public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
         bool enableTracking = true
     );
 
-    IPaginate<TEntity> GetList(
+    IPaginate<TEntity> GetPagedList(
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
@@ -35,7 +35,7 @@ public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
         bool enableTracking = true
     );
 
-    IPaginate<TEntity> GetListByDynamic(
+    IPaginate<TEntity> GetPagedListByDynamic(
         DynamicQuery dynamic,
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,

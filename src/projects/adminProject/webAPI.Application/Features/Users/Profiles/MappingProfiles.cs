@@ -25,7 +25,7 @@ namespace webAPI.Application.Features.Users.Profiles
             CreateMap<User, DeletedUserResponse>().ReverseMap();
             CreateMap<User, GetByIdUserResponse>().ReverseMap();
             CreateMap<User, GetListUserListItemDto>().ReverseMap();
-            CreateMap<IPaginate<User>, GetListResponse<GetListUserListItemDto>>().ReverseMap();
+            CreateMap<IPaginate<User>, GetPagedListResponse<GetListUserListItemDto>>().ReverseMap();
         }
     }
 }

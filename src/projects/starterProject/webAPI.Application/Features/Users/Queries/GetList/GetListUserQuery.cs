@@ -10,7 +10,7 @@ using MediatR;
 
 namespace Application.Features.Users.Queries.GetList;
 
-public class GetListUserQuery : IRequest<CustomResponseDto<GetListResponse<GetListUserListItemDto>>>
+public class GetListUserQuery : IRequest<CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>>>
 {
     public PageRequest PageRequest { get; set; }
 
@@ -24,7 +24,7 @@ public class GetListUserQuery : IRequest<CustomResponseDto<GetListResponse<GetLi
         PageRequest = pageRequest;
     }
 
-    public class GetListUserQueryHandler : IRequestHandler<GetListUserQuery, CustomResponseDto<GetListResponse<GetListUserListItemDto>>>
+    public class GetListUserQueryHandler : IRequestHandler<GetListUserQuery, CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -35,16 +35,16 @@ public class GetListUserQuery : IRequest<CustomResponseDto<GetListResponse<GetLi
             _mapper = mapper;
         }
 
-        public async Task<CustomResponseDto<GetListResponse<GetListUserListItemDto>>> Handle(GetListUserQuery request, CancellationToken cancellationToken)
+        public async Task<CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>>> Handle(GetListUserQuery request, CancellationToken cancellationToken)
         {
-            IPaginate<User> users = await _userRepository.GetListAsync(
+            IPaginate<User> users = await _userRepository.GetPagedListAsync(
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 
-            GetListResponse<GetListUserListItemDto> response = _mapper.Map<GetListResponse<GetListUserListItemDto>>(users);
-            return CustomResponseDto<GetListResponse<GetListUserListItemDto>>.Success((int)HttpStatusCode.OK, response, true);
+            GetPagedListResponse<GetListUserListItemDto> response = _mapper.Map<GetPagedListResponse<GetListUserListItemDto>>(users);
+            return CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>>.Success((int)HttpStatusCode.OK, response, true);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace webAPI.Application.Features.OperationClaims.Profiles
             CreateMap<OperationClaim, DeletedOperationClaimResponse>().ReverseMap();
             CreateMap<OperationClaim, GetByIdOperationClaimResponse>().ReverseMap();
             CreateMap<OperationClaim, GetListOperationClaimListItemDto>().ReverseMap();
-            CreateMap<IPaginate<OperationClaim>, GetListResponse<GetListOperationClaimListItemDto>>().ReverseMap();
+            CreateMap<IPaginate<OperationClaim>, GetPagedListResponse<GetListOperationClaimListItemDto>>().ReverseMap();
         }
     }
 }

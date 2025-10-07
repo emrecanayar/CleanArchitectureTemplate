@@ -18,7 +18,7 @@ public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransa
         CancellationToken cancellationToken = default
     );
 
-    Task<IPaginate<TEntity>> GetListAsync(
+    Task<IPaginate<TEntity>> GetPagedListAsync(
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
@@ -38,7 +38,7 @@ public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransa
         CancellationToken cancellationToken = default
     );
 
-    Task<IPaginate<TEntity>> GetListByDynamicAsync(
+    Task<IPaginate<TEntity>> GetPagedListByDynamicAsync(
         DynamicQuery dynamic,
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
@@ -57,18 +57,18 @@ public interface IAsyncRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransa
         CancellationToken cancellationToken = default
     );
 
-    Task<IPaginate<TEntity>> GetListByDynamicPredicateAsync(DynamicQuery dynamic,
+    Task<IPaginate<TEntity>> GetPagedListByDynamicPredicateAsync(DynamicQuery dynamic,
                                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
                                        Expression<Func<TEntity, bool>>? predicate = null,
                                        int index = 0, int size = 10, bool enableTracking = true,
                                        CancellationToken cancellationToken = default);
-    Task<IPaginate<TEntity>> GetListByDynamicOrderByAsync(DynamicQuery dynamic,
+    Task<IPaginate<TEntity>> GetPagedListByDynamicOrderByAsync(DynamicQuery dynamic,
                                              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
                                              Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
                                              int index = 0, int size = 10, bool enableTracking = true,
                                              CancellationToken cancellationToken = default);
 
-    Task<IPaginate<TEntity>> GetListIgnoreByDynamicAsync(DynamicQuery dynamic,
+    Task<IPaginate<TEntity>> GetPagedListIgnoreByDynamicAsync(DynamicQuery dynamic,
                                      Expression<Func<TEntity, bool>>? predicate = null,
                                      Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
                                      int index = 0, int size = 10, bool enableTracking = true,

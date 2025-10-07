@@ -40,7 +40,7 @@ public static class MockRepositoryHelper
         mockRepo
             .Setup(
                 s =>
-                    s.GetListAsync(
+                    s.GetPagedListAsync(
                         It.IsAny<Expression<Func<TEntity, bool>>>(),
                         It.IsAny<Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>>(),
                         It.IsAny<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>>(),

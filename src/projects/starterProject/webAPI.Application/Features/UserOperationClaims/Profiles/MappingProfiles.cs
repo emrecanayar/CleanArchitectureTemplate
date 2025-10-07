@@ -22,6 +22,6 @@ public class MappingProfiles : Profile
         CreateMap<UserOperationClaim, DeletedUserOperationClaimResponse>().ReverseMap();
         CreateMap<UserOperationClaim, GetByIdUserOperationClaimResponse>().ReverseMap();
         CreateMap<UserOperationClaim, GetListUserOperationClaimListItemDto>().ReverseMap();
-        CreateMap<IPaginate<UserOperationClaim>, GetListResponse<GetListUserOperationClaimListItemDto>>().ReverseMap();
+        CreateMap<IPaginate<UserOperationClaim>, GetPagedListResponse<GetListUserOperationClaimListItemDto>>().ReverseMap();
     }
 }

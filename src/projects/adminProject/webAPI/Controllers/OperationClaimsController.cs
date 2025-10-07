@@ -24,7 +24,7 @@ namespace webAPI.Controllers
         public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
         {
             GetListOperationClaimQuery getListOperationClaimQuery = new() { PageRequest = pageRequest };
-            CustomResponseDto<GetListResponse<GetListOperationClaimListItemDto>> result = await Mediator.Send(getListOperationClaimQuery);
+            CustomResponseDto<GetPagedListResponse<GetListOperationClaimListItemDto>> result = await Mediator.Send(getListOperationClaimQuery);
             return Ok(result);
         }
 

@@ -50,7 +50,7 @@ namespace webAPI.Application.Services.UserOperationClaims
             CancellationToken cancellationToken = default
         )
         {
-            IPaginate<UserOperationClaim> userUserOperationClaimList = await _userUserOperationClaimRepository.GetListAsync(
+            IPaginate<UserOperationClaim> userUserOperationClaimList = await _userUserOperationClaimRepository.GetPagedListAsync(
                 predicate,
                 orderBy,
                 include,

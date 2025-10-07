@@ -28,7 +28,7 @@ public class GetListUserTests : UserMockRepository
     {
         _query.PageRequest = new PageRequest { PageIndex = 0, PageSize = 3 };
 
-        CustomResponseDto<GetListResponse<GetListUserListItemDto>> result = await _handler.Handle(_query, CancellationToken.None);
+        CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>> result = await _handler.Handle(_query, CancellationToken.None);
 
         Assert.Equal(expected: 2, result.Data.Items.Count);
     }
