@@ -7,11 +7,13 @@ namespace Core.Persistence.Constants
 {
     public static class LocalizationConnectionString
     {
-        private static readonly HttpContextAccessor HttpContextAccessor = new();
-        private static HttpContext? _httpContext => HttpContextAccessor.HttpContext;
+        private static readonly HttpContextAccessor _httpContextAccessor = new();
+
+        private static HttpContext? _httpContext => _httpContextAccessor.HttpContext;
+
         private static IWebHostEnvironment? _env => _httpContext?.RequestServices.GetService(typeof(IWebHostEnvironment)) as IWebHostEnvironment;
 
-        public static IConfiguration AppSetting { get; } = InitializeAppSetting();
+        private static IConfiguration AppSetting { get; } = InitializeAppSetting();
 
         private static IConfiguration InitializeAppSetting()
         {
@@ -36,10 +38,8 @@ namespace Core.Persistence.Constants
 
         public static string? Execute()
         {
-            string? connectionString = AppSetting.GetConnectionString("RunflowConnectionString");
+            string? connectionString = AppSetting.GetConnectionString("ConnectionString");
             return connectionString;
-
         }
-
     }
 }

@@ -15,9 +15,13 @@ namespace Application.Features.Users.Commands.Update;
 public class UpdateUserCommand : IRequest<CustomResponseDto<UpdatedUserResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
+
     public string FirstName { get; set; }
+
     public string LastName { get; set; }
+
     public string Email { get; set; }
+
     public string Password { get; set; }
 
     public UpdateUserCommand()
@@ -62,8 +66,7 @@ public class UpdateUserCommand : IRequest<CustomResponseDto<UpdatedUserResponse>
             HashingHelper.CreatePasswordHash(
                 request.Password,
                 passwordHash: out byte[] passwordHash,
-                passwordSalt: out byte[] passwordSalt
-            );
+                passwordSalt: out byte[] passwordSalt);
             user!.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             await _userRepository.UpdateAsync(user);

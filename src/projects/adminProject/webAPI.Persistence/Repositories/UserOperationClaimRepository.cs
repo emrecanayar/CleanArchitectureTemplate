@@ -8,6 +8,8 @@ namespace webAPI.Persistence.Repositories
     public class UserOperationClaimRepository : EfRepositoryBase<UserOperationClaim, Guid, BaseDbContext>, IUserOperationClaimRepository
     {
         public UserOperationClaimRepository(BaseDbContext context)
-            : base(context) { }
+            : base(context)
+        {
+        }
     }
 }

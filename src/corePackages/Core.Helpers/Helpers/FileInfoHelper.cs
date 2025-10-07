@@ -21,10 +21,11 @@
             var fileName = fileInfo.Name.Split(".");
             return fileName[0].ToString() + fileInfo.Extension?.ToLower();
         }
+
         public static string GetDirectoryName(string path)
         {
             FileInfo fileInfo = new FileInfo(path);
-            return fileInfo.DirectoryName;
+            return fileInfo.DirectoryName!;
         }
     }
 }

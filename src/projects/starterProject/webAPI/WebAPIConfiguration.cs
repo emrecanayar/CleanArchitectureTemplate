@@ -3,6 +3,7 @@
 public class WebApiConfiguration
 {
     public string ApiDomain { get; set; }
+
     public string[] AllowedOrigins { get; set; }
 
     public WebApiConfiguration()

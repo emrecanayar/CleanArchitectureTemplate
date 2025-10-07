@@ -10,9 +10,9 @@ namespace Core.Timing
         /// <summary>
         /// Gets an attribute's value from an Xml node.
         /// </summary>
-        /// <param name="node">The Xml node</param>
-        /// <param name="attributeName">Attribute name</param>
-        /// <returns>Value of the attribute</returns>
+        /// <param name="node">The Xml node.</param>
+        /// <param name="attributeName">Attribute name.</param>
+        /// <returns>Value of the attribute.</returns>
         public static string? GetAttributeValueOrNull(this XmlNode node, string attributeName)
         {
             if (node.Attributes == null || node.Attributes.Count <= 0)

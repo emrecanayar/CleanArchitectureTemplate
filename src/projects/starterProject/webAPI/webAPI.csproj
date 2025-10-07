@@ -27,9 +27,7 @@
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
 	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="logs\NewFolder\" />
-	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\corePackages\Core.BackgroundJob\Core.BackgroundJob.csproj" />
 		<ProjectReference Include="..\..\..\corePackages\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj" />

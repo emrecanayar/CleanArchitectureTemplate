@@ -13,6 +13,7 @@ namespace webAPI.Application.Features.UserOperationClaims.Commands.Create
     public class CreateUserOperationClaimCommand : IRequest<CustomResponseDto<CreatedUserOperationClaimResponse>>, ISecuredRequest
     {
         public Guid UserId { get; set; }
+
         public Guid OperationClaimId { get; set; }
 
         public string[] Roles => new[] { Admin, Write, Add };
@@ -27,8 +28,7 @@ namespace webAPI.Application.Features.UserOperationClaims.Commands.Create
             public CreateUserOperationClaimCommandHandler(
                 IUserOperationClaimRepository userOperationClaimRepository,
                 IMapper mapper,
-                UserOperationClaimBusinessRules userOperationClaimBusinessRules
-            )
+                UserOperationClaimBusinessRules userOperationClaimBusinessRules)
             {
                 _userOperationClaimRepository = userOperationClaimRepository;
                 _mapper = mapper;
@@ -37,20 +37,17 @@ namespace webAPI.Application.Features.UserOperationClaims.Commands.Create
 
             public async Task<CustomResponseDto<CreatedUserOperationClaimResponse>> Handle(
                 CreateUserOperationClaimCommand request,
-                CancellationToken cancellationToken
-            )
+                CancellationToken cancellationToken)
             {
                 await _userOperationClaimBusinessRules.UserShouldNotHasOperationClaimAlreadyWhenInsert(
                     request.UserId,
-                    request.OperationClaimId
-                );
+                    request.OperationClaimId);
                 UserOperationClaim mappedUserOperationClaim = _mapper.Map<UserOperationClaim>(request);
 
                 UserOperationClaim createdUserOperationClaim = await _userOperationClaimRepository.AddAsync(mappedUserOperationClaim);
 
                 CreatedUserOperationClaimResponse createdUserOperationClaimDto = _mapper.Map<CreatedUserOperationClaimResponse>(
-                    createdUserOperationClaim
-                );
+                    createdUserOperationClaim);
                 return CustomResponseDto<CreatedUserOperationClaimResponse>.Success((int)HttpStatusCode.OK, createdUserOperationClaimDto, true);
             }
         }

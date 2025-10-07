@@ -23,8 +23,7 @@ public class UserManager : IUserService
         Func<IQueryable<User>, IIncludableQueryable<User, object>>? include = null,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         User? user = await _userRepository.GetAsync(predicate, include, withDeleted, enableTracking, cancellationToken);
         return user;
@@ -38,8 +37,7 @@ public class UserManager : IUserService
         int size = 10,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         IPaginate<User> userList = await _userRepository.GetPagedListAsync(
             predicate,
@@ -49,8 +47,7 @@ public class UserManager : IUserService
             size,
             withDeleted,
             enableTracking,
-            cancellationToken
-        );
+            cancellationToken);
         return userList;
     }
 

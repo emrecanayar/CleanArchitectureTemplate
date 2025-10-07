@@ -22,8 +22,9 @@ namespace webAPI.Controllers
         public async Task<IActionResult> AddFile(IFormFile file)
         {
             CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _environment.WebRootPath });
-            //CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _configuration.GetSection("WebRootPath").Value });
-            return Created("", result);
+
+            // CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _configuration.GetSection("WebRootPath").Value });
+            return Created(string.Empty, result);
         }
 
         [HttpPost("GetFile")]

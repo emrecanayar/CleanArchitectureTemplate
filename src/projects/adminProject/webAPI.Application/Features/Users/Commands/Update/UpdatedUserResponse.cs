@@ -6,9 +6,13 @@ namespace webAPI.Application.Features.Users.Commands.Update
     public class UpdatedUserResponse : IResponse
     {
         public Guid Id { get; set; }
+
         public string FirstName { get; set; }
+
         public string LastName { get; set; }
+
         public string Email { get; set; }
+
         public RecordStatu Status { get; set; }
 
         public UpdatedUserResponse()
@@ -27,5 +31,4 @@ namespace webAPI.Application.Features.Users.Commands.Update
             Status = status;
         }
     }
-
 }

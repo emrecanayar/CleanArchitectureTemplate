@@ -12,6 +12,7 @@ namespace Core.Security.JWT;
 public class JwtHelper : ITokenHelper
 {
     public IConfiguration Configuration { get; }
+
     private readonly TokenOptions _tokenOptions;
     private DateTime _accessTokenExpiration;
 
@@ -44,7 +45,7 @@ public class JwtHelper : ITokenHelper
                 UserId = user.Id,
                 Token = RandomRefreshToken(),
                 Expires = DateTime.UtcNow.AddDays(7),
-                CreatedByIp = ipAddress
+                CreatedByIp = ipAddress,
             };
 
         return refreshToken;
@@ -54,8 +55,7 @@ public class JwtHelper : ITokenHelper
         TokenOptions tokenOptions,
         User user,
         SigningCredentials signingCredentials,
-        IList<OperationClaim> operationClaims
-    )
+        IList<OperationClaim> operationClaims)
     {
         JwtSecurityToken jwt =
             new(
@@ -64,8 +64,7 @@ public class JwtHelper : ITokenHelper
                 expires: _accessTokenExpiration,
                 notBefore: DateTime.Now,
                 claims: SetClaims(user, operationClaims),
-                signingCredentials: signingCredentials
-            );
+                signingCredentials: signingCredentials);
         return jwt;
     }
 

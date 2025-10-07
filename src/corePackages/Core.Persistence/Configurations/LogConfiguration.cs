@@ -35,7 +35,6 @@ namespace Core.Persistence.Configurations
             builder.Property(x => x.GetLog).IsRequired(false).HasColumnName("GetLog").HasColumnType(LengthContraints.MAX);
             builder.Property(x => x.GetErrorLog).IsRequired(false).HasColumnName("GetErrorLog").HasColumnType(LengthContraints.MAX);
             builder.ToTable(TableNameConstants.LOG);
-
         }
     }
 }

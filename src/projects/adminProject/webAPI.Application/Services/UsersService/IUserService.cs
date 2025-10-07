@@ -12,8 +12,7 @@ namespace webAPI.Application.Services.UsersService
             Func<IQueryable<User>, IIncludableQueryable<User, object>>? include = null,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        );
+            CancellationToken cancellationToken = default);
 
         Task<IPaginate<User>?> GetListAsync(
             Expression<Func<User, bool>>? predicate = null,
@@ -23,11 +22,12 @@ namespace webAPI.Application.Services.UsersService
             int size = 10,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        );
+            CancellationToken cancellationToken = default);
 
         Task<User> AddAsync(User user);
+
         Task<User> UpdateAsync(User user);
+
         Task<User> DeleteAsync(User user, bool permanent = false);
     }
 }

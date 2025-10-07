@@ -6,6 +6,5 @@ public class UpdateUserOperationClaimCommandValidator : AbstractValidator<Update
 {
     public UpdateUserOperationClaimCommandValidator()
     {
-
     }
 }

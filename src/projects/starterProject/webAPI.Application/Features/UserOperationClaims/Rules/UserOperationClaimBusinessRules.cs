@@ -18,7 +18,10 @@ public class UserOperationClaimBusinessRules : BaseBusinessRules
     public Task UserOperationClaimShouldExistWhenSelected(UserOperationClaim? userOperationClaim)
     {
         if (userOperationClaim == null)
+        {
             throw new BusinessException(UserOperationClaimsMessages.UserOperationClaimNotExists);
+        }
+
         return Task.CompletedTask;
     }
 
@@ -26,13 +29,18 @@ public class UserOperationClaimBusinessRules : BaseBusinessRules
     {
         bool doesExist = await _userOperationClaimRepository.AnyAsync(predicate: b => b.Id == id);
         if (!doesExist)
+        {
             throw new BusinessException(UserOperationClaimsMessages.UserOperationClaimNotExists);
+        }
     }
 
     public Task UserOperationClaimShouldNotExistWhenSelected(UserOperationClaim? userOperationClaim)
     {
         if (userOperationClaim != null)
+        {
             throw new BusinessException(UserOperationClaimsMessages.UserOperationClaimAlreadyExists);
+        }
+
         return Task.CompletedTask;
     }
 
@@ -40,15 +48,18 @@ public class UserOperationClaimBusinessRules : BaseBusinessRules
     {
         bool doesExist = await _userOperationClaimRepository.AnyAsync(u => u.UserId == userId && u.OperationClaimId == operationClaimId);
         if (doesExist)
+        {
             throw new BusinessException(UserOperationClaimsMessages.UserOperationClaimAlreadyExists);
+        }
     }
 
     public async Task UserShouldNotHasOperationClaimAlreadyWhenUpdated(Guid id, Guid userId, Guid operationClaimId)
     {
         bool doesExist = await _userOperationClaimRepository.AnyAsync(
-            predicate: uoc => uoc.Id == id && uoc.UserId == userId && uoc.OperationClaimId == operationClaimId
-        );
+            predicate: uoc => uoc.Id == id && uoc.UserId == userId && uoc.OperationClaimId == operationClaimId);
         if (doesExist)
+        {
             throw new BusinessException(UserOperationClaimsMessages.UserOperationClaimAlreadyExists);
+        }
     }
 }

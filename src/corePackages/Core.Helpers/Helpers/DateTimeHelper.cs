@@ -1,17 +1,16 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Core.Helpers.Helpers
 {
     public static class DateTimeHelper
     {
-        private static Calendar cal = new GregorianCalendar();
+        private static Calendar _cal = new GregorianCalendar();
 
         public static DateTime? AddDays(DateTime time, int days)
         {
             try
             {
-                return cal.AddDays(time, days);
+                return _cal.AddDays(time, days);
             }
             catch (ArgumentException)
             {
@@ -23,7 +22,7 @@ namespace Core.Helpers.Helpers
         {
             try
             {
-                return cal.AddMonths(time, months);
+                return _cal.AddMonths(time, months);
             }
             catch (ArgumentException)
             {
@@ -35,7 +34,7 @@ namespace Core.Helpers.Helpers
         {
             try
             {
-                return cal.AddYears(time, years);
+                return _cal.AddYears(time, years);
             }
             catch (ArgumentException)
             {
@@ -71,7 +70,6 @@ namespace Core.Helpers.Helpers
 
             return DateTime.Compare(dt1DiscardedTime.Value, dt2DiscardedTime.Value);
         }
-
 
         public static int CompareYearMonth(DateTime dt1, DateTime dt2)
         {
@@ -140,11 +138,8 @@ namespace Core.Helpers.Helpers
             }
         }
 
-
         public static bool InRange(DateTime date, DateTime start, DateTime end)
         {
-            Debug.Assert(DateTime.Compare(start, end) < 1);
-
             if (CompareDays(date, start) > -1 && CompareDays(date, end) < 1)
             {
                 return true;

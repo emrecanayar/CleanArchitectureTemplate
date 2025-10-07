@@ -24,7 +24,7 @@ public class CreateUserTests : UserMockRepository
     {
         _command = command;
         _validator = validator;
-        _handler = new CreateUserCommandHandler(MockRepository.Object, Mapper, BusinessRules);
+        _handler = new CreateUserCommandHandler(_mockRepository.Object, _mapper, _businessRules);
     }
 
     [Fact]

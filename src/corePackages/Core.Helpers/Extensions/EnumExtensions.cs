@@ -4,19 +4,22 @@ namespace Core.Helpers.Extensions
 {
     public static class EnumExtensions
     {
-        public static int GetEnumIndex<TEnum>(this TEnum @enum) where TEnum : struct, Enum
+        public static int GetEnumIndex<TEnum>(this TEnum @enum)
+            where TEnum : struct, Enum
         {
             Array values = typeof(TEnum).GetEnumValues();
             return Array.IndexOf(values, @enum);
         }
 
-        public static string? GetEnumName<TEnum>(this TEnum @enum) where TEnum : struct, Enum
+        public static string? GetEnumName<TEnum>(this TEnum @enum)
+            where TEnum : struct, Enum
         {
             var enumText = Enum.GetName(typeof(TEnum), @enum);
             return enumText;
         }
 
-        public static object? GetEnumCustomAttributeValue<TEnum>(this TEnum @enum, Type customAttributeType) where TEnum : struct, Enum
+        public static object? GetEnumCustomAttributeValue<TEnum>(this TEnum @enum, Type customAttributeType)
+            where TEnum : struct, Enum
         {
             var enumName = @enum.GetEnumName();
             if (enumName == null)
@@ -25,17 +28,23 @@ namespace Core.Helpers.Extensions
             }
 
             var enumMember = typeof(TEnum).GetMember(enumName).FirstOrDefault();
-            if (enumMember == null) return default;
+            if (enumMember == null)
+            {
+                return default;
+            }
 
             var customAttribute = enumMember.GetCustomAttributesData().FirstOrDefault(w => w.AttributeType.Name == customAttributeType.Name);
-            if (customAttribute == null) return default;
+            if (customAttribute == null)
+            {
+                return default;
+            }
 
             var enumAttributeValue = customAttribute.NamedArguments.FirstOrDefault().TypedValue.Value;
             return enumAttributeValue;
         }
 
-
-        public static object? GetEnumFirstCustomAttributeValue<TEnum>(this TEnum @enum) where TEnum : struct, Enum
+        public static object? GetEnumFirstCustomAttributeValue<TEnum>(this TEnum @enum)
+            where TEnum : struct, Enum
         {
             var enumName = @enum.GetEnumName();
             if (enumName == null)
@@ -44,17 +53,23 @@ namespace Core.Helpers.Extensions
             }
 
             var enumMember = typeof(TEnum).GetMember(enumName).FirstOrDefault();
-            if (enumMember == null) return default;
+            if (enumMember == null)
+            {
+                return default;
+            }
 
             var customAttribute = enumMember.GetCustomAttributesData().FirstOrDefault();
-            if (customAttribute == null) return default;
+            if (customAttribute == null)
+            {
+                return default;
+            }
 
             var enumAttributeValue = customAttribute.NamedArguments.FirstOrDefault().TypedValue.Value;
             return enumAttributeValue;
         }
 
-
-        public static object[] GetEnumCustomAttributesValues<TEnum>(this TEnum @enum, params Type[] customAttributesTypes) where TEnum : struct, Enum
+        public static object[] GetEnumCustomAttributesValues<TEnum>(this TEnum @enum, params Type[] customAttributesTypes)
+            where TEnum : struct, Enum
         {
             List<object> values = new List<object>();
             foreach (var customAttributeType in customAttributesTypes)
@@ -65,12 +80,14 @@ namespace Core.Helpers.Extensions
                     values.Add(attributeValue);
                 }
             }
+
             object[] array = [.. values];
             values.Clear();
             return array;
         }
 
-        public static object?[] GetEnumAllCustomAttributesValues<TEnum>(this TEnum @enum) where TEnum : struct, Enum
+        public static object?[] GetEnumAllCustomAttributesValues<TEnum>(this TEnum @enum)
+            where TEnum : struct, Enum
         {
             var enumName = @enum.GetEnumName();
             if (enumName == null)
@@ -79,15 +96,20 @@ namespace Core.Helpers.Extensions
             }
 
             var enumMember = typeof(TEnum).GetMember(enumName).FirstOrDefault();
-            if (enumMember == null) return Array.Empty<object>();
+            if (enumMember == null)
+            {
+                return Array.Empty<object>();
+            }
 
             var customAttributes = enumMember.GetCustomAttributesData();
-            if (customAttributes == null || customAttributes.Count <= 0) return Array.Empty<object>();
+            if (customAttributes == null || customAttributes.Count <= 0)
+            {
+                return Array.Empty<object>();
+            }
 
             var values = customAttributes.Select(s => s.NamedArguments.FirstOrDefault()).Select(s => s.TypedValue.Value).ToList();
             return values.ToArray();
         }
-
 
         public static List<KeyValuePair<string, TValue>> GetEnumMemberNamesAndValues<TValue>(this Type enumType)
         {
@@ -99,8 +121,10 @@ namespace Core.Helpers.Extensions
                 {
                     throw new InvalidOperationException($"Unable to find the name for the enum value '{value}'.");
                 }
+
                 dict.Add(name, value);
             }
+
             return [.. dict];
         }
 
@@ -117,11 +141,12 @@ namespace Core.Helpers.Extensions
 
                 dict.Add(name, value);
             }
+
             return [.. dict];
         }
 
-
-        public static string? GetDescription<T>(this T enumValue) where T : struct, IConvertible
+        public static string? GetDescription<T>(this T enumValue)
+            where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
             {
@@ -150,6 +175,5 @@ namespace Core.Helpers.Extensions
 
             return description;
         }
-
     }
 }

@@ -3,6 +3,7 @@ using Core.Persistence.Repositories;
 
 namespace webAPI.Application.Services.Repositories
 {
-    public interface IEmailAuthenticatorRepository : IAsyncRepository<EmailAuthenticator, Guid>, IRepository<EmailAuthenticator, Guid> { }
-
+    public interface IEmailAuthenticatorRepository : IAsyncRepository<EmailAuthenticator, Guid>, IRepository<EmailAuthenticator, Guid>
+    {
+    }
 }

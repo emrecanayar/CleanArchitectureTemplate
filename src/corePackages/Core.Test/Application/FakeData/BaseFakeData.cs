@@ -7,5 +7,6 @@ public abstract class BaseFakeData<TEntity, TEntityId>
     where TEntityId : struct, IEquatable<TEntityId>
 {
     public List<TEntity> Data => CreateFakeData();
+
     public abstract List<TEntity> CreateFakeData();
 }

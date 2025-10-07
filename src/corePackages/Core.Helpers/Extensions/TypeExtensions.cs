@@ -18,11 +18,11 @@ namespace Core.Helpers.Extensions
                 {
                     Method = m,
                     Params = m.GetParameters(),
-                    Args = m.GetGenericArguments()
+                    Args = m.GetGenericArguments(),
                 })
                 .Where(x => x.Params.Length == pParametersCount
-                            && x.Args.Length == pGenericArgumentsCount
-                ).Select(x => x.Method)
+                            && x.Args.Length == pGenericArgumentsCount)
+                .Select(x => x.Method)
                 .First();
         }
     }

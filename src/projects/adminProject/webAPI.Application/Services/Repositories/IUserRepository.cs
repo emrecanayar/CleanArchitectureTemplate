@@ -3,6 +3,7 @@ using Core.Persistence.Repositories;
 
 namespace webAPI.Application.Services.Repositories
 {
-    public interface IUserRepository : IAsyncRepository<User, Guid>, IRepository<User, Guid> { }
-
+    public interface IUserRepository : IAsyncRepository<User, Guid>, IRepository<User, Guid>
+    {
+    }
 }

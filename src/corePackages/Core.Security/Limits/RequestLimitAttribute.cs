@@ -8,13 +8,18 @@ namespace Core.Security.Limits
     public class RequestLimitAttribute : ActionFilterAttribute, ILimitedRequest
     {
         public string Name { get; }
+
         public int NoOfRequest { get; set; } = 1;
+
         public int Seconds { get; set; } = 1;
+
         private static MemoryCache Cache { get; } = new MemoryCache(new MemoryCacheOptions());
+
         public RequestLimitAttribute(string name)
         {
             Name = name;
         }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var ipAddress = context.HttpContext.Request.HttpContext.Connection.RemoteIpAddress;
@@ -31,7 +36,7 @@ namespace Core.Security.Limits
             else
             {
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(Seconds));
-                Cache.Set(memoryCacheKey, (prevReqCount + 1), cacheEntryOptions);
+                Cache.Set(memoryCacheKey, prevReqCount + 1, cacheEntryOptions);
             }
         }
     }

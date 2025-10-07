@@ -18,7 +18,10 @@ namespace webAPI.Application.Features.OperationClaims.Rules
         public Task OperationClaimShouldExistWhenSelected(OperationClaim? operationClaim)
         {
             if (operationClaim == null)
+            {
                 throw new BusinessException(OperationClaimsMessages.NotExists);
+            }
+
             return Task.CompletedTask;
         }
 
@@ -26,21 +29,27 @@ namespace webAPI.Application.Features.OperationClaims.Rules
         {
             bool doesExist = await _operationClaimRepository.AnyAsync(predicate: b => b.Id == id, enableTracking: false);
             if (doesExist)
+            {
                 throw new BusinessException(OperationClaimsMessages.NotExists);
+            }
         }
 
         public async Task OperationClaimNameShouldNotExistWhenCreating(string name)
         {
             bool doesExist = await _operationClaimRepository.AnyAsync(predicate: b => b.Name == name, enableTracking: false);
             if (doesExist)
+            {
                 throw new BusinessException(OperationClaimsMessages.AlreadyExists);
+            }
         }
 
         public async Task OperationClaimNameShouldNotExistWhenUpdating(Guid id, string name)
         {
             bool doesExist = await _operationClaimRepository.AnyAsync(predicate: b => b.Id != id && b.Name == name, enableTracking: false);
             if (doesExist)
+            {
                 throw new BusinessException(OperationClaimsMessages.AlreadyExists);
+            }
         }
     }
 }

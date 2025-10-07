@@ -19,7 +19,7 @@ public class DeleteUserTests : UserMockRepository
         : base(fakeData)
     {
         _command = command;
-        _handler = new DeleteUserCommandHandler(MockRepository.Object, Mapper, BusinessRules);
+        _handler = new DeleteUserCommandHandler(_mockRepository.Object, _mapper, _businessRules);
     }
 
     [Fact]
@@ -29,5 +29,4 @@ public class DeleteUserTests : UserMockRepository
         CustomResponseDto<DeletedUserResponse> result = await _handler.Handle(_command, CancellationToken.None);
         Assert.NotNull(result);
     }
-
 }

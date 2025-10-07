@@ -68,7 +68,10 @@
         {
             Directory.CreateDirectory(varToDirectory);
 
-            if (!Directory.Exists(varFromDirectory)) return;
+            if (!Directory.Exists(varFromDirectory))
+            {
+                return;
+            }
 
             string[] directories = Directory.GetDirectories(varFromDirectory);
 
@@ -101,11 +104,15 @@
 
         public static void DeleteDir(string dir)
         {
-            if (dir.Length == 0) return;
+            if (dir.Length == 0)
+            {
+                return;
+            }
 
             if (Directory.Exists(dir))
-
+            {
                 Directory.Delete(dir);
+            }
         }
 
         public static void DeleteDirectory(string directoryPath)
@@ -120,7 +127,10 @@
         {
             Directory.CreateDirectory(varToDirectory);
 
-            if (!Directory.Exists(varFromDirectory)) return;
+            if (!Directory.Exists(varFromDirectory))
+            {
+                return;
+            }
 
             string[] directories = Directory.GetDirectories(varFromDirectory);
 
@@ -247,8 +257,9 @@
         public static void DeleteFile(string file)
         {
             if (File.Exists(file))
-
+            {
                 File.Delete(file);
+            }
         }
     }
 }

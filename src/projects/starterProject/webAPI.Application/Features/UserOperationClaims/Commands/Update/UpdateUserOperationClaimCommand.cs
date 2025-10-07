@@ -14,7 +14,9 @@ namespace Application.Features.UserOperationClaims.Commands.Update;
 public class UpdateUserOperationClaimCommand : IRequest<CustomResponseDto<UpdatedUserOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
+
     public Guid UserId { get; set; }
+
     public Guid OperationClaimId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, UserOperationClaimsOperationClaims.Update };
@@ -29,8 +31,7 @@ public class UpdateUserOperationClaimCommand : IRequest<CustomResponseDto<Update
         public UpdateUserOperationClaimCommandHandler(
             IUserOperationClaimRepository userOperationClaimRepository,
             IMapper mapper,
-            UserOperationClaimBusinessRules userOperationClaimBusinessRules
-        )
+            UserOperationClaimBusinessRules userOperationClaimBusinessRules)
         {
             _userOperationClaimRepository = userOperationClaimRepository;
             _mapper = mapper;
@@ -39,27 +40,23 @@ public class UpdateUserOperationClaimCommand : IRequest<CustomResponseDto<Update
 
         public async Task<CustomResponseDto<UpdatedUserOperationClaimResponse>> Handle(
             UpdateUserOperationClaimCommand request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
             UserOperationClaim? userOperationClaim = await _userOperationClaimRepository.GetAsync(
                 predicate: uoc => uoc.Id == request.Id,
                 enableTracking: false,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _userOperationClaimBusinessRules.UserOperationClaimShouldExistWhenSelected(userOperationClaim);
             await _userOperationClaimBusinessRules.UserShouldNotHasOperationClaimAlreadyWhenUpdated(
                 request.Id,
                 request.UserId,
-                request.OperationClaimId
-            );
+                request.OperationClaimId);
             UserOperationClaim mappedUserOperationClaim = _mapper.Map(request, destination: userOperationClaim!);
 
             UserOperationClaim updatedUserOperationClaim = await _userOperationClaimRepository.UpdateAsync(mappedUserOperationClaim);
 
             UpdatedUserOperationClaimResponse updatedUserOperationClaimDto = _mapper.Map<UpdatedUserOperationClaimResponse>(
-                updatedUserOperationClaim
-            );
+                updatedUserOperationClaim);
             return CustomResponseDto<UpdatedUserOperationClaimResponse>.Success((int)HttpStatusCode.OK, updatedUserOperationClaimDto, true);
         }
     }

@@ -14,11 +14,13 @@ namespace Application.Tests.Features.OperationClaims.Commands.Create
         private readonly CreateOperationClaimCommandValidator _validator;
         private readonly CreateOperationClaimCommand _command;
         private readonly CreateOperationClaimCommandHandler _handler;
-        public CreateOperationClaimTests(OperationClaimFakeData fakeData, CreateOperationClaimCommandValidator validator, CreateOperationClaimCommand command) : base(fakeData)
+
+        public CreateOperationClaimTests(OperationClaimFakeData fakeData, CreateOperationClaimCommandValidator validator, CreateOperationClaimCommand command)
+            : base(fakeData)
         {
             _validator = validator;
             _command = command;
-            _handler = new CreateOperationClaimCommandHandler(MockRepository.Object, Mapper, BusinessRules);
+            _handler = new CreateOperationClaimCommandHandler(_mockRepository.Object, _mapper, _businessRules);
         }
 
         [Fact]

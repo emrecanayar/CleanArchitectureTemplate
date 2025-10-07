@@ -22,7 +22,10 @@ public class MailKitMailService : IMailService
     public void SendMail(Mail mail)
     {
         if (mail.ToList == null || mail.ToList.Count < 1)
+        {
             return;
+        }
+
         EmailPrepare(mail, email: out MimeMessage email, smtp: out SmtpClient smtp);
         smtp.Send(email);
         smtp.Disconnect(true);
@@ -33,7 +36,10 @@ public class MailKitMailService : IMailService
     public async Task SendEmailAsync(Mail mail)
     {
         if (mail.ToList == null || mail.ToList.Count < 1)
+        {
             return;
+        }
+
         EmailPrepare(mail, email: out MimeMessage email, smtp: out SmtpClient smtp);
         await smtp.SendAsync(email);
         smtp.Disconnect(true);
@@ -47,19 +53,33 @@ public class MailKitMailService : IMailService
         email.From.Add(new MailboxAddress(_mailSettings.SenderFullName, _mailSettings.SenderEmail));
         email.To.AddRange(mail.ToList);
         if (mail.CcList != null && mail.CcList.Any())
+        {
             email.Cc.AddRange(mail.CcList);
+        }
+
         if (mail.BccList != null && mail.BccList.Any())
+        {
             email.Bcc.AddRange(mail.BccList);
+        }
 
         email.Subject = mail.Subject;
         if (mail.UnsubscribeLink != null)
+        {
             email.Headers.Add(field: "List-Unsubscribe", value: $"<{mail.UnsubscribeLink}>");
+        }
+
         BodyBuilder bodyBuilder = new() { TextBody = mail.TextBody, HtmlBody = mail.HtmlBody };
 
         if (mail.Attachments != null)
+        {
             foreach (MimeEntity? attachment in mail.Attachments)
+            {
                 if (attachment != null)
+                {
                     bodyBuilder.Attachments.Add(attachment);
+                }
+            }
+        }
 
         email.Body = bodyBuilder.ToMessageBody();
         email.Prepare(EncodingConstraint.SevenBit);
@@ -71,7 +91,7 @@ public class MailKitMailService : IMailService
                 HeaderCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Simple,
                 BodyCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Simple,
                 AgentOrUserIdentifier = $"@{_mailSettings.DomainName}",
-                QueryMethod = "dns/txt"
+                QueryMethod = "dns/txt",
             };
             HeaderId[] headers = { HeaderId.From, HeaderId.Subject, HeaderId.To };
             signer.Sign(email, headers);
@@ -80,7 +100,9 @@ public class MailKitMailService : IMailService
         smtp = new SmtpClient();
         smtp.Connect(_mailSettings.Server, _mailSettings.Port);
         if (_mailSettings.AuthenticationRequired)
+        {
             smtp.Authenticate(_mailSettings.UserName, _mailSettings.Password);
+        }
     }
 
     private AsymmetricKeyParameter ReadPrivateKeyFromPemEncodedString()

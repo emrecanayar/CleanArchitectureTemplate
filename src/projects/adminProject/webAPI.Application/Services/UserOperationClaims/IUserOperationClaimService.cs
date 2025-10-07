@@ -12,8 +12,7 @@ namespace webAPI.Application.Services.UserOperationClaims
             Func<IQueryable<UserOperationClaim>, IIncludableQueryable<UserOperationClaim, object>>? include = null,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        );
+            CancellationToken cancellationToken = default);
 
         Task<IPaginate<UserOperationClaim>?> GetListAsync(
             Expression<Func<UserOperationClaim, bool>>? predicate = null,
@@ -23,11 +22,12 @@ namespace webAPI.Application.Services.UserOperationClaims
             int size = 10,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        );
+            CancellationToken cancellationToken = default);
 
         Task<UserOperationClaim> AddAsync(UserOperationClaim userOperationClaim);
+
         Task<UserOperationClaim> UpdateAsync(UserOperationClaim userOperationClaim);
+
         Task<UserOperationClaim> DeleteAsync(UserOperationClaim userOperationClaim, bool permanent = false);
     }
 }

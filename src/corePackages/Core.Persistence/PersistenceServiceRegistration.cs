@@ -14,8 +14,7 @@ namespace Core.Persistence
             services.AddDbContext<BaseDbContext>(
             options =>
             options.UseSqlServer(configuration.GetConnectionString("ConnectionString"), b => b.MigrationsAssembly("Core.Persistence"))
-            .LogTo(msg => EntityFrameworkQueryLog.LogConsole(msg), LogLevel.Information)
-            );
+            .LogTo(msg => EntityFrameworkQueryLog.LogConsole(msg), LogLevel.Information));
 
             return services;
         }

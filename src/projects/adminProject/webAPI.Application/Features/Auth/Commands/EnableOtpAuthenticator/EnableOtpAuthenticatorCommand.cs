@@ -24,8 +24,7 @@ namespace webAPI.Application.Features.Auth.Commands.EnableOtpAuthenticator
                 IUserService userService,
                 IOtpAuthenticatorRepository otpAuthenticatorRepository,
                 AuthBusinessRules authBusinessRules,
-                IAuthenticatorService authenticatorService
-            )
+                IAuthenticatorService authenticatorService)
             {
                 _userService = userService;
                 _otpAuthenticatorRepository = otpAuthenticatorRepository;
@@ -35,8 +34,7 @@ namespace webAPI.Application.Features.Auth.Commands.EnableOtpAuthenticator
 
             public async Task<CustomResponseDto<EnabledOtpAuthenticatorResponse>> Handle(
                 EnableOtpAuthenticatorCommand request,
-                CancellationToken cancellationToken
-            )
+                CancellationToken cancellationToken)
             {
                 User? user = await _userService.GetAsync(predicate: u => u.Id == request.UserId, cancellationToken: cancellationToken);
                 await _authBusinessRules.UserShouldBeExistsWhenSelected(user);
@@ -44,11 +42,12 @@ namespace webAPI.Application.Features.Auth.Commands.EnableOtpAuthenticator
 
                 OtpAuthenticator? doesExistOtpAuthenticator = await _otpAuthenticatorRepository.GetAsync(
                     predicate: o => o.UserId == request.UserId,
-                    cancellationToken: cancellationToken
-                );
+                    cancellationToken: cancellationToken);
                 await _authBusinessRules.OtpAuthenticatorThatVerifiedShouldNotBeExists(doesExistOtpAuthenticator);
                 if (doesExistOtpAuthenticator is not null)
+                {
                     await _otpAuthenticatorRepository.DeleteAsync(doesExistOtpAuthenticator);
+                }
 
                 OtpAuthenticator newOtpAuthenticator = await _authenticatorService.CreateOtpAuthenticator(user!);
                 OtpAuthenticator addedOtpAuthenticator = await _otpAuthenticatorRepository.AddAsync(newOtpAuthenticator);

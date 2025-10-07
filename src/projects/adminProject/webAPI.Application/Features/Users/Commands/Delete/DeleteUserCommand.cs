@@ -9,7 +9,6 @@ using webAPI.Application.Features.Users.Rules;
 using webAPI.Application.Services.Repositories;
 using static webAPI.Application.Features.Users.Constants.UsersOperationClaims;
 
-
 namespace webAPI.Application.Features.Users.Commands.Delete
 {
     public class DeleteUserCommand : IRequest<CustomResponseDto<DeletedUserResponse>>, ISecuredRequest

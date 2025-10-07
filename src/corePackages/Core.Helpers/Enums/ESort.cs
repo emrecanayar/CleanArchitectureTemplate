@@ -8,6 +8,6 @@ namespace Core.Helpers.Enums
         ASC = 1,
 
         [Display(Name = "OrderByDescending")]
-        DESC = 2
+        DESC = 2,
     }
 }

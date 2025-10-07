@@ -44,7 +44,9 @@ public class AuthController : BaseController
         CustomResponseDto<LoggedResponse> result = await Mediator.Send(loginCommand);
 
         if (result.Data.RefreshToken is not null)
+        {
             setRefreshTokenToCookie(result.Data.RefreshToken);
+        }
 
         return Ok(result.Data.ToHttpResponse());
     }
@@ -55,7 +57,7 @@ public class AuthController : BaseController
         RegisterCommand registerCommand = new() { UserForRegisterDto = userForRegisterDto, IpAddress = getIpAddress() };
         CustomResponseDto<RegisteredResponse> result = await Mediator.Send(registerCommand);
         setRefreshTokenToCookie(result.Data.RefreshToken);
-        return Created(uri: "", result.Data.AccessToken);
+        return Created(uri: string.Empty, result.Data.AccessToken);
     }
 
     [HttpGet("RefreshToken")]
@@ -64,7 +66,7 @@ public class AuthController : BaseController
         RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = getRefreshTokenFromCookies(), IpAddress = getIpAddress() };
         CustomResponseDto<RefreshedTokensResponse> result = await Mediator.Send(refreshTokenCommand);
         setRefreshTokenToCookie(result.Data.RefreshToken);
-        return Created(uri: "", result.Data.AccessToken);
+        return Created(uri: string.Empty, result.Data.AccessToken);
     }
 
     [HttpPut("RevokeToken")]
@@ -136,6 +138,7 @@ public class AuthController : BaseController
 
         return Ok(result);
     }
+
     private string getRefreshTokenFromCookies() =>
         Request.Cookies["refreshToken"] ?? throw new ArgumentException("Refresh token is not found in request cookies.");
 

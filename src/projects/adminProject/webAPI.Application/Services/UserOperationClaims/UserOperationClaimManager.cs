@@ -14,8 +14,7 @@ namespace webAPI.Application.Services.UserOperationClaims
 
         public UserOperationClaimManager(
             IUserOperationClaimRepository userUserOperationClaimRepository,
-            UserOperationClaimBusinessRules userUserOperationClaimBusinessRules
-        )
+            UserOperationClaimBusinessRules userUserOperationClaimBusinessRules)
         {
             _userUserOperationClaimRepository = userUserOperationClaimRepository;
             _userUserOperationClaimBusinessRules = userUserOperationClaimBusinessRules;
@@ -26,16 +25,14 @@ namespace webAPI.Application.Services.UserOperationClaims
             Func<IQueryable<UserOperationClaim>, IIncludableQueryable<UserOperationClaim, object>>? include = null,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        )
+            CancellationToken cancellationToken = default)
         {
             UserOperationClaim? userUserOperationClaim = await _userUserOperationClaimRepository.GetAsync(
                 predicate,
                 include,
                 withDeleted,
                 enableTracking,
-                cancellationToken
-            );
+                cancellationToken);
             return userUserOperationClaim;
         }
 
@@ -47,8 +44,7 @@ namespace webAPI.Application.Services.UserOperationClaims
             int size = 10,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        )
+            CancellationToken cancellationToken = default)
         {
             IPaginate<UserOperationClaim> userUserOperationClaimList = await _userUserOperationClaimRepository.GetPagedListAsync(
                 predicate,
@@ -58,8 +54,7 @@ namespace webAPI.Application.Services.UserOperationClaims
                 size,
                 withDeleted,
                 enableTracking,
-                cancellationToken
-            );
+                cancellationToken);
             return userUserOperationClaimList;
         }
 
@@ -67,8 +62,7 @@ namespace webAPI.Application.Services.UserOperationClaims
         {
             await _userUserOperationClaimBusinessRules.UserShouldNotHasOperationClaimAlreadyWhenInsert(
                 userUserOperationClaim.UserId,
-                userUserOperationClaim.OperationClaimId
-            );
+                userUserOperationClaim.OperationClaimId);
 
             UserOperationClaim addedUserOperationClaim = await _userUserOperationClaimRepository.AddAsync(userUserOperationClaim);
 
@@ -80,8 +74,7 @@ namespace webAPI.Application.Services.UserOperationClaims
             await _userUserOperationClaimBusinessRules.UserShouldNotHasOperationClaimAlreadyWhenUpdated(
                 userUserOperationClaim.Id,
                 userUserOperationClaim.UserId,
-                userUserOperationClaim.OperationClaimId
-            );
+                userUserOperationClaim.OperationClaimId);
 
             UserOperationClaim updatedUserOperationClaim = await _userUserOperationClaimRepository.UpdateAsync(userUserOperationClaim);
 

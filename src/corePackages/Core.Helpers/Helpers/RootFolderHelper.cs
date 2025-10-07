@@ -30,7 +30,6 @@ namespace Core.Helpers.Helpers
         public string GetWebSiteAdminUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebSiteAdminDomain}/{path}" : $"{WebSiteAdminDomain}/{path}/{pathParam}";
 
-
         public string GetWebApiAdminUrl(string path, string? pathParam = null)
             => pathParam is null ? $"{WebApiAdminDomain}/{path}" : $"{WebApiAdminDomain}/{path}/{pathParam}";
     }

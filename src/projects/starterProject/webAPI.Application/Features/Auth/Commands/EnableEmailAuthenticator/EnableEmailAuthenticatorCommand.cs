@@ -14,6 +14,7 @@ namespace Application.Features.Auth.Commands.EnableEmailAuthenticator;
 public class EnableEmailAuthenticatorCommand : IRequest
 {
     public Guid UserId { get; set; }
+
     public string VerifyEmailUrlPrefix { get; set; }
 
     public EnableEmailAuthenticatorCommand()
@@ -40,8 +41,7 @@ public class EnableEmailAuthenticatorCommand : IRequest
             IEmailAuthenticatorRepository emailAuthenticatorRepository,
             IMailService mailService,
             AuthBusinessRules authBusinessRules,
-            IAuthenticatorService authenticatorService
-        )
+            IAuthenticatorService authenticatorService)
         {
             _userService = userService;
             _emailAuthenticatorRepository = emailAuthenticatorRepository;
@@ -70,9 +70,8 @@ public class EnableEmailAuthenticatorCommand : IRequest
                     ToList = toEmailList,
                     Subject = "Verify Your Email - NArchitecture",
                     TextBody =
-                        $"Click on the link to verify your email: {request.VerifyEmailUrlPrefix}?ActivationKey={HttpUtility.UrlEncode(addedEmailAuthenticator.ActivationKey)}"
-                }
-            );
+                        $"Click on the link to verify your email: {request.VerifyEmailUrlPrefix}?ActivationKey={HttpUtility.UrlEncode(addedEmailAuthenticator.ActivationKey)}",
+                });
         }
     }
 }

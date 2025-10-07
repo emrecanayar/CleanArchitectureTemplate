@@ -7,23 +7,30 @@ namespace webAPI.Application.Features.Auth.Commands.Login
     public class LoggedResponse : IResponse
     {
         public AccessToken? AccessToken { get; set; }
+
         public Core.Domain.Entities.RefreshToken? RefreshToken { get; set; }
+
         public AuthenticatorType? RequiredAuthenticatorType { get; set; }
+
         public GetByIdUserResponse User { get; set; }
+
         public LoggedHttpResponse ToHttpResponse() =>
             new()
             {
                 AccessToken = AccessToken,
                 RefreshToken = RefreshToken,
                 User = User,
-                RequiredAuthenticatorType = RequiredAuthenticatorType
+                RequiredAuthenticatorType = RequiredAuthenticatorType,
             };
 
         public class LoggedHttpResponse
         {
             public AccessToken? AccessToken { get; set; }
+
             public Core.Domain.Entities.RefreshToken? RefreshToken { get; set; }
+
             public GetByIdUserResponse User { get; set; }
+
             public AuthenticatorType? RequiredAuthenticatorType { get; set; }
         }
     }

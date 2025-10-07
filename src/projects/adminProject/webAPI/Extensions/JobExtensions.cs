@@ -6,7 +6,6 @@ namespace webAPI.Extensions
     {
         public static void ConfigureRecurringJobs(this IGlobalConfiguration hangfireConfig)
         {
-
         }
     }
 }

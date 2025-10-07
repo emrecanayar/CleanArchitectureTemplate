@@ -22,8 +22,7 @@ namespace webAPI.Application.Features.OperationClaims.Queries.GetById
             public GetByIdOperationClaimQueryHandler(
                 IOperationClaimRepository operationClaimRepository,
                 IMapper mapper,
-                OperationClaimBusinessRules operationClaimBusinessRules
-            )
+                OperationClaimBusinessRules operationClaimBusinessRules)
             {
                 _operationClaimRepository = operationClaimRepository;
                 _mapper = mapper;
@@ -35,8 +34,7 @@ namespace webAPI.Application.Features.OperationClaims.Queries.GetById
                 OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                     predicate: b => b.Id == request.Id,
                     include: q => q.Include(oc => oc.UserOperationClaims),
-                    cancellationToken: cancellationToken
-                );
+                    cancellationToken: cancellationToken);
                 await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
 
                 GetByIdOperationClaimResponse response = _mapper.Map<GetByIdOperationClaimResponse>(operationClaim);
@@ -44,5 +42,4 @@ namespace webAPI.Application.Features.OperationClaims.Queries.GetById
             }
         }
     }
-
 }

@@ -10,6 +10,7 @@ namespace webAPI.Controllers
     public class UploadedFilesController : BaseController
     {
         private readonly IConfiguration _configuration;
+
         public UploadedFilesController(IConfiguration configuration)
         {
             this._configuration = configuration;
@@ -19,7 +20,7 @@ namespace webAPI.Controllers
         public async Task<IActionResult> AddFile(IFormFile file)
         {
             CustomResponseDto<UploadedFileCreatedDto> result = await Mediator.Send(new UploadFileCommand { File = file, WebRootPath = _configuration.GetSection("WebRootPath").Value });
-            return Created("", result);
+            return Created(string.Empty, result);
         }
 
         [HttpPost("GetFile")]

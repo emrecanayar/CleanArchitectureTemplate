@@ -12,5 +12,4 @@ namespace webAPI.Application.Features.Users.Commands.UpdateFromAuth
             RuleFor(c => c.NewPassword).NotEmpty().MinimumLength(4).Equal(c => c.Password);
         }
     }
-
 }

@@ -13,8 +13,11 @@ namespace Core.Security.ApplicationSecurity.Filters
         }
 
         public string Name { get; }
+
         public int NoOfRequest { get; set; } = 1;
+
         public int Seconds { get; set; } = 1;
+
         private static MemoryCache Cache { get; } = new MemoryCache(new MemoryCacheOptions());
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -33,7 +36,7 @@ namespace Core.Security.ApplicationSecurity.Filters
             else
             {
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(Seconds));
-                Cache.Set(memoryCacheKey, (prevReqCount + 1), cacheEntryOptions);
+                Cache.Set(memoryCacheKey, prevReqCount + 1, cacheEntryOptions);
             }
         }
     }

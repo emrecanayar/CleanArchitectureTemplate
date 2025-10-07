@@ -27,8 +27,7 @@ public class DeleteOperationClaimCommand : IRequest<CustomResponseDto<DeletedOpe
         public DeleteOperationClaimCommandHandler(
             IOperationClaimRepository operationClaimRepository,
             IMapper mapper,
-            OperationClaimBusinessRules operationClaimBusinessRules
-        )
+            OperationClaimBusinessRules operationClaimBusinessRules)
         {
             _operationClaimRepository = operationClaimRepository;
             _mapper = mapper;
@@ -40,8 +39,7 @@ public class DeleteOperationClaimCommand : IRequest<CustomResponseDto<DeletedOpe
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: oc => oc.Id == request.Id,
                 include: q => q.Include(oc => oc.UserOperationClaims),
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
 
             await _operationClaimRepository.DeleteAsync(entity: operationClaim!);

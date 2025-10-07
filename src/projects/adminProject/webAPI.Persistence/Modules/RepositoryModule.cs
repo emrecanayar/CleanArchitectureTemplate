@@ -3,7 +3,6 @@ using Autofac;
 using Core.Persistence.Contexts;
 using Module = Autofac.Module;
 
-
 namespace webAPI.Persistence.Modules
 {
     public class RepositoryModule : Module
@@ -13,7 +12,7 @@ namespace webAPI.Persistence.Modules
             var apiAssembly = Assembly.GetExecutingAssembly();
             var repoAssembly = Assembly.GetAssembly(typeof(BaseDbContext));
 
-            builder.RegisterAssemblyTypes(apiAssembly, repoAssembly).Where(x => x.Name.EndsWith("Repository")).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(apiAssembly, repoAssembly!).Where(x => x.Name.EndsWith("Repository")).AsImplementedInterfaces().InstancePerLifetimeScope();
         }
     }
 }

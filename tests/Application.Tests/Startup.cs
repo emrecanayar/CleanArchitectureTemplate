@@ -10,5 +10,4 @@ public sealed class Startup
         services.AddUsersServices();
         services.AddOperationClaimsServices();
     }
-
 }

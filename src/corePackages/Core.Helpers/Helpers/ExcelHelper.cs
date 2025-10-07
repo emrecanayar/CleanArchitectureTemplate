@@ -17,7 +17,7 @@ namespace Core.Helpers.Helpers
                 }
 
                 var properties = typeOfobject.GetProperties();
-                //header column texts
+
                 var columns = worksheet.FirstRow().Cells().Select((v, i) => new { Value = v.Value, Index = i + 1 });
 
                 foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
@@ -36,9 +36,11 @@ namespace Core.Helpers.Helpers
                         var type = prop.PropertyType;
                         prop.SetValue(obj, Convert.ChangeType(val, type));
                     }
+
                     list.Add(obj);
                 }
             }
+
             return list;
         }
 
@@ -52,6 +54,7 @@ namespace Core.Helpers.Helpers
                 workbook.SaveAs(file);
                 exported = true;
             }
+
             return exported;
         }
     }

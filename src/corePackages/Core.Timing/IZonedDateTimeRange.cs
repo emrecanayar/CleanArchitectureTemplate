@@ -6,27 +6,27 @@
     public interface IZonedDateTimeRange : IDateTimeRange
     {
         /// <summary>
-        /// The Timezone of the datetime range
+        /// Gets or sets the Timezone of the datetime range.
         /// </summary>
         string Timezone { get; set; }
 
         /// <summary>
-        /// The StartTime with Offset
+        /// Gets or sets the StartTime with Offset.
         /// </summary>
         DateTimeOffset StartTimeOffset { get; set; }
 
         /// <summary>
-        /// The EndTime with Offset
+        /// Gets or sets the EndTime with Offset.
         /// </summary>
         DateTimeOffset EndTimeOffset { get; set; }
 
         /// <summary>
-        /// The StartTime in UTC
+        /// Gets or sets the StartTime in UTC.
         /// </summary>
         DateTime StartTimeUtc { get; set; }
 
         /// <summary>
-        /// The EndTime in UTC
+        /// Gets or sets the EndTime in UTC.
         /// </summary>
         DateTime EndTimeUtc { get; set; }
     }

@@ -10,18 +10,20 @@ namespace webAPI.Controllers.Base
     [ApiController]
     public class BaseController : ControllerBase
     {
+        private IMediator? _mediator;
+
+        private IUserRepository? _userRepository;
+
         protected IMediator Mediator =>
        _mediator ??=
            HttpContext.RequestServices.GetService<IMediator>()
            ?? throw new InvalidOperationException("IMediator cannot be retrieved from request services.");
 
-        private IMediator? _mediator;
-        protected IUserRepository _userRepository =>
-           userRepository ??=
+        protected IUserRepository UserRepository =>
+           _userRepository ??=
            HttpContext.RequestServices.GetService<IUserRepository>()
            ?? throw new InvalidOperationException("IUserRepository cannot be retrieved from request services.");
 
-        private IUserRepository? userRepository;
         protected string getIpAddress()
         {
             string ipAddress = Request.Headers.ContainsKey("X-Forwarded-For")
@@ -31,19 +33,17 @@ namespace webAPI.Controllers.Base
             return ipAddress;
         }
 
-        protected Guid getUserIdFromRequest() //todo authentication behavior?
+        protected Guid getUserIdFromRequest() // todo authentication behavior?
         {
             Guid userId = HttpContext.User.GetUserId();
             return userId;
-
         }
 
         protected User getUserFromRequest()
         {
             Guid userId = HttpContext.User.GetUserId();
             User? user = _userRepository.Get(x => x.Id == userId, enableTracking: false);
-            return user;
-
+            return user!;
         }
     }
 }

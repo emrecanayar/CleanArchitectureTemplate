@@ -21,8 +21,7 @@ public class GetByIdUserOperationClaimQuery : IRequest<CustomResponseDto<GetById
         public GetByIdUserOperationClaimQueryHandler(
             IUserOperationClaimRepository userOperationClaimRepository,
             IMapper mapper,
-            UserOperationClaimBusinessRules userOperationClaimBusinessRules
-        )
+            UserOperationClaimBusinessRules userOperationClaimBusinessRules)
         {
             _userOperationClaimRepository = userOperationClaimRepository;
             _mapper = mapper;
@@ -31,13 +30,11 @@ public class GetByIdUserOperationClaimQuery : IRequest<CustomResponseDto<GetById
 
         public async Task<CustomResponseDto<GetByIdUserOperationClaimResponse>> Handle(
             GetByIdUserOperationClaimQuery request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
             UserOperationClaim? userOperationClaim = await _userOperationClaimRepository.GetAsync(
                 predicate: b => b.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _userOperationClaimBusinessRules.UserOperationClaimShouldExistWhenSelected(userOperationClaim);
 
             GetByIdUserOperationClaimResponse userOperationClaimDto = _mapper.Map<GetByIdUserOperationClaimResponse>(userOperationClaim);

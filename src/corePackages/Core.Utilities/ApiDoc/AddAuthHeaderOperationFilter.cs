@@ -24,12 +24,12 @@ namespace Core.Utilities.ApiDoc
 
             var jwtbearerScheme = new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" },
             };
 
             operation.Security = new List<OpenApiSecurityRequirement>
             {
-                new OpenApiSecurityRequirement { [jwtbearerScheme] = new string[] { } }
+                new OpenApiSecurityRequirement { [jwtbearerScheme] = new string[] { } },
             };
         }
     }

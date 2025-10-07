@@ -23,7 +23,7 @@ public class UserFakeData : BaseFakeData<User, Guid>
                     PasswordSalt = new byte[] { },
                     Status = RecordStatu.Active,
                     CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
+                    ModifiedDate = DateTime.Now,
                 },
                 new User
                 {
@@ -35,8 +35,8 @@ public class UserFakeData : BaseFakeData<User, Guid>
                     PasswordSalt = new byte[] { },
                     Status = RecordStatu.Active,
                     CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
-                }
+                    ModifiedDate = DateTime.Now,
+                },
             };
         return data;
     }

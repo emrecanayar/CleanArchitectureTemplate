@@ -38,13 +38,11 @@ namespace webAPI.Application.Features.UserOperationClaims.Queries.GetList
 
             public async Task<CustomResponseDto<GetPagedListResponse<GetListUserOperationClaimListItemDto>>> Handle(
                 GetListUserOperationClaimQuery request,
-                CancellationToken cancellationToken
-            )
+                CancellationToken cancellationToken)
             {
                 IPaginate<UserOperationClaim> userOperationClaims = await _userOperationClaimRepository.GetPagedListAsync(
                     index: request.PageRequest.PageIndex,
-                    size: request.PageRequest.PageSize
-                );
+                    size: request.PageRequest.PageSize);
 
                 GetPagedListResponse<GetListUserOperationClaimListItemDto> mappedUserOperationClaimListModel = _mapper.Map<
                     GetPagedListResponse<GetListUserOperationClaimListItemDto>

@@ -13,5 +13,4 @@
         public const string UserMailAlreadyExists = "User mail already exists.";
         public const string PasswordDontMatch = "Password don't match.";
     }
-
 }

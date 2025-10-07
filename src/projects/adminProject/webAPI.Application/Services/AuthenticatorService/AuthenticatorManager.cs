@@ -22,8 +22,7 @@ namespace webAPI.Application.Services.AuthenticatorService
             IEmailAuthenticatorRepository emailAuthenticatorRepository,
             IMailService mailService,
             IOtpAuthenticatorHelper otpAuthenticatorHelper,
-            IOtpAuthenticatorRepository otpAuthenticatorRepository
-        )
+            IOtpAuthenticatorRepository otpAuthenticatorRepository)
         {
             _emailAuthenticatorHelper = emailAuthenticatorHelper;
             _emailAuthenticatorRepository = emailAuthenticatorRepository;
@@ -39,7 +38,7 @@ namespace webAPI.Application.Services.AuthenticatorService
                 {
                     UserId = user.Id,
                     ActivationKey = await _emailAuthenticatorHelper.CreateEmailActivationKey(),
-                    IsVerified = false
+                    IsVerified = false,
                 };
             return emailAuthenticator;
         }
@@ -51,7 +50,7 @@ namespace webAPI.Application.Services.AuthenticatorService
                 {
                     UserId = user.Id,
                     SecretKey = await _otpAuthenticatorHelper.GenerateSecretKey(),
-                    IsVerified = false
+                    IsVerified = false,
                 };
             return otpAuthenticator;
         }
@@ -65,24 +64,35 @@ namespace webAPI.Application.Services.AuthenticatorService
         public async Task SendAuthenticatorCode(User user)
         {
             if (user.AuthenticatorType is AuthenticatorType.Email)
+            {
                 await SendAuthenticatorCodeWithEmail(user);
+            }
         }
 
         public async Task VerifyAuthenticatorCode(User user, string authenticatorCode)
         {
             if (user.AuthenticatorType is AuthenticatorType.Email)
+            {
                 await VerifyAuthenticatorCodeWithEmail(user, authenticatorCode);
+            }
             else if (user.AuthenticatorType is AuthenticatorType.Otp)
+            {
                 await VerifyAuthenticatorCodeWithOtp(user, authenticatorCode);
+            }
         }
 
         private async Task SendAuthenticatorCodeWithEmail(User user)
         {
             EmailAuthenticator? emailAuthenticator = await _emailAuthenticatorRepository.GetAsync(predicate: e => e.UserId == user.Id);
             if (emailAuthenticator is null)
+            {
                 throw new NotFoundException("Email Authenticator not found.");
+            }
+
             if (!emailAuthenticator.IsVerified)
+            {
                 throw new BusinessException("Email Authenticator must be is verified.");
+            }
 
             string authenticatorCode = await _emailAuthenticatorHelper.CreateEmailActivationCode();
             emailAuthenticator.ActivationKey = authenticatorCode;
@@ -95,18 +105,23 @@ namespace webAPI.Application.Services.AuthenticatorService
                 {
                     ToList = toEmailList,
                     Subject = "Authenticator Code - NArchitecture",
-                    TextBody = $"Enter your authenticator code: {authenticatorCode}"
-                }
-            );
+                    TextBody = $"Enter your authenticator code: {authenticatorCode}",
+                });
         }
 
         private async Task VerifyAuthenticatorCodeWithEmail(User user, string authenticatorCode)
         {
             EmailAuthenticator? emailAuthenticator = await _emailAuthenticatorRepository.GetAsync(predicate: e => e.UserId == user.Id);
             if (emailAuthenticator is null)
+            {
                 throw new NotFoundException("Email Authenticator not found.");
+            }
+
             if (emailAuthenticator.ActivationKey != authenticatorCode)
+            {
                 throw new BusinessException("Authenticator code is invalid.");
+            }
+
             emailAuthenticator.ActivationKey = null;
             await _emailAuthenticatorRepository.UpdateAsync(emailAuthenticator);
         }
@@ -115,10 +130,15 @@ namespace webAPI.Application.Services.AuthenticatorService
         {
             OtpAuthenticator? otpAuthenticator = await _otpAuthenticatorRepository.GetAsync(predicate: e => e.UserId == user.Id);
             if (otpAuthenticator is null)
+            {
                 throw new NotFoundException("Otp Authenticator not found.");
+            }
+
             bool result = await _otpAuthenticatorHelper.VerifyCode(otpAuthenticator.SecretKey, authenticatorCode);
             if (!result)
+            {
                 throw new BusinessException("Authenticator code is invalid.");
+            }
         }
     }
 }

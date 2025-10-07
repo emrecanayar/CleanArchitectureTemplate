@@ -26,8 +26,7 @@ namespace webAPI.Application.Features.Auth.Commands.VerifyEmailAuthenticator
 
             public VerifyEmailAuthenticatorCommandHandler(
                 IEmailAuthenticatorRepository emailAuthenticatorRepository,
-                AuthBusinessRules authBusinessRules
-            )
+                AuthBusinessRules authBusinessRules)
             {
                 _emailAuthenticatorRepository = emailAuthenticatorRepository;
                 _authBusinessRules = authBusinessRules;
@@ -37,8 +36,7 @@ namespace webAPI.Application.Features.Auth.Commands.VerifyEmailAuthenticator
             {
                 EmailAuthenticator? emailAuthenticator = await _emailAuthenticatorRepository.GetAsync(
                     predicate: e => e.ActivationKey == request.ActivationKey,
-                    cancellationToken: cancellationToken
-                );
+                    cancellationToken: cancellationToken);
                 await _authBusinessRules.EmailAuthenticatorShouldBeExists(emailAuthenticator);
                 await _authBusinessRules.EmailAuthenticatorActivationKeyShouldBeExists(emailAuthenticator!);
 

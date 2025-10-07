@@ -6,6 +6,5 @@ public class CreateUserOperationClaimCommandValidator : AbstractValidator<Create
 {
     public CreateUserOperationClaimCommandValidator()
     {
-
     }
 }

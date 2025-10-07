@@ -6,7 +6,6 @@ namespace webAPI.Application.Features.UserOperationClaims.Commands.Create
     {
         public CreateUserOperationClaimCommandValidator()
         {
-
         }
     }
 }

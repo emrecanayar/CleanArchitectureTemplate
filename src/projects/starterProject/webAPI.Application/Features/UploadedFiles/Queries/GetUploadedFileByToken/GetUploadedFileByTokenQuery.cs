@@ -34,7 +34,7 @@ namespace webAPI.Application.Features.UploadedFiles.Queries.GetUploadedFileByTok
             public async Task<CustomResponseDto<UploadedFileDto>> Handle(GetUploadedFileByTokenQuery request, CancellationToken cancellationToken)
             {
                 UploadedFile? uploadedFile = await this._uploadedFileRepository.GetAsync(d => d.Token == request.Token);
-                this._uploadedFileBusinessRules.FileShouldExistWhenRequested(uploadedFile);
+                this._uploadedFileBusinessRules.FileShouldExistWhenRequested(uploadedFile!);
                 UploadedFileDto uploadedFileDto = _mapper.Map<UploadedFileDto>(uploadedFile);
                 return CustomResponseDto<UploadedFileDto>.Success((int)HttpStatusCode.OK, uploadedFileDto, isSuccess: true);
             }

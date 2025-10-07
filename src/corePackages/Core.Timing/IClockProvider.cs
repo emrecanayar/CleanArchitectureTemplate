@@ -16,7 +16,7 @@
         DateTimeKind Kind { get; }
 
         /// <summary>
-        /// Is that provider supports multiple time zone.
+        /// Gets a value indicating whether is that provider supports multiple time zone.
         /// </summary>
         bool SupportsMultipleTimezone { get; }
 
@@ -24,7 +24,7 @@
         /// Normalizes given <see cref="DateTime"/>.
         /// </summary>
         /// <param name="dateTime">DateTime to be normalized.</param>
-        /// <returns>Normalized DateTime</returns>
+        /// <returns>Normalized DateTime.</returns>
         DateTime Normalize(DateTime dateTime);
     }
 }

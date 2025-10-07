@@ -11,7 +11,9 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFileTransfer
     public class UploadFileTransferCommand : IRequest<CustomResponseDto<UploadedFileTransferDto>>
     {
         public string Token { get; set; }
+
         public string NewFolderPath { get; set; }
+
         public string WebRootPath { get; set; }
 
         public UploadFileTransferCommand()
@@ -19,7 +21,6 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFileTransfer
             Token = string.Empty;
             NewFolderPath = string.Empty;
             WebRootPath = string.Empty;
-
         }
 
         public class UploadFileTransferCommandHandler : IRequestHandler<UploadFileTransferCommand, CustomResponseDto<UploadedFileTransferDto>>
@@ -40,7 +41,7 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFileTransfer
                 var addedOrUpdatedResult = await this._uploadedFileService.AddOrUpdateDocument(new UploadedFileDto
                 {
                     FileType = this._uploadedFileBusinessRules.DetectFileType(result.Path),
-                    FileName = "",
+                    FileName = string.Empty,
                     Path = result.Path,
                     Extension = FileInfoHelper.GetFileExtension(result.Path),
                 });

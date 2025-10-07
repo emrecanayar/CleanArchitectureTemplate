@@ -9,6 +9,7 @@
             {
                 return input;
             }
+
             return input.Substring(0, index) + replacement + input.Substring(index + search.Length);
         }
 
@@ -18,6 +19,7 @@
             {
                 return input;
             }
+
             return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
 
@@ -40,6 +42,7 @@
             {
                 words[i] = words[i].ToTitleCase();
             }
+
             return string.Join(" ", words);
         }
 

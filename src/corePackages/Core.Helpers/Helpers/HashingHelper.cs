@@ -12,7 +12,6 @@ namespace Core.Helpers.Helpers
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
-
         }
 
         public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
@@ -21,8 +20,12 @@ namespace Core.Helpers.Helpers
             {
                 byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
+                {
                     if (computedHash[i] != passwordHash[i])
+                    {
                         return false;
+                    }
+                }
             }
 
             return true;
@@ -32,7 +35,10 @@ namespace Core.Helpers.Helpers
         {
             var encode = Encoding.UTF8;
 
-            if (string.IsNullOrWhiteSpace(str)) return "";
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return string.Empty;
+            }
 
             using (var md5 = MD5.Create())
             {
@@ -42,6 +48,7 @@ namespace Core.Helpers.Helpers
                 {
                     sb.Append(i.ToString("x2"));
                 }
+
                 return sb.ToString();
             }
         }
@@ -55,7 +62,7 @@ namespace Core.Helpers.Helpers
                     byte[] bytes_in = encode.GetBytes(content);
                     byte[] bytes_out = sha1.ComputeHash(bytes_in);
                     string result = BitConverter.ToString(bytes_out);
-                    result = result.Replace("-", "");
+                    result = result.Replace("-", string.Empty);
                     return result;
                 }
             }
@@ -65,10 +72,12 @@ namespace Core.Helpers.Helpers
             }
         }
 
-
         public static string AESEncrypt(string toEncrypt, string key)
         {
-            if (string.IsNullOrWhiteSpace(toEncrypt)) return "";
+            if (string.IsNullOrWhiteSpace(toEncrypt))
+            {
+                return string.Empty;
+            }
 
             byte[] keyArray = Encoding.UTF8.GetBytes(key);
             byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
@@ -86,10 +95,12 @@ namespace Core.Helpers.Helpers
             }
         }
 
-
         public static string AESDecrypt(string toDecrypt, string key)
         {
-            if (string.IsNullOrWhiteSpace(toDecrypt)) return "";
+            if (string.IsNullOrWhiteSpace(toDecrypt))
+            {
+                return string.Empty;
+            }
 
             byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
             byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
@@ -106,7 +117,6 @@ namespace Core.Helpers.Helpers
                 return UTF8Encoding.UTF8.GetString(resultArray);
             }
         }
-
 
         public static string GeyRandomAESKey()
         {
@@ -130,9 +140,9 @@ namespace Core.Helpers.Helpers
 
                 str.Append(ch);
             }
+
             return str.ToString();
         }
-
 
         public static string GetMD5HashFromFile(Stream stream)
         {
@@ -146,6 +156,7 @@ namespace Core.Helpers.Helpers
                     {
                         sb.Append(hash[i].ToString("x2"));
                     }
+
                     return sb.ToString();
                 }
             }

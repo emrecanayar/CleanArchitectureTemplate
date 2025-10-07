@@ -19,6 +19,5 @@ namespace Core.Persistence.Configurations
             builder.HasOne(x => x.Language).WithMany(x => x.Dictionaries).HasForeignKey(x => x.LanguageId).IsRequired(true);
             builder.ToTable(TableNameConstants.DICTIONARY);
         }
-
     }
 }

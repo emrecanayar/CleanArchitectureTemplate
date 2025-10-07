@@ -41,8 +41,7 @@ namespace Core.Persistence.Configurations
             HashingHelper.CreatePasswordHash(
                 password: "password",
                 passwordHash: out byte[] passwordHash,
-                passwordSalt: out byte[] passwordSalt
-            );
+                passwordSalt: out byte[] passwordSalt);
             User adminUser =
                 new()
                 {
@@ -53,7 +52,7 @@ namespace Core.Persistence.Configurations
                     Status = RecordStatu.Active,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    CreatedDate = new DateTime(2025, 7, 1, 13, 3, 57, 929, DateTimeKind.Local).AddTicks(6015)
+                    CreatedDate = new DateTime(2025, 7, 1, 13, 3, 57, 929, DateTimeKind.Local).AddTicks(6015),
                 };
             users.Add(adminUser);
 

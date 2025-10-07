@@ -23,7 +23,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             {
                 HostName = _brokerOptions.HostName,
                 UserName = _brokerOptions.UserName,
-                Password = _brokerOptions.Password
+                Password = _brokerOptions.Password,
             };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();

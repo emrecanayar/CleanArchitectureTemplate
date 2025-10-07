@@ -40,8 +40,7 @@ namespace webAPI.Application.Features.Users.Queries.GetList
                 IPaginate<User> users = await _userRepository.GetPagedListAsync(
                     index: request.PageRequest.PageIndex,
                     size: request.PageRequest.PageSize,
-                    cancellationToken: cancellationToken
-                );
+                    cancellationToken: cancellationToken);
 
                 GetPagedListResponse<GetListUserListItemDto> response = _mapper.Map<GetPagedListResponse<GetListUserListItemDto>>(users);
                 return CustomResponseDto<GetPagedListResponse<GetListUserListItemDto>>.Success((int)HttpStatusCode.OK, response, true);

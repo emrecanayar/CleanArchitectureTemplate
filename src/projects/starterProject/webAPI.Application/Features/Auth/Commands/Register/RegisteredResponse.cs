@@ -6,6 +6,7 @@ namespace Application.Features.Auth.Commands.Register;
 public class RegisteredResponse : IResponse
 {
     public AccessToken AccessToken { get; set; }
+
     public Core.Domain.Entities.RefreshToken RefreshToken { get; set; }
 
     public RegisteredResponse()

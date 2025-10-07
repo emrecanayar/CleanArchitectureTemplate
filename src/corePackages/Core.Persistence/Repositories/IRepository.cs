@@ -14,8 +14,7 @@ public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
         Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
         bool withDeleted = false,
-        bool enableTracking = true
-    );
+        bool enableTracking = true);
 
     IPaginate<TEntity> GetPagedList(
         Expression<Func<TEntity, bool>>? predicate = null,
@@ -24,16 +23,14 @@ public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
         int index = 0,
         int size = 10,
         bool withDeleted = false,
-        bool enableTracking = true
-    );
+        bool enableTracking = true);
 
     IList<TEntity> GetToList(
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
         bool withDeleted = false,
-        bool enableTracking = true
-    );
+        bool enableTracking = true);
 
     IPaginate<TEntity> GetPagedListByDynamic(
         DynamicQuery dynamic,
@@ -42,22 +39,26 @@ public interface IRepository<TEntity, TEntityId> : IQuery<TEntity>, ITransaction
         int index = 0,
         int size = 10,
         bool withDeleted = false,
-        bool enableTracking = true
-    );
+        bool enableTracking = true);
 
     IList<TEntity> GetToListByDynamic(
         DynamicQuery dynamic,
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
         bool withDeleted = false,
-        bool enableTracking = true
-    );
+        bool enableTracking = true);
 
     bool Any(Expression<Func<TEntity, bool>>? predicate = null, bool withDeleted = false, bool enableTracking = true);
+
     TEntity Add(TEntity entity);
+
     ICollection<TEntity> AddRange(ICollection<TEntity> entities);
+
     TEntity Update(TEntity entity);
+
     ICollection<TEntity> UpdateRange(ICollection<TEntity> entities);
+
     TEntity Delete(TEntity entity, bool permanent = false);
+
     ICollection<TEntity> DeleteRange(ICollection<TEntity> entity, bool permanent = false);
 }

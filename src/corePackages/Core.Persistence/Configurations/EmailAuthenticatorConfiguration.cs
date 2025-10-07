@@ -14,8 +14,7 @@ namespace Core.Persistence.Configurations
             builder.Property(x => x.UserId).HasColumnName("UserId");
             builder.Property(x => x.ActivationKey).HasColumnName("ActivationKey").IsRequired(false).HasMaxLength(LengthContraints.ActivationKey);
             builder.Property(x => x.IsVerified).HasColumnName("IsVerified").IsRequired(true);
-            builder.ToTable(TableNameConstants.EMAIL_AUTHENTICATOR);
-
+            builder.ToTable(TableNameConstants.EMAILAUTHENTICATOR);
         }
     }
 }

@@ -27,8 +27,7 @@ public class DeleteUserOperationClaimCommand : IRequest<CustomResponseDto<Delete
         public DeleteUserOperationClaimCommandHandler(
             IUserOperationClaimRepository userOperationClaimRepository,
             IMapper mapper,
-            UserOperationClaimBusinessRules userOperationClaimBusinessRules
-        )
+            UserOperationClaimBusinessRules userOperationClaimBusinessRules)
         {
             _userOperationClaimRepository = userOperationClaimRepository;
             _mapper = mapper;
@@ -37,13 +36,11 @@ public class DeleteUserOperationClaimCommand : IRequest<CustomResponseDto<Delete
 
         public async Task<CustomResponseDto<DeletedUserOperationClaimResponse>> Handle(
             DeleteUserOperationClaimCommand request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
             UserOperationClaim? userOperationClaim = await _userOperationClaimRepository.GetAsync(
                 predicate: uoc => uoc.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _userOperationClaimBusinessRules.UserOperationClaimShouldExistWhenSelected(userOperationClaim);
 
             await _userOperationClaimRepository.DeleteAsync(userOperationClaim!);

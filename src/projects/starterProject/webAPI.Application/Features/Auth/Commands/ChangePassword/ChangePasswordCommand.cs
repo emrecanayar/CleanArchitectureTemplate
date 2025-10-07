@@ -17,7 +17,9 @@ namespace Application.Features.Auths.Commands.ChangePassword
     {
         [JsonIgnore]
         public Guid UserId { get; set; }
+
         public string NewPassword { get; set; }
+
         public string ConfirmPassword { get; set; }
 
         public string[] Roles => new[] { Admin, UsersOperationClaims.Write, Add };

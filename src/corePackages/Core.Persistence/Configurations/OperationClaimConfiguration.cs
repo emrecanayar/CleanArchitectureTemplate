@@ -15,7 +15,7 @@ namespace Core.Persistence.Configurations
             base.Configure(builder);
             builder.Property(x => x.Name).HasColumnName("Name").IsRequired(true).HasMaxLength(LengthContraints.NameMaxLength);
             builder.HasIndex(x => x.Name, "UK_OperationClaims_Name").IsUnique();
-            builder.ToTable(TableNameConstants.OPERATION_CLAIM);
+            builder.ToTable(TableNameConstants.OPERATIONCLAIM);
             builder.HasData(getSeeds());
         }
 
@@ -24,7 +24,7 @@ namespace Core.Persistence.Configurations
             HashSet<OperationClaim> seeds =
                 new()
                 {
-                new OperationClaim { Id =SeedData.AdminOperationClaimId, Name = GeneralOperationClaims.Admin,CreatedDate=new DateTime(2025, 7, 1, 13, 3, 57, 929, DateTimeKind.Local).AddTicks(6015) }
+                new OperationClaim { Id = SeedData.AdminOperationClaimId, Name = GeneralOperationClaims.Admin, CreatedDate = new DateTime(2025, 7, 1, 13, 3, 57, 929, DateTimeKind.Local).AddTicks(6015) },
                 };
 
             return seeds;

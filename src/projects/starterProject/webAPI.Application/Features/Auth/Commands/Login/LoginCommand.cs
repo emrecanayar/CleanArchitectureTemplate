@@ -17,6 +17,7 @@ namespace Application.Features.Auth.Commands.Login;
 public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
 {
     public UserForLoginDto UserForLoginDto { get; set; }
+
     public string IpAddress { get; set; }
 
     public LoginCommand()
@@ -38,13 +39,13 @@ public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+
         public LoginCommandHandler(
             IUserService userService,
             IAuthService authService,
             AuthBusinessRules authBusinessRules,
             IAuthenticatorService authenticatorService,
-            IMapper mapper
-        )
+            IMapper mapper)
         {
             _userService = userService;
             _authService = authService;
@@ -57,8 +58,7 @@ public class LoginCommand : IRequest<CustomResponseDto<LoggedResponse>>
         {
             User? user = await _userService.GetAsync(
                 predicate: u => u.Email == request.UserForLoginDto.Email,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _authBusinessRules.UserShouldBeExistsWhenSelected(user);
             await _authBusinessRules.UserPasswordShouldBeMatch(user!.Id, request.UserForLoginDto.Password);
 

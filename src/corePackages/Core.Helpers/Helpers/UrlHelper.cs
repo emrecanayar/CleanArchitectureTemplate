@@ -6,13 +6,18 @@ namespace Core.Helpers.Helpers
     {
         public static string FriendlyUrl(string url)
         {
-            if (string.IsNullOrEmpty(url)) return "";
+            if (string.IsNullOrEmpty(url))
+            {
+                return string.Empty;
+            }
+
             url = url.ToLower();
             url = url.Trim();
             if (url.Length > 100)
             {
                 url = url.Substring(0, 100);
             }
+
             url = url.Replace("İ", "I");
             url = url.Replace("ı", "i");
             url = url.Replace("ğ", "g");
@@ -25,8 +30,8 @@ namespace Core.Helpers.Helpers
             url = url.Replace("Ş", "S");
             url = url.Replace("ü", "u");
             url = url.Replace("Ü", "U");
-            url = url.Replace("'", "");
-            url = url.Replace("\"", "");
+            url = url.Replace("'", string.Empty);
+            url = url.Replace("\"", string.Empty);
             char[] replacerList = @"$%#@!*?;:~`+=()[]{}|\'<>,/^&"".".ToCharArray();
             for (int i = 0; i < replacerList.Length; i++)
             {
@@ -36,10 +41,14 @@ namespace Core.Helpers.Helpers
                     url = url.Replace(strChr, string.Empty);
                 }
             }
+
             Regex r = new Regex("[^a-zA-Z0-9_-]");
             url = r.Replace(url, "-");
             while (url.IndexOf("--") > -1)
+            {
                 url = url.Replace("--", "-");
+            }
+
             return url;
         }
     }

@@ -13,9 +13,13 @@ namespace Application.Features.Users.Commands.UpdateFromAuth;
 public class UpdateUserFromAuthCommand : IRequest<CustomResponseDto<UpdatedUserFromAuthResponse>>
 {
     public Guid Id { get; set; }
+
     public string FirstName { get; set; }
+
     public string LastName { get; set; }
+
     public string Password { get; set; }
+
     public string? NewPassword { get; set; }
 
     public UpdateUserFromAuthCommand()
@@ -44,8 +48,7 @@ public class UpdateUserFromAuthCommand : IRequest<CustomResponseDto<UpdatedUserF
             IUserRepository userRepository,
             IMapper mapper,
             UserBusinessRules userBusinessRules,
-            IAuthService authService
-        )
+            IAuthService authService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -66,11 +69,11 @@ public class UpdateUserFromAuthCommand : IRequest<CustomResponseDto<UpdatedUserF
                 HashingHelper.CreatePasswordHash(
                     request.Password,
                     passwordHash: out byte[] passwordHash,
-                    passwordSalt: out byte[] passwordSalt
-                );
+                    passwordSalt: out byte[] passwordSalt);
                 user!.PasswordHash = passwordHash;
                 user!.PasswordSalt = passwordSalt;
             }
+
             User updatedUser = await _userRepository.UpdateAsync(user!);
 
             UpdatedUserFromAuthResponse response = _mapper.Map<UpdatedUserFromAuthResponse>(updatedUser);

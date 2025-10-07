@@ -38,18 +38,15 @@ public class GetListOperationClaimQuery : IRequest<CustomResponseDto<GetPagedLis
 
         public async Task<CustomResponseDto<GetPagedListResponse<GetListOperationClaimListItemDto>>> Handle(
             GetListOperationClaimQuery request,
-            CancellationToken cancellationToken
-        )
+            CancellationToken cancellationToken)
         {
             IPaginate<OperationClaim> operationClaims = await _operationClaimRepository.GetPagedListAsync(
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
 
             GetPagedListResponse<GetListOperationClaimListItemDto> response = _mapper.Map<GetPagedListResponse<GetListOperationClaimListItemDto>>(
-                operationClaims
-            );
+                operationClaims);
             return CustomResponseDto<GetPagedListResponse<GetListOperationClaimListItemDto>>.Success((int)HttpStatusCode.OK, response, true);
         }
     }

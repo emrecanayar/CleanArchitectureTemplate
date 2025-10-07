@@ -10,7 +10,8 @@ namespace Application.Tests.Mocks.Repositories
 {
     public class OperationClaimMockRepository : BaseMockRepository<IOperationClaimRepository, OperationClaim, Guid, MappingProfiles, OperationClaimBusinessRules, OperationClaimFakeData>
     {
-        public OperationClaimMockRepository(OperationClaimFakeData fakeData) : base(fakeData)
+        public OperationClaimMockRepository(OperationClaimFakeData fakeData)
+            : base(fakeData)
         {
         }
     }

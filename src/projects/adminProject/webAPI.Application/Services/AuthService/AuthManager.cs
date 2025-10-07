@@ -20,8 +20,7 @@ namespace webAPI.Application.Services.AuthService
             IRefreshTokenRepository refreshTokenRepository,
             ITokenHelper tokenHelper,
             IConfiguration configuration,
-            AuthBusinessRules authBusinessRules
-        )
+            AuthBusinessRules authBusinessRules)
         {
             _userOperationClaimRepository = userOperationClaimRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -63,8 +62,7 @@ namespace webAPI.Application.Services.AuthService
                         r.UserId == userId
                         && r.Revoked == null
                         && r.Expires >= DateTime.UtcNow
-                        && r.CreatedDate.AddDays(_tokenOptions.RefreshTokenTTL) <= DateTime.UtcNow
-                )
+                        && r.CreatedDate.AddDays(_tokenOptions.RefreshTokenTTL) <= DateTime.UtcNow)
                 .ToListAsync();
 
             await _refreshTokenRepository.DeleteRangeAsync(refreshTokens);
@@ -97,9 +95,13 @@ namespace webAPI.Application.Services.AuthService
             RefreshToken? childToken = await _refreshTokenRepository.GetAsync(predicate: r => r.Token == refreshToken.ReplacedByToken);
 
             if (childToken?.Revoked != null && childToken.Expires <= DateTime.UtcNow)
+            {
                 await RevokeRefreshToken(childToken, ipAddress, reason);
+            }
             else
+            {
                 await RevokeDescendantRefreshTokens(refreshToken: childToken!, ipAddress, reason);
+            }
         }
 
         public Task<RefreshToken> CreateRefreshToken(User user, string ipAddress)

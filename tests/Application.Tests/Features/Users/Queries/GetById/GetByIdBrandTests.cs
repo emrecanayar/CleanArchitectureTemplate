@@ -19,7 +19,7 @@ public class GetByIdUserTests : UserMockRepository
         : base(fakeData)
     {
         _query = query;
-        _handler = new GetByIdUserQueryHandler(MockRepository.Object, Mapper, BusinessRules);
+        _handler = new GetByIdUserQueryHandler(_mockRepository.Object, _mapper, _businessRules);
     }
 
     [Fact]
@@ -31,5 +31,4 @@ public class GetByIdUserTests : UserMockRepository
 
         Assert.Equal(expected: "example@email.com", result.Data.Email);
     }
-
 }

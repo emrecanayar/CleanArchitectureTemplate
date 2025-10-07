@@ -22,8 +22,7 @@ public class GetByIdOperationClaimQuery : IRequest<CustomResponseDto<GetByIdOper
         public GetByIdOperationClaimQueryHandler(
             IOperationClaimRepository operationClaimRepository,
             IMapper mapper,
-            OperationClaimBusinessRules operationClaimBusinessRules
-        )
+            OperationClaimBusinessRules operationClaimBusinessRules)
         {
             _operationClaimRepository = operationClaimRepository;
             _mapper = mapper;
@@ -35,8 +34,7 @@ public class GetByIdOperationClaimQuery : IRequest<CustomResponseDto<GetByIdOper
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: b => b.Id == request.Id,
                 include: q => q.Include(oc => oc.UserOperationClaims),
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
 
             GetByIdOperationClaimResponse response = _mapper.Map<GetByIdOperationClaimResponse>(operationClaim);

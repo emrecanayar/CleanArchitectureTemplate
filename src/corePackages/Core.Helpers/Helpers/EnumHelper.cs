@@ -3,7 +3,8 @@ using System.Reflection;
 
 namespace Core.Helpers.Helpers
 {
-    public static class EnumHelper<T> where T : struct, Enum
+    public static class EnumHelper<T>
+        where T : struct, Enum
     {
         public static IList<T> GetValues(Enum value)
         {
@@ -13,6 +14,7 @@ namespace Core.Helpers.Helpers
             {
                 enumValues.Add((T)Enum.Parse(value.GetType(), fi.Name, false));
             }
+
             return enumValues;
         }
 
@@ -52,11 +54,12 @@ namespace Core.Helpers.Helpers
             return displayAttribute.Name ?? value.ToString();
         }
 
-
         public static Dictionary<int, string> GetEnumValuesAndNames(Type enumType)
         {
             if (!enumType.IsEnum)
+            {
                 throw new ArgumentException("enumType must be an Enum type");
+            }
 
             Dictionary<int, string> dictionary = new Dictionary<int, string>();
 
@@ -73,7 +76,6 @@ namespace Core.Helpers.Helpers
 
             return dictionary;
         }
-
 
         private static string LookupResource(Type resourceManagerProvider, string resourceKey)
         {
@@ -92,6 +94,5 @@ namespace Core.Helpers.Helpers
 
             return resourceKey ?? throw new InvalidOperationException("The resource key is null.");
         }
-
     }
 }

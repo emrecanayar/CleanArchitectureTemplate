@@ -15,7 +15,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
         private Stopwatch? _stopwatch;
-        private readonly string securitykey = "zKbVE-yEO'Gg9n7)e[8vJOf=dsUf&eP}";
+        private string _securitykey = "zKbVE-yEO'Gg9n7)e[8vJOf=dsUf&eP}";
 
         public CustomHttpContextHashingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
         {
@@ -43,8 +43,14 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                 return;
             }
 
-            if (!String.IsNullOrEmpty(context.Request.QueryString.Value)) await QueryStringDecrypt(context);
-            else await JsonBodyDecrypt(context);
+            if (!string.IsNullOrEmpty(context.Request.QueryString.Value))
+            {
+                await QueryStringDecrypt(context);
+            }
+            else
+            {
+                await JsonBodyDecrypt(context);
+            }
         }
 
         public bool IsSendedFromWeb(HttpContext context)
@@ -56,6 +62,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                 ClientInfo client = uaParser.Parse(userAgent);
                 return client.UA.Family == "Chrome" || client.UA.Family == "Edge" || client.UA.Family == "Firefox" || client.UA.Family == "Safari" || client.UA.Family == "Opera" || client.UA.Family == "Brave" || client.String == "PostmanRuntime/7.29.2";
             }
+
             return false;
         }
 
@@ -74,7 +81,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
             {
                 var encryptQueries = context.Request.QueryString.Value.Split("?enc=");
                 string encryptQuery = encryptQueries[1];
-                string query = HashingHelper.AESDecrypt(encryptQuery, securitykey);
+                string query = HashingHelper.AESDecrypt(encryptQuery, _securitykey);
                 var queryKeyValues = query.Split("=");
 
                 List<KeyValuePair<string, string>> queryparameters = new List<KeyValuePair<string, string>>();
@@ -97,8 +104,8 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                 HttpType = context.Request.Method,
                 Query = context.Request.QueryString.Value,
                 RequestUrl = context.Request.Path,
-                RequestName = "",
-                RequestIP = context.Request.Host.Value
+                RequestName = string.Empty,
+                RequestIP = context.Request.Host.Value,
             };
 
             var request = context.Request.Body;
@@ -118,12 +125,17 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                     using (var reader = new StreamReader(request))
                     {
                         api.Body = await reader.ReadToEndAsync();
-                        if (!String.IsNullOrEmpty(api.Body))
+                        if (!string.IsNullOrEmpty(api.Body))
                         {
                             JObject json = JObject.Parse(api.Body);
                             if (json["value"] != null)
+                            {
                                 api.Body = json["value"].ToString();
-                            else _logger.LogInformation($" Information: There is no value on the sent request.");
+                            }
+                            else
+                            {
+                                _logger.LogInformation($" Information: There is no value on the sent request.");
+                            }
                         }
 
                         if (string.IsNullOrEmpty(api.Body))
@@ -132,8 +144,9 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                             return;
                         }
 
-                        api.Body = HashingHelper.AESDecrypt(api.Body, securitykey);
+                        api.Body = HashingHelper.AESDecrypt(api.Body, _securitykey);
                     }
+
                     using (var writer = new StreamWriter(newRequest))
                     {
                         await writer.WriteAsync(api.Body);
@@ -161,7 +174,7 @@ namespace Core.Security.ApplicationSecurity.Middlewares
                 _stopwatch.Stop();
                 api.ElapsedTime = _stopwatch.ElapsedMilliseconds;
 
-                _logger.LogDebug($"RequestLog:{DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + (new Random()).Next(0, 10000)}-{api.ElapsedTime}ms", $"{JsonConvert.SerializeObject(api)}");
+                _logger.LogDebug($"RequestLog:{DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + new Random().Next(0, 10000)}-{api.ElapsedTime}ms", $"{JsonConvert.SerializeObject(api)}");
                 return Task.CompletedTask;
             });
 

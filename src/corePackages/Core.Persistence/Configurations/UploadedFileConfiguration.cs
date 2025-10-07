@@ -16,7 +16,7 @@ namespace Core.Persistence.Configurations
             builder.Property(x => x.Path).HasColumnName("Path").IsRequired(false).HasMaxLength(LengthContraints.TokenMaxLength);
             builder.Property(x => x.Extension).HasColumnName("Extension").IsRequired(false).HasMaxLength(LengthContraints.TokenMaxLength);
             builder.Property(x => x.FileType).HasColumnName("FileType").IsRequired(false).HasConversion<int>();
-            builder.ToTable(TableNameConstants.UPLOADED_FILE);
+            builder.ToTable(TableNameConstants.UPLOADEDFILE);
         }
     }
 }

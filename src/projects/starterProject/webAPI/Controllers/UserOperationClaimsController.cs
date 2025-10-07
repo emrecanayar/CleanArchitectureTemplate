@@ -32,7 +32,7 @@ public class UserOperationClaimsController : BaseController
     public async Task<IActionResult> Add([FromBody] CreateUserOperationClaimCommand createUserOperationClaimCommand)
     {
         CustomResponseDto<CreatedUserOperationClaimResponse> result = await Mediator.Send(createUserOperationClaimCommand);
-        return Created(uri: "", result);
+        return Created(uri: string.Empty, result);
     }
 
     [HttpPut]

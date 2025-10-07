@@ -15,6 +15,7 @@ namespace Application.Features.Auth.Commands.Register;
 public class RegisterCommand : IRequest<CustomResponseDto<RegisteredResponse>>
 {
     public UserForRegisterDto UserForRegisterDto { get; set; }
+
     public string IpAddress { get; set; }
 
     public RegisterCommand()
@@ -49,8 +50,7 @@ public class RegisterCommand : IRequest<CustomResponseDto<RegisteredResponse>>
             HashingHelper.CreatePasswordHash(
                 request.UserForRegisterDto.Password,
                 passwordHash: out byte[] passwordHash,
-                passwordSalt: out byte[] passwordSalt
-            );
+                passwordSalt: out byte[] passwordSalt);
             User newUser =
                 new()
                 {
@@ -59,7 +59,7 @@ public class RegisterCommand : IRequest<CustomResponseDto<RegisteredResponse>>
                     LastName = request.UserForRegisterDto.LastName,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    Status = RecordStatu.Active
+                    Status = RecordStatu.Active,
                 };
             User createdUser = await _userRepository.AddAsync(newUser);
 

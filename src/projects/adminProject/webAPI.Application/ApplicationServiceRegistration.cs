@@ -47,7 +47,6 @@ namespace webAPI.Application
                 configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
             });
 
-
             services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
             services.AddScopedWithManagers(typeof(IAuthService).Assembly);
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -65,7 +64,6 @@ namespace webAPI.Application
                 options.Configuration = "localhost:6379";
             });
 
-
             return services;
         }
 
@@ -73,15 +71,21 @@ namespace webAPI.Application
             this IServiceCollection services,
             Assembly assembly,
             Type type,
-            Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null
-        )
+            Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null)
         {
             var types = assembly.GetTypes().Where(t => t.IsSubclassOf(type) && type != t).ToList();
             foreach (Type? item in types)
+            {
                 if (addWithLifeCycle == null)
+                {
                     services.AddScoped(item);
+                }
                 else
+                {
                     addWithLifeCycle(services, type);
+                }
+            }
+
             return services;
         }
 
@@ -92,7 +96,7 @@ namespace webAPI.Application
 
             foreach (var serviceType in serviceTypes)
             {
-                var managerTypeName = serviceType.Name.Replace("Service", "Manager").ReplaceFirst("I", "");
+                var managerTypeName = serviceType.Name.Replace("Service", "Manager").ReplaceFirst("I", string.Empty);
                 var managerType = assembly.GetTypes().SingleOrDefault(t => t.Name == managerTypeName);
 
                 if (managerType != null)

@@ -25,7 +25,7 @@ namespace webAPI.Application.Services.UploadedFileService
         public async Task<UploadedFile> AddOrUpdateDocument(UploadedFileDto uploadedFileDto)
         {
             string uploadedFileData = JsonSerializer.Serialize(uploadedFileDto);
-            string encryptedPath = HashingHelper.AESEncrypt(uploadedFileData, SecurityKeyConstant.DOCUMENT_SECURITY_KEY);
+            string encryptedPath = HashingHelper.AESEncrypt(uploadedFileData, SecurityKeyConstant._dOCUMENTSECURITYKEY);
             UploadedFile uploadedFile = new UploadedFile
             {
                 Id = uploadedFileDto.Id,
@@ -34,25 +34,32 @@ namespace webAPI.Application.Services.UploadedFileService
                 Directory = uploadedFileDto.Directory,
                 Path = uploadedFileDto.Path,
                 Extension = uploadedFileDto.Extension,
-                FileType = uploadedFileDto.FileType
+                FileType = uploadedFileDto.FileType,
             };
-            //await this._uploadedFileBusinessRules.FileTokenCanNotBeDuplicatedWhenInserted(uploadedFile.Token);
 
+            // await this._uploadedFileBusinessRules.FileTokenCanNotBeDuplicatedWhenInserted(uploadedFile.Token);
             if (uploadedFile.Id != Guid.Empty)
+            {
                 await this._uploadedFileRepository.UpdateAsync(uploadedFile);
+            }
             else
+            {
                 await this._uploadedFileRepository.AddAsync(uploadedFile);
+            }
 
             return uploadedFile;
         }
 
         public async Task<UploadedFileResponseDto> TransferFile(string token, string newFolderPath)
         {
-            string webRootPath = _environment.WebRootPath;// _configuration.GetSection("WebRootPath").Value;
+            string webRootPath = _environment.WebRootPath; // _configuration.GetSection("WebRootPath").Value;
             UploadedFile? uploadedFile = await this._uploadedFileRepository.GetAsync(x => x.Token == token, enableTracking: false);
-            if (uploadedFile == null) return null;
+            if (uploadedFile == null)
+            {
+                return null!;
+            }
 
-            var decryptedProjectFileData = HashingHelper.AESDecrypt(uploadedFile.Token, SecurityKeyConstant.DOCUMENT_SECURITY_KEY);
+            var decryptedProjectFileData = HashingHelper.AESDecrypt(uploadedFile.Token, SecurityKeyConstant._dOCUMENTSECURITYKEY);
 
             UploadedFileDto? uploadedFileDto = JsonSerializer.Deserialize<UploadedFileDto>(decryptedProjectFileData);
 
@@ -71,7 +78,6 @@ namespace webAPI.Application.Services.UploadedFileService
                 Directory = uploadedFileDto.Directory,
                 Extension = uploadedFileDto.Extension,
                 FileType = uploadedFileDto.FileType,
-
             };
         }
 
@@ -87,6 +93,7 @@ namespace webAPI.Application.Services.UploadedFileService
                 fileName = Guid.NewGuid().ToString() + extension;
                 newLocation = Path.Combine(webRootPath, newFolder, fileName);
             }
+
             File.Move(oldLocation, newLocation, false);
             return newLocation;
         }

@@ -14,6 +14,7 @@ namespace Application.Features.OperationClaims.Commands.Update;
 public class UpdateOperationClaimCommand : IRequest<CustomResponseDto<UpdatedOperationClaimResponse>>, ISecuredRequest
 {
     public Guid Id { get; set; }
+
     public string Name { get; set; }
 
     public UpdateOperationClaimCommand()
@@ -38,8 +39,7 @@ public class UpdateOperationClaimCommand : IRequest<CustomResponseDto<UpdatedOpe
         public UpdateOperationClaimCommandHandler(
             IOperationClaimRepository operationClaimRepository,
             IMapper mapper,
-            OperationClaimBusinessRules operationClaimBusinessRules
-        )
+            OperationClaimBusinessRules operationClaimBusinessRules)
         {
             _operationClaimRepository = operationClaimRepository;
             _mapper = mapper;
@@ -50,8 +50,7 @@ public class UpdateOperationClaimCommand : IRequest<CustomResponseDto<UpdatedOpe
         {
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate: oc => oc.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
             await _operationClaimBusinessRules.OperationClaimNameShouldNotExistWhenUpdating(request.Id, request.Name);
             OperationClaim mappedOperationClaim = _mapper.Map(request, destination: operationClaim!);

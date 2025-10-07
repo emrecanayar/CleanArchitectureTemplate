@@ -14,8 +14,7 @@ namespace webAPI.Application.Services.OperationClaims
 
         public OperationClaimManager(
             IOperationClaimRepository operationClaimRepository,
-            OperationClaimBusinessRules operationClaimBusinessRules
-        )
+            OperationClaimBusinessRules operationClaimBusinessRules)
         {
             _operationClaimRepository = operationClaimRepository;
             _operationClaimBusinessRules = operationClaimBusinessRules;
@@ -26,16 +25,14 @@ namespace webAPI.Application.Services.OperationClaims
             Func<IQueryable<OperationClaim>, IIncludableQueryable<OperationClaim, object>>? include = null,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        )
+            CancellationToken cancellationToken = default)
         {
             OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                 predicate,
                 include,
                 withDeleted,
                 enableTracking,
-                cancellationToken
-            );
+                cancellationToken);
             return operationClaim;
         }
 
@@ -47,8 +44,7 @@ namespace webAPI.Application.Services.OperationClaims
             int size = 10,
             bool withDeleted = false,
             bool enableTracking = true,
-            CancellationToken cancellationToken = default
-        )
+            CancellationToken cancellationToken = default)
         {
             IPaginate<OperationClaim> operationClaimList = await _operationClaimRepository.GetPagedListAsync(
                 predicate,
@@ -58,8 +54,7 @@ namespace webAPI.Application.Services.OperationClaims
                 size,
                 withDeleted,
                 enableTracking,
-                cancellationToken
-            );
+                cancellationToken);
             return operationClaimList;
         }
 

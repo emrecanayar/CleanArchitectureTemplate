@@ -11,6 +11,7 @@ namespace Application.Features.Auth.Commands.VerifyOtpAuthenticator;
 public class VerifyOtpAuthenticatorCommand : IRequest
 {
     public Guid UserId { get; set; }
+
     public string ActivationCode { get; set; }
 
     public VerifyOtpAuthenticatorCommand()
@@ -35,8 +36,7 @@ public class VerifyOtpAuthenticatorCommand : IRequest
             IOtpAuthenticatorRepository otpAuthenticatorRepository,
             AuthBusinessRules authBusinessRules,
             IUserService userService,
-            IAuthenticatorService authenticatorService
-        )
+            IAuthenticatorService authenticatorService)
         {
             _otpAuthenticatorRepository = otpAuthenticatorRepository;
             _authBusinessRules = authBusinessRules;
@@ -48,8 +48,7 @@ public class VerifyOtpAuthenticatorCommand : IRequest
         {
             OtpAuthenticator? otpAuthenticator = await _otpAuthenticatorRepository.GetAsync(
                 predicate: e => e.UserId == request.UserId,
-                cancellationToken: cancellationToken
-            );
+                cancellationToken: cancellationToken);
             await _authBusinessRules.OtpAuthenticatorShouldBeExists(otpAuthenticator);
 
             User? user = await _userService.GetAsync(predicate: u => u.Id == request.UserId, cancellationToken: cancellationToken);

@@ -10,7 +10,6 @@ using webAPI.Application.Features.OperationClaims.Rules;
 using webAPI.Application.Services.Repositories;
 using static webAPI.Application.Features.OperationClaims.Constants.OperationClaimsOperationClaims;
 
-
 namespace webAPI.Application.Features.OperationClaims.Commands.Delete
 {
     public class DeleteOperationClaimCommand : IRequest<CustomResponseDto<DeletedOperationClaimResponse>>, ISecuredRequest
@@ -28,8 +27,7 @@ namespace webAPI.Application.Features.OperationClaims.Commands.Delete
             public DeleteOperationClaimCommandHandler(
                 IOperationClaimRepository operationClaimRepository,
                 IMapper mapper,
-                OperationClaimBusinessRules operationClaimBusinessRules
-            )
+                OperationClaimBusinessRules operationClaimBusinessRules)
             {
                 _operationClaimRepository = operationClaimRepository;
                 _mapper = mapper;
@@ -41,8 +39,7 @@ namespace webAPI.Application.Features.OperationClaims.Commands.Delete
                 OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
                     predicate: oc => oc.Id == request.Id,
                     include: q => q.Include(oc => oc.UserOperationClaims),
-                    cancellationToken: cancellationToken
-                );
+                    cancellationToken: cancellationToken);
                 await _operationClaimBusinessRules.OperationClaimShouldExistWhenSelected(operationClaim);
 
                 await _operationClaimRepository.DeleteAsync(entity: operationClaim!);

@@ -11,5 +11,7 @@ namespace Application.Tests.Mocks.Repositories;
 public class UserMockRepository : BaseMockRepository<IUserRepository, User, Guid, MappingProfiles, UserBusinessRules, UserFakeData>
 {
     public UserMockRepository(UserFakeData fakeData)
-        : base(fakeData) { }
+        : base(fakeData)
+    {
+    }
 }

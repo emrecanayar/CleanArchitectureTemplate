@@ -28,9 +28,9 @@ namespace Core.Persistence.Repositories
                && x.EntryKey == name && x.Status == RecordStatu.Active).AsNoTracking().FirstOrDefault()?.EntryValue;
             return translation ?? string.Empty;
         }
+
         public static List<DictionaryDto> GetValues(string name, bool getAllTranslations)
         {
-
             using var db = createDbContext();
             List<Dictionary> dictionaries;
             if (getAllTranslations)
@@ -42,6 +42,7 @@ namespace Core.Persistence.Repositories
                 var culture = _culture ?? CultureInfo.CurrentCulture;
                 dictionaries = db.Set<Dictionary>().Include(nameof(Dictionary.Language)).Where(x => x.Language.Symbol == culture.Name && x.EntryKey == name).ToList();
             }
+
             var dictionariesDtos = dictionaries.Select(x => new DictionaryDto()
             {
                 Id = x.Id,
@@ -50,10 +51,9 @@ namespace Core.Persistence.Repositories
                 EntryValue = x.EntryValue,
                 LanguageId = x.LanguageId,
                 Property = x.Property,
-                ValueType = x.ValueType
+                ValueType = x.ValueType,
             });
             return dictionariesDtos.ToList();
-
         }
 
         public string this[string name]
@@ -84,6 +84,7 @@ namespace Core.Persistence.Repositories
                     var culture = _culture ?? CultureInfo.CurrentCulture;
                     dictionaries = db.Set<Dictionary>().Include(nameof(Dictionary.Language)).Where(x => x.Language.Symbol == culture.Name && x.EntryKey == name).ToList();
                 }
+
                 var dictionariesDtos = dictionaries.Select(x => new DictionaryDto()
                 {
                     Id = x.Id,
@@ -92,7 +93,7 @@ namespace Core.Persistence.Repositories
                     EntryValue = x.EntryValue,
                     LanguageId = x.LanguageId,
                     Property = x.Property,
-                    ValueType = x.ValueType
+                    ValueType = x.ValueType,
                 });
                 return dictionariesDtos.ToList();
             }

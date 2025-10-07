@@ -35,8 +35,7 @@ namespace webAPI.Application.Features.OperationClaims.Commands.Create
             public CreateOperationClaimCommandHandler(
                 IOperationClaimRepository operationClaimRepository,
                 IMapper mapper,
-                OperationClaimBusinessRules operationClaimBusinessRules
-            )
+                OperationClaimBusinessRules operationClaimBusinessRules)
             {
                 _operationClaimRepository = operationClaimRepository;
                 _mapper = mapper;

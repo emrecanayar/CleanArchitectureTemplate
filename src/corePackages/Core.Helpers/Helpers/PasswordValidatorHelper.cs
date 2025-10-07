@@ -13,6 +13,7 @@
                     break;
                 }
             }
+
             foreach (char c in password)
             {
                 if (c >= 'A' && c <= 'Z')
@@ -21,7 +22,12 @@
                     break;
                 }
             }
-            if (validConditions == 0) return false;
+
+            if (validConditions == 0)
+            {
+                return false;
+            }
+
             foreach (char c in password)
             {
                 if (c >= '0' && c <= '9')
@@ -30,12 +36,21 @@
                     break;
                 }
             }
-            if (validConditions == 1) return false;
+
+            if (validConditions == 1)
+            {
+                return false;
+            }
+
             if (validConditions == 2)
             {
                 char[] special = { '@', '#', '$', '%', '^', '&', '+', '=', '.', '!', '-' };
-                if (password.IndexOfAny(special) == -1) return false;
+                if (password.IndexOfAny(special) == -1)
+                {
+                    return false;
+                }
             }
+
             return true;
         }
     }

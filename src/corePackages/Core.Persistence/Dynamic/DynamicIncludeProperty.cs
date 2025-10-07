@@ -3,6 +3,7 @@
     public class DynamicIncludeProperty
     {
         public DynamicQuery? Dynamic { get; set; }
+
         public List<string>? IncludeProperties { get; set; }
 
         public DynamicIncludeProperty()

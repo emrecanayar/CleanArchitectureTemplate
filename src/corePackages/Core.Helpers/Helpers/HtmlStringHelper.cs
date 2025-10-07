@@ -26,6 +26,7 @@ namespace Core.Helpers.Helpers
                 htmlContent = htmlContent.Replace(flag, value);
                 flagNo++;
             }
+
             return htmlContent;
         }
 
@@ -35,8 +36,9 @@ namespace Core.Helpers.Helpers
             foreach (var property in queryParams.GetType().GetProperties())
             {
                 dataStrings.Add(property.Name);
-                dataStrings.Add(property.GetValue(queryParams)?.ToString() ?? "");
+                dataStrings.Add(property.GetValue(queryParams)?.ToString() ?? string.Empty);
             }
+
             var queryString = dataStrings.Aggregate((fItem, sItem) => $"{fItem}={sItem}&").TrimEnd('&');
             return queryString;
         }

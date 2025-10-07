@@ -16,9 +16,9 @@ public abstract class BaseMockRepository<TRepository, TEntity, TEntityId, TMappi
     where TBusinessRules : BaseBusinessRules
     where TFakeData : BaseFakeData<TEntity, TEntityId>, new()
 {
-    public IMapper Mapper;
-    public Mock<TRepository> MockRepository;
-    public TBusinessRules BusinessRules;
+    public IMapper _mapper;
+    public Mock<TRepository> _mockRepository;
+    public TBusinessRules _businessRules;
 
     protected BaseMockRepository(TFakeData fakeData)
     {
@@ -27,11 +27,11 @@ public abstract class BaseMockRepository<TRepository, TEntity, TEntityId, TMappi
             {
                 c.AddProfile<TMappingProfile>();
             });
-        Mapper = mapperConfig.CreateMapper();
+        _mapper = mapperConfig.CreateMapper();
 
-        MockRepository = MockRepositoryHelper.GetRepository<TRepository, TEntity, TEntityId>(fakeData.Data);
-        BusinessRules =
-            (TBusinessRules)Activator.CreateInstance(type: typeof(TBusinessRules), MockRepository.Object)!
+        _mockRepository = MockRepositoryHelper.GetRepository<TRepository, TEntity, TEntityId>(fakeData.Data);
+        _businessRules =
+            (TBusinessRules)Activator.CreateInstance(type: typeof(TBusinessRules), _mockRepository.Object)!
             ?? throw new InvalidOperationException($"Cannot create an instance of {typeof(TBusinessRules).FullName}.");
     }
 }

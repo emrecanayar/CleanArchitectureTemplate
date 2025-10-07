@@ -14,8 +14,11 @@ namespace Application.Features.Users.Commands.Create;
 public class CreateUserCommand : IRequest<CustomResponseDto<CreatedUserResponse>>, ISecuredRequest
 {
     public string FirstName { get; set; }
+
     public string LastName { get; set; }
+
     public string Email { get; set; }
+
     public string Password { get; set; }
 
     public CreateUserCommand()
@@ -57,8 +60,7 @@ public class CreateUserCommand : IRequest<CustomResponseDto<CreatedUserResponse>
             HashingHelper.CreatePasswordHash(
                 request.Password,
                 passwordHash: out byte[] passwordHash,
-                passwordSalt: out byte[] passwordSalt
-            );
+                passwordSalt: out byte[] passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             User createdUser = await _userRepository.AddAsync(user);

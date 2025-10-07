@@ -18,5 +18,4 @@ public static class ClaimsPrincipalExtensions
         string? claimValue = claimsPrincipal?.Claims(ClaimTypes.NameIdentifier)?.FirstOrDefault();
         return claimValue == null ? throw new AuthorizationException("User ID claim not found.") : Guid.Parse(claimValue);
     }
-
 }

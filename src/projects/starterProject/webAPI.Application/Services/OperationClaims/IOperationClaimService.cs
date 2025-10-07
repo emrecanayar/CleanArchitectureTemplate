@@ -12,8 +12,7 @@ public interface IOperationClaimService
         Func<IQueryable<OperationClaim>, IIncludableQueryable<OperationClaim, object>>? include = null,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
 
     Task<IPaginate<OperationClaim>?> GetListAsync(
         Expression<Func<OperationClaim, bool>>? predicate = null,
@@ -23,10 +22,11 @@ public interface IOperationClaimService
         int size = 10,
         bool withDeleted = false,
         bool enableTracking = true,
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
 
     Task<OperationClaim> AddAsync(OperationClaim operationClaim);
+
     Task<OperationClaim> UpdateAsync(OperationClaim operationClaim);
+
     Task<OperationClaim> DeleteAsync(OperationClaim operationClaim, bool permanent = false);
 }
