@@ -75,10 +75,7 @@ if (string.Equals(environment, "Production"))
             DashboardJobListLimit = 5000, // Dashboard'da gösterilecek iþ sayýsý
         }));
 
-        if (string.Equals(environment, "Production"))
-        {
-            config.ConfigureRecurringJobs();
-        }
+        config.ConfigureRecurringJobs();
     });
 }
 

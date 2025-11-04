@@ -83,8 +83,16 @@ namespace Core.Application.Pipelines.DbLogging
             }
             finally
             {
-                // Veritabanına log kaydını eklenir.
-                await addLogToDatabase(logEntry);
+                var environment = _configuration["ASPNETCORE_ENVIRONMENT"];
+                var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
+
+                bool isDevelopment = string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase);
+                bool isLocalhost = remoteIp == "::1" || remoteIp == "127.0.0.1";
+
+                if (!isDevelopment && !isLocalhost)
+                {
+                    await addLogToDatabase(logEntry);
+                }
             }
         }
 

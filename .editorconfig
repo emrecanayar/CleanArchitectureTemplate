@@ -10,22 +10,15 @@ root = true
 # Company name for file headers
 
 # Document exposed/internal/private elements
-dotnet_diagnostic.SA0001.severity = none
 dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1008.severity = none
 dotnet_diagnostic.SA1009.severity = none
-dotnet_diagnostic.SA1010.severity = none
-dotnet_diagnostic.SA1011.severity = none
 dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1116.severity = none
-dotnet_diagnostic.SA1117.severity = none
 dotnet_diagnostic.SA1200.severity = none
 dotnet_diagnostic.SA1201.severity = none
-dotnet_diagnostic.SA1202.severity = none
-dotnet_diagnostic.SA1204.severity = none
 dotnet_diagnostic.SA1208.severity = none
 dotnet_diagnostic.SA1300.severity = none
 dotnet_diagnostic.SA1309.severity = none
-dotnet_diagnostic.SA1401.severity = none
 dotnet_diagnostic.SA1402.severity = none
 dotnet_diagnostic.CS1591.severity = none
 dotnet_diagnostic.SA1600.severity = none
@@ -34,15 +27,12 @@ dotnet_diagnostic.SA1602.severity = none
 dotnet_diagnostic.SA1604.severity = none
 dotnet_diagnostic.SA1606.severity = none
 dotnet_diagnostic.SA1611.severity = none
-dotnet_diagnostic.SA1618.severity = none
 dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.CS0618.severity = none
 dotnet_diagnostic.CS8618.severity = none
-dotnet_diagnostic.CS8601.severity = none
 dotnet_diagnostic.CS8619.severity = none
-dotnet_diagnostic.CS0693.severity = none
 dotnet_diagnostic.CS8602.severity = none
 dotnet_diagnostic.CS8714.severity = none
+dotnet_diagnostic.CS0693.severity = none
 
 ###########################
 # Ordering rules
