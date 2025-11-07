@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Core.Domain.ComplexTypes.Enums;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -181,6 +182,28 @@ namespace Core.Helpers.Helpers
             };
         }
 
+        public static GenerateUrl GenerateURLForFileFast(IFormFile file, string webRootPath, string folderPath)
+        {
+            var directoryPath = Path.Combine(webRootPath, folderPath.Replace("/", "\\"));
+            CheckDirectoryExists(directoryPath);
+
+            var uniqueId = Guid.NewGuid().ToString("N");
+            var extension = file.ContentType.StartsWith("image/") ? ".webp" : Path.GetExtension(file.FileName);
+            var uniqueName = $"{Path.GetFileNameWithoutExtension(file.FileName)}_{uniqueId}";
+            var fullPath = Path.Combine(directoryPath, uniqueName + extension);
+
+            var relativePath = $"{folderPath}/{uniqueName}{extension}".Replace("\\", "/");
+
+            return new GenerateUrl
+            {
+                FileType = extension,
+                FileName = $"{uniqueName}{extension}",
+                Path = relativePath,
+                Directory = Path.GetDirectoryName(relativePath),
+                Extension = FileInfoHelper.GetFileExtension(relativePath),
+            };
+        }
+
         public static string Upload(IFormFile file, string webRootPath, string filePath)
         {
             var isNotValid = CheckFileTypeValid(Path.GetExtension(file.FileName));
@@ -191,6 +214,19 @@ namespace Core.Helpers.Helpers
 
             CreateFile(Path.Combine(webRootPath, filePath), file);
             return $"{filePath}";
+        }
+
+        public static async Task<string> UploadAsync(IFormFile file, string webRootPath, string filePath)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            if (CheckFileTypeValid(extension))
+            {
+                throw new InvalidOperationException("File type is not valid!");
+            }
+
+            var fullPath = Path.Combine(webRootPath, filePath.Replace("/", "\\"));
+            await CreateFileAsync(fullPath, file);
+            return filePath;
         }
 
         public static bool Delete(string webRootPath, string path)
@@ -212,27 +248,62 @@ namespace Core.Helpers.Helpers
             return path.Substring(1).Replace("\\", "/");
         }
 
+        public static FileType GetFileType(string filePath)
+        {
+            var extension = FileInfoHelper.GetFileExtension(filePath);
+            switch (extension)
+            {
+                case ".xlsx":
+                case ".xls":
+                case ".xlsm":
+                case ".xlm":
+                    return FileType.Xls;
+                case ".docx":
+                case ".doc":
+                    return FileType.Doc;
+                case ".potx":
+                case ".pot":
+                case ".ppsx":
+                case ".pps":
+                case ".pptx":
+                case ".ppt":
+                    return FileType.Pps;
+                case ".pdf":
+                    return FileType.Pdf;
+                case ".jpeg":
+                case ".png":
+                case ".jpg":
+                case ".svg":
+                case ".webp":
+                    return FileType.Img;
+                case ".mp4":
+                    return FileType.Mp4;
+                default:
+                    return default(FileType);
+            }
+        }
+
         private static bool CheckFileTypeValid(string type)
         {
-            return type.ToLower() != ".xlsx" &&
-                type.ToLower() != ".xls" &&
-                type.ToLower() != ".xlsm" &&
-                type.ToLower() != ".xlm" &&
-                type.ToLower() != ".docx" &&
-                type.ToLower() != ".doc" &&
-                type.ToLower() != ".potx" &&
-                type.ToLower() != ".pot" &&
-                type.ToLower() != ".ppsx" &&
-                type.ToLower() != ".pps" &&
-                type.ToLower() != ".pptx" &&
-                type.ToLower() != ".ppt" &&
-                type.ToLower() != ".pdf" &&
-                type.ToLower() != ".jpeg" &&
-                type.ToLower() != ".png" &&
-                type.ToLower() != ".jpg" &&
-                type.ToLower() != ".svg" &&
-                type.ToLower() != ".webp" &&
-                type.ToLower() != ".mp4";
+            return !type.Equals(".xlsx", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".xls", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".xlsm", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".xlm", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".docx", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".doc", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".potx", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".pot", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".ppsx", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".pps", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".pptx", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".ppt", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".pdf", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".jpeg", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".png", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".jpg", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".svg", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".webp", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(type, ".mp4", StringComparison.OrdinalIgnoreCase);
         }
 
         private static void CheckDirectoryExists(string directory)
@@ -243,11 +314,29 @@ namespace Core.Helpers.Helpers
             }
         }
 
+        private static async Task CreateFileAsync(string fullPath, IFormFile file)
+        {
+            await using var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, true);
+
+            if (file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            {
+                using var image = Image.Load(file.OpenReadStream());
+                var encoder = new WebpEncoder { Quality = 90 };
+                await Task.Run(() => image.Save(fs, encoder));
+            }
+            else
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            await fs.FlushAsync();
+        }
+
         private static void CreateFile(string directory, IFormFile file)
         {
             using (FileStream fs = File.Create(directory.Replace("/", "\\")))
             {
-                if (!file.ContentType.StartsWith("image/"))
+                if (file.ContentType.StartsWith("image/"))
                 {
                     using var image = Image.Load(file.OpenReadStream());
 

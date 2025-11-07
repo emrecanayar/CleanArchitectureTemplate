@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Core.Application.ResponseTypes.Concrete;
-using Core.Domain.Entities;
 using Core.Helpers.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +17,7 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFile
 
         public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, CustomResponseDto<UploadedFileCreatedDto>>
         {
-            private readonly string _uPLOADEDFILEFOLDER = Path.Combine("Resources", "UploadedFiles", "DocumentPool");
+            private readonly string _uploadedFileFolder = Path.Combine("Resources", "UploadedFiles", "DocumentPool");
             private readonly IUploadedFileService _uploadedFileService;
             private readonly UploadedFileBusinessRules _uploadedFileBusinessRules;
 
@@ -30,21 +29,22 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFile
 
             public async Task<CustomResponseDto<UploadedFileCreatedDto>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
             {
-                FileHelper.GenerateUrl file = FileHelper.GenerateURLForFile(request.File, request.WebRootPath!, _uPLOADEDFILEFOLDER);
+                var fileData = FileHelper.GenerateURLForFileFast(request.File, request.WebRootPath!, _uploadedFileFolder);
 
                 var uploadedFileDto = new UploadedFileDto
                 {
-                    FileType = this._uploadedFileBusinessRules.DetectFileType(file.Path!),
-                    FileName = string.Concat(file.FileName, file.Extension),
-                    Path = file.Path,
-                    Extension = file.Extension,
-                    Directory = Path.GetDirectoryName(file.Path),
+                    FileType = _uploadedFileBusinessRules.DetectFileType(fileData.Path!),
+                    FileName = fileData.FileName!,
+                    Path = fileData.Path!,
+                    Extension = fileData.Extension!,
+                    Directory = Path.GetDirectoryName(fileData.Path),
                 };
 
-                UploadedFile uploadedFile = await this._uploadedFileService.AddOrUpdateDocument(uploadedFileDto);
+                var uploadedFile = await _uploadedFileService.AddOrUpdateDocument(uploadedFileDto);
 
-                FileHelper.Upload(request.File, request.WebRootPath!, file.Path!);
-                return CustomResponseDto<UploadedFileCreatedDto>.Success((int)HttpStatusCode.Created, new UploadedFileCreatedDto { Path = file.Path, Token = uploadedFile.Token }, true);
+                await FileHelper.UploadAsync(request.File, request.WebRootPath!, fileData.Path!);
+
+                return CustomResponseDto<UploadedFileCreatedDto>.Success((int)HttpStatusCode.Created, new UploadedFileCreatedDto { Path = fileData.Path!, Token = uploadedFile.Token }, true);
             }
         }
     }

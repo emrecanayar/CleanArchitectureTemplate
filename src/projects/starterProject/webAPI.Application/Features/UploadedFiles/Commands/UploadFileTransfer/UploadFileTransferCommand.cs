@@ -43,7 +43,7 @@ namespace webAPI.Application.Features.UploadedFiles.Commands.UploadFileTransfer
                     FileType = this._uploadedFileBusinessRules.DetectFileType(result.Path),
                     FileName = string.Empty,
                     Path = result.Path,
-                    Extension = FileInfoHelper.GetFileExtension(result.Path),
+                    Extension = FileInfoHelper.GetFileExtension(result.Path)!,
                 });
 
                 return CustomResponseDto<UploadedFileTransferDto>.Success((int)HttpStatusCode.OK, new UploadedFileTransferDto { NewFolderPath = result.Path, Token = addedOrUpdatedResult.Token }, true);
